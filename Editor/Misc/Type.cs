@@ -19,7 +19,7 @@ namespace UnityGameFramework.Editor
         private static readonly string[] RuntimeAssemblyNames =
         {
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Runtime",
+            "EasyGameFramework.Core.Runtime",
 #endif
             "Assembly-CSharp",
         };
@@ -27,11 +27,11 @@ namespace UnityGameFramework.Editor
         private static readonly string[] RuntimeOrEditorAssemblyNames =
         {
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Runtime",
+            "EasyGameFramework.Core.Runtime",
 #endif
             "Assembly-CSharp",
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Editor",
+            "EasyGameFramework.Core.Editor",
 #endif
             "Assembly-CSharp-Editor",
         };
