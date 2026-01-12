@@ -44,6 +44,15 @@ namespace EasyGameFramework
         }
 
         /// <summary>
+        /// 获取错误信息。
+        /// </summary>
+        public string ErrorMessage
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
         public object UserData
@@ -62,6 +71,7 @@ namespace EasyGameFramework
             UnloadSceneFailureEventArgs unloadSceneFailureEventArgs = ReferencePool.Acquire<UnloadSceneFailureEventArgs>();
             unloadSceneFailureEventArgs.PackageName = e.PackageName;
             unloadSceneFailureEventArgs.SceneAssetName = e.SceneAssetName;
+            unloadSceneFailureEventArgs.ErrorMessage = e.ErrorMessage;
             unloadSceneFailureEventArgs.UserData = e.UserData;
             return unloadSceneFailureEventArgs;
         }

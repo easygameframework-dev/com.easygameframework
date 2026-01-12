@@ -424,12 +424,12 @@ namespace EasyGameFramework.Core.Scene
             }
         }
 
-        private void UnloadSceneFailureCallback(string packageName, string sceneAssetName, object userData)
+        private void UnloadSceneFailureCallback(string packageName, string sceneAssetName, string errorMessage, object userData)
         {
             m_UnloadingSceneAssetNames.Remove(new AssetAddress(packageName, sceneAssetName));
             if (m_UnloadSceneFailureEventHandler != null)
             {
-                UnloadSceneFailureEventArgs unloadSceneFailureEventArgs = UnloadSceneFailureEventArgs.Create(packageName, sceneAssetName, userData);
+                UnloadSceneFailureEventArgs unloadSceneFailureEventArgs = UnloadSceneFailureEventArgs.Create(packageName, sceneAssetName, errorMessage, userData);
                 m_UnloadSceneFailureEventHandler(this, unloadSceneFailureEventArgs);
                 ReferencePool.Release(unloadSceneFailureEventArgs);
                 return;
