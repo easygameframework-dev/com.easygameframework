@@ -111,39 +111,39 @@ namespace EasyGameFramework.Core
         /// <summary>
         /// 读取数据。
         /// </summary>
-        /// <param name="dataAssetName">内容资源名称。</param>
-        public void ReadData(string dataAssetName)
+        /// <param name="dataAssetAddress">内容资源地址。</param>
+        public void ReadData(AssetAddress dataAssetAddress)
         {
-            ReadData(dataAssetName, Constant.DefaultPriority, null);
+            ReadData(dataAssetAddress, Constant.DefaultPriority, null);
         }
 
         /// <summary>
         /// 读取数据。
         /// </summary>
-        /// <param name="dataAssetName">内容资源名称。</param>
+        /// <param name="dataAssetAddress">内容资源地址。</param>
         /// <param name="priority">加载数据资源的优先级。</param>
-        public void ReadData(string dataAssetName, int priority)
+        public void ReadData(AssetAddress dataAssetAddress, int priority)
         {
-            ReadData(dataAssetName, priority, null);
+            ReadData(dataAssetAddress, priority, null);
         }
 
         /// <summary>
         /// 读取数据。
         /// </summary>
-        /// <param name="dataAssetName">内容资源名称。</param>
+        /// <param name="dataAssetAddress">内容资源地址。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string dataAssetName, object userData)
+        public void ReadData(AssetAddress dataAssetAddress, object userData)
         {
-            ReadData(dataAssetName, Constant.DefaultPriority, userData);
+            ReadData(dataAssetAddress, Constant.DefaultPriority, userData);
         }
 
         /// <summary>
         /// 读取数据。
         /// </summary>
-        /// <param name="dataAssetName">内容资源名称。</param>
+        /// <param name="dataAssetAddress">内容资源地址。</param>
         /// <param name="priority">加载数据资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string dataAssetName, int priority, object userData)
+        public void ReadData(AssetAddress dataAssetAddress, int priority, object userData)
         {
             if (m_ResourceManager == null)
             {
@@ -155,15 +155,15 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("You must set data provider helper first.");
             }
 
-            HasAssetResult result = m_ResourceManager.HasAsset(dataAssetName);
+            HasAssetResult result = m_ResourceManager.HasAsset(dataAssetAddress);
             switch (result)
             {
                 case HasAssetResult.AssetOnDisk:
                 case HasAssetResult.AssetOnFileSystem:
-                    m_ResourceManager.LoadAsset(dataAssetName, m_LoadAssetCallbacks, null, priority, userData);
+                    m_ResourceManager.LoadAsset(dataAssetAddress, m_LoadAssetCallbacks, null, priority, userData);
                     break;
                 default:
-                    throw new GameFrameworkException(Utility.Text.Format("Data asset '{0}' is '{1}'.", dataAssetName, result));
+                    throw new GameFrameworkException(Utility.Text.Format("Data asset '{0}' is '{1}'.", dataAssetAddress, result));
             }
         }
 

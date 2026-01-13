@@ -75,14 +75,6 @@ namespace EasyGameFramework.Core.Resource
         public float AssetExpireTime { get; set; }
         public int AssetPriority { get; set; }
 
-        private string m_CurrentPackageName;
-
-        public string CurrentPackageName
-        {
-            get => m_CurrentPackageName;
-            set => m_CurrentPackageName = value;
-        }
-
         /// <summary>
         /// 资源管理器轮询。
         /// </summary>
@@ -169,22 +161,22 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 检查资源是否存在。
         /// </summary>
-        /// <param name="assetName">要检查资源的名称。</param>
+        /// <param name="assetAddress">要检查资源的地址。</param>
         /// <returns>检查资源是否存在的结果。</returns>
-        public HasAssetResult HasAsset(string assetName)
+        public HasAssetResult HasAsset(AssetAddress assetAddress)
         {
-            if (string.IsNullOrEmpty(assetName))
+            if (!assetAddress.IsValid())
             {
-                throw new GameFrameworkException("Asset name is invalid.");
+                throw new GameFrameworkException("Asset address is invalid.");
             }
 
-            AssetInfo assetInfo = GetAssetInfo(assetName);
+            AssetInfo assetInfo = GetAssetInfo(assetAddress);
             if (assetInfo == null)
             {
                 return HasAssetResult.NotExist;
             }
 
-            if (!m_ResourceHelper.CheckAssetNameValid(CurrentPackageName, assetName))
+            if (!m_ResourceHelper.CheckAssetNameValid(assetAddress.PackageName, assetAddress.Location))
             {
                 return HasAssetResult.NotExist;
             }
@@ -197,52 +189,56 @@ namespace EasyGameFramework.Core.Resource
             return HasAssetResult.AssetOnDisk;
         }
 
-        public AssetInfo GetAssetInfo(string assetName)
+        public AssetInfo GetAssetInfo(AssetAddress assetAddress)
         {
-            if (string.IsNullOrEmpty(assetName))
+            if (!assetAddress.IsValid())
             {
-                throw new GameFrameworkException("Asset name is invalid.");
+                throw new GameFrameworkException("Asset address is invalid.");
             }
 
-            var address = new AssetAddress(CurrentPackageName, assetName);
-            if (m_AssetInfosCache.TryGetValue(address, out AssetInfo assetInfo))
+            if (m_AssetInfosCache.TryGetValue(assetAddress, out AssetInfo assetInfo))
             {
                 return assetInfo;
             }
 
-            assetInfo = m_ResourceHelper.GetAssetInfo(CurrentPackageName, assetName);
-            m_AssetInfosCache[address] = assetInfo;
+            assetInfo = m_ResourceHelper.GetAssetInfo(assetAddress.PackageName, assetAddress.Location);
+            m_AssetInfosCache[assetAddress] = assetInfo;
             return assetInfo;
         }
 
-        public AssetInfo[] GetAssetInfos(params string[] tags)
+        public AssetInfo[] GetAssetInfos(string packageName, params string[] tags)
         {
+            if (string.IsNullOrEmpty(packageName))
+            {
+                throw new GameFrameworkException("Package name is invalid.");
+            }
+
             if (tags == null || tags.Length == 0)
             {
                 throw new GameFrameworkException("Tags is empty.");
             }
 
-            var key = (CurrentPackageName, tags);
+            var key = (packageName, tags);
             if (m_AssetInfosCacheByTags.TryGetValue(key, out AssetInfo[] assetInfos))
             {
                 return assetInfos;
             }
 
-            assetInfos = m_ResourceHelper.GetAssetInfos(CurrentPackageName, tags);
+            assetInfos = m_ResourceHelper.GetAssetInfos(packageName, tags);
             m_AssetInfosCacheByTags[key] = assetInfos;
             return assetInfos;
         }
 
         public void LoadAsset(
-            string assetName,
+            AssetAddress assetAddress,
             LoadAssetCallbacks loadAssetCallbacks,
             Type assetType = null,
             int? customPriority = null,
             object userData = null)
         {
-            if (string.IsNullOrEmpty(assetName))
+            if (!assetAddress.IsValid())
             {
-                throw new GameFrameworkException("Asset name is invalid.");
+                throw new GameFrameworkException("Asset address is invalid.");
             }
 
             if (loadAssetCallbacks == null)
@@ -250,8 +246,13 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Load asset callbacks is invalid.");
             }
 
-            m_ResourceLoader.LoadAsset(CurrentPackageName, assetName, assetType, customPriority ?? Constant.DefaultPriority,
-                loadAssetCallbacks, userData);
+            m_ResourceLoader.LoadAsset(
+                assetAddress.PackageName,
+                assetAddress.Location,
+                assetType,
+                customPriority ?? Constant.DefaultPriority,
+                loadAssetCallbacks,
+                userData);
         }
 
         /// <summary>
@@ -268,12 +269,15 @@ namespace EasyGameFramework.Core.Resource
             m_ResourceLoader.UnloadAsset(asset);
         }
 
-        public void LoadScene(string sceneAssetName, LoadSceneCallbacks loadSceneCallbacks, int? customPriority = null,
+        public void LoadScene(
+            AssetAddress sceneAssetAddress,
+            LoadSceneCallbacks loadSceneCallbacks,
+            int? customPriority = null,
             object userData = null)
         {
-            if (string.IsNullOrEmpty(sceneAssetName))
+            if (!sceneAssetAddress.IsValid())
             {
-                throw new GameFrameworkException("Scene asset name is invalid.");
+                throw new GameFrameworkException("Scene address is invalid.");
             }
 
             if (loadSceneCallbacks == null)
@@ -281,22 +285,28 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Load scene callbacks is invalid.");
             }
 
-            m_ResourceLoader.LoadScene(CurrentPackageName, sceneAssetName, customPriority ?? Constant.DefaultPriority,
-                loadSceneCallbacks, userData);
+            m_ResourceLoader.LoadScene(
+                sceneAssetAddress.PackageName,
+                sceneAssetAddress.Location,
+                customPriority ?? Constant.DefaultPriority,
+                loadSceneCallbacks,
+                userData);
         }
 
         /// <summary>
         /// 异步卸载场景。
         /// </summary>
-        /// <param name="sceneAssetName">要卸载场景资源的名称。</param>
+        /// <param name="sceneAssetAddress">要卸载场景资源的地址。</param>
         /// <param name="unloadSceneCallbacks">卸载场景回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks,
+        public void UnloadScene(
+            AssetAddress sceneAssetAddress,
+            UnloadSceneCallbacks unloadSceneCallbacks,
             object userData = null)
         {
-            if (string.IsNullOrEmpty(sceneAssetName))
+            if (!sceneAssetAddress.IsValid())
             {
-                throw new GameFrameworkException("Scene asset name is invalid.");
+                throw new GameFrameworkException("Scene address is invalid.");
             }
 
             if (unloadSceneCallbacks == null)
@@ -304,7 +314,11 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Unload scene callbacks is invalid.");
             }
 
-            m_ResourceLoader.UnloadScene(CurrentPackageName, sceneAssetName, unloadSceneCallbacks, userData);
+            m_ResourceLoader.UnloadScene(
+                sceneAssetAddress.PackageName,
+                sceneAssetAddress.Location,
+                unloadSceneCallbacks,
+                userData);
         }
 
         public void ClearAllCacheFiles(

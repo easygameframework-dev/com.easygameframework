@@ -164,41 +164,41 @@ namespace EasyGameFramework
         /// <summary>
         /// 读取字典。
         /// </summary>
-        /// <param name="dictionaryAssetName">字典资源名称。</param>
-        public void ReadData(string dictionaryAssetName)
+        /// <param name="dictionaryAssetAddress">字典资源地址。</param>
+        public void ReadData(AssetAddress dictionaryAssetAddress)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName);
+            m_LocalizationManager.ReadData(dictionaryAssetAddress);
         }
 
         /// <summary>
         /// 读取字典。
         /// </summary>
-        /// <param name="dictionaryAssetName">字典资源名称。</param>
+        /// <param name="dictionaryAssetAddress">字典资源地址。</param>
         /// <param name="priority">加载字典资源的优先级。</param>
-        public void ReadData(string dictionaryAssetName, int priority)
+        public void ReadData(AssetAddress dictionaryAssetAddress, int priority)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName, priority);
+            m_LocalizationManager.ReadData(dictionaryAssetAddress, priority);
         }
 
         /// <summary>
         /// 读取字典。
         /// </summary>
-        /// <param name="dictionaryAssetName">字典资源名称。</param>
+        /// <param name="dictionaryAssetAddress">字典资源地址。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string dictionaryAssetName, object userData)
+        public void ReadData(AssetAddress dictionaryAssetAddress, object userData)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName, userData);
+            m_LocalizationManager.ReadData(dictionaryAssetAddress, userData);
         }
 
         /// <summary>
         /// 读取字典。
         /// </summary>
-        /// <param name="dictionaryAssetName">字典资源名称。</param>
+        /// <param name="dictionaryAssetAddress">字典资源地址。</param>
         /// <param name="priority">加载字典资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string dictionaryAssetName, int priority, object userData)
+        public void ReadData(AssetAddress dictionaryAssetAddress, int priority, object userData)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName, priority, userData);
+            m_LocalizationManager.ReadData(dictionaryAssetAddress, priority, userData);
         }
 
         /// <summary>

@@ -370,6 +370,7 @@ namespace EasyGameFramework
         /// <param name="entityLogicType">实体逻辑类型。</param>
         /// <param name="entityAssetName">实体资源名称。</param>
         /// <param name="entityGroupName">实体组名称。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
         /// <param name="customPriority">加载实体资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
         public void ShowEntity(int entityId, Type entityLogicType, string entityAssetName, string entityGroupName, string customPackageName = "", int? customPriority = null, object userData = null)
@@ -380,12 +381,7 @@ namespace EasyGameFramework
                 return;
             }
 
-            if (!string.IsNullOrEmpty(customPackageName))
-            {
-                m_ResourceManager.CurrentPackageName = customPackageName;
-            }
-
-            m_EntityManager.ShowEntity(entityId, entityAssetName, entityGroupName, customPriority, ShowEntityInfo.Create(entityLogicType, userData));
+            m_EntityManager.ShowEntity(entityId, entityAssetName, entityGroupName, customPackageName, customPriority, ShowEntityInfo.Create(entityLogicType, userData));
         }
 
         /// <summary>

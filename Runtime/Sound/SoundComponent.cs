@@ -315,6 +315,7 @@ namespace EasyGameFramework
         /// </summary>
         /// <param name="soundAssetName">声音资源名称。</param>
         /// <param name="soundGroupName">声音组名称。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
         /// <param name="customPriority">加载声音资源的优先级。</param>
         /// <param name="playSoundParams">播放声音参数。</param>
         /// <param name="bindingEntity">要绑定到的实体</param>
@@ -331,11 +332,7 @@ namespace EasyGameFramework
             int? customPriority = null,
             object userData = null)
         {
-            if (!string.IsNullOrEmpty(customPackageName))
-            {
-                m_ResourceManager.CurrentPackageName = customPackageName;
-            }
-            return m_SoundManager.PlaySound(soundAssetName, soundGroupName, playSoundParams, customPriority, PlaySoundInfo.Create(bindingEntity, worldPosition, userData));
+            return m_SoundManager.PlaySound(soundAssetName, soundGroupName, customPackageName, playSoundParams, customPriority, PlaySoundInfo.Create(bindingEntity, worldPosition, userData));
         }
 
         /// <summary>

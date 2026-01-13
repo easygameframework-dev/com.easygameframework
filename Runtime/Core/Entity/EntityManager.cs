@@ -534,9 +534,10 @@ namespace EasyGameFramework.Core.Entity
         /// <param name="entityId">实体编号。</param>
         /// <param name="entityAssetName">实体资源名称。</param>
         /// <param name="entityGroupName">实体组名称。</param>
+        /// <param name="packageName">资源包名称。</param>
         /// <param name="customPriority">加载实体资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ShowEntity(int entityId, string entityAssetName, string entityGroupName, int? customPriority, object userData)
+        public void ShowEntity(int entityId, string entityAssetName, string entityGroupName, string packageName, int? customPriority, object userData)
         {
             if (m_ResourceManager == null)
             {
@@ -579,7 +580,11 @@ namespace EasyGameFramework.Core.Entity
             {
                 int serialId = ++m_Serial;
                 m_EntitiesBeingLoaded.Add(entityId, serialId);
-                m_ResourceManager.LoadAsset(entityAssetName, m_LoadAssetCallbacks, null, customPriority, ShowEntityInfo.Create(serialId, entityId, entityGroup, userData));
+
+                // Use AssetAddress for resource loading
+                string actualPackageName = string.IsNullOrEmpty(packageName) ? "DefaultPackage" : packageName;
+                var assetAddress = new AssetAddress(actualPackageName, entityAssetName);
+                m_ResourceManager.LoadAsset(assetAddress, m_LoadAssetCallbacks, null, customPriority, ShowEntityInfo.Create(serialId, entityId, entityGroup, userData));
                 return;
             }
 

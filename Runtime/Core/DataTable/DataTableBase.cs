@@ -107,41 +107,41 @@ namespace EasyGameFramework.Core.DataTable
         /// <summary>
         /// 读取数据表。
         /// </summary>
-        /// <param name="dataTableAssetName">数据表资源名称。</param>
-        public void ReadData(string dataTableAssetName)
+        /// <param name="dataTableAssetAddress">数据表资源地址。</param>
+        public void ReadData(AssetAddress dataTableAssetAddress)
         {
-            m_DataProvider.ReadData(dataTableAssetName);
+            m_DataProvider.ReadData(dataTableAssetAddress);
         }
 
         /// <summary>
         /// 读取数据表。
         /// </summary>
-        /// <param name="dataTableAssetName">数据表资源名称。</param>
+        /// <param name="dataTableAssetAddress">数据表资源地址。</param>
         /// <param name="priority">加载数据表资源的优先级。</param>
-        public void ReadData(string dataTableAssetName, int priority)
+        public void ReadData(AssetAddress dataTableAssetAddress, int priority)
         {
-            m_DataProvider.ReadData(dataTableAssetName, priority);
+            m_DataProvider.ReadData(dataTableAssetAddress, priority);
         }
 
         /// <summary>
         /// 读取数据表。
         /// </summary>
-        /// <param name="dataTableAssetName">数据表资源名称。</param>
+        /// <param name="dataTableAssetAddress">数据表资源地址。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string dataTableAssetName, object userData)
+        public void ReadData(AssetAddress dataTableAssetAddress, object userData)
         {
-            m_DataProvider.ReadData(dataTableAssetName, userData);
+            m_DataProvider.ReadData(dataTableAssetAddress, userData);
         }
 
         /// <summary>
         /// 读取数据表。
         /// </summary>
-        /// <param name="dataTableAssetName">数据表资源名称。</param>
+        /// <param name="dataTableAssetAddress">数据表资源地址。</param>
         /// <param name="priority">加载数据表资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string dataTableAssetName, int priority, object userData)
+        public void ReadData(AssetAddress dataTableAssetAddress, int priority, object userData)
         {
-            m_DataProvider.ReadData(dataTableAssetName, priority, userData);
+            m_DataProvider.ReadData(dataTableAssetAddress, priority, userData);
         }
 
         /// <summary>

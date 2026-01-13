@@ -118,11 +118,6 @@ namespace EasyGameFramework.Core.Resource
         int AssetPriority { get; set; }
 
         /// <summary>
-        /// 当前资源包名称。
-        /// </summary>
-        string CurrentPackageName { get; set; }
-
-        /// <summary>
         /// 设置资源只读区路径。
         /// </summary>
         /// <param name="readOnlyPath">资源只读区路径。</param>
@@ -155,34 +150,35 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 检查资源是否存在。
         /// </summary>
-        /// <param name="assetName">要检查资源的名称。</param>
+        /// <param name="assetAddress">要检查资源的地址。</param>
         /// <returns>检查资源是否存在的结果。</returns>
-        HasAssetResult HasAsset(string assetName);
+        HasAssetResult HasAsset(AssetAddress assetAddress);
 
         /// <summary>
         /// 获取资源信息
         /// </summary>
-        /// <param name="assetName">要获取资源信息的名称。</param>
+        /// <param name="assetAddress">要获取资源信息的地址。</param>
         /// <returns></returns>
-        AssetInfo GetAssetInfo(string assetName);
+        AssetInfo GetAssetInfo(AssetAddress assetAddress);
 
         /// <summary>
         /// 获取资源信息数组。
         /// </summary>
+        /// <param name="packageName">资源包名称。</param>
         /// <param name="tags">资源标签数组。</param>
         /// <returns>资源信息数组。</returns>
-        AssetInfo[] GetAssetInfos(params string[] tags);
+        AssetInfo[] GetAssetInfos(string packageName, params string[] tags);
 
         /// <summary>
         /// 异步加载资源。
         /// </summary>
-        /// <param name="assetName">要加载资源的名称。</param>
+        /// <param name="assetAddress">要加载资源的地址。</param>
         /// <param name="assetType">要加载资源的类型。</param>
         /// <param name="customPriority">加载资源的优先级。</param>
         /// <param name="loadAssetCallbacks">加载资源回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
         void LoadAsset(
-            string assetName,
+            AssetAddress assetAddress,
             LoadAssetCallbacks loadAssetCallbacks,
             Type assetType = null,
             int? customPriority = null,
@@ -197,12 +193,12 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 异步加载场景。
         /// </summary>
-        /// <param name="sceneAssetName">要加载场景资源的名称。</param>
+        /// <param name="sceneAssetAddress">要加载场景资源的地址。</param>
         /// <param name="customPriority">加载场景资源的优先级。</param>
         /// <param name="loadSceneCallbacks">加载场景回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
         void LoadScene(
-            string sceneAssetName,
+            AssetAddress sceneAssetAddress,
             LoadSceneCallbacks loadSceneCallbacks,
             int? customPriority = null,
             object userData = null);
@@ -210,10 +206,10 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 异步卸载场景。
         /// </summary>
-        /// <param name="sceneAssetName">要卸载场景资源的名称。</param>
+        /// <param name="sceneAssetAddress">要卸载场景资源的地址。</param>
         /// <param name="unloadSceneCallbacks">卸载场景回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks, object userData = null);
+        void UnloadScene(AssetAddress sceneAssetAddress, UnloadSceneCallbacks unloadSceneCallbacks, object userData = null);
 
         /// <summary>
         /// 清理所有缓存文件。

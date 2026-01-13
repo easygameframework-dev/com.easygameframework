@@ -229,11 +229,12 @@ namespace EasyGameFramework.Core.UI
         /// </summary>
         /// <param name="uiFormAssetName">界面资源名称。</param>
         /// <param name="uiGroupName">界面组名称。</param>
+        /// <param name="packageName">资源包名称。</param>
         /// <param name="customPriority">加载界面资源的优先级。</param>
         /// <param name="pauseCoveredUIForm">是否暂停被覆盖的界面。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>界面的序列编号。</returns>
-        int OpenUIForm(string uiFormAssetName, string uiGroupName, int? customPriority = null, bool pauseCoveredUIForm = false, object userData = null);
+        int OpenUIForm(string uiFormAssetName, string uiGroupName, string packageName = "", int? customPriority = null, bool pauseCoveredUIForm = false, object userData = null);
 
         /// <summary>
         /// 关闭界面。

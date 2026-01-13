@@ -122,11 +122,12 @@ namespace EasyGameFramework.Core.Sound
         /// </summary>
         /// <param name="soundAssetName">声音资源名称。</param>
         /// <param name="soundGroupName">声音组名称。</param>
+        /// <param name="packageName">资源包名称。</param>
         /// <param name="customPriority">加载声音资源的优先级。</param>
         /// <param name="playSoundParams">播放声音参数。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams = null, int? customPriority = null, object userData = null);
+        int PlaySound(string soundAssetName, string soundGroupName, string packageName = "", PlaySoundParams playSoundParams = null, int? customPriority = null, object userData = null);
 
         /// <summary>
         /// 停止播放声音。

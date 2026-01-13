@@ -117,15 +117,6 @@ namespace EasyGameFramework.Core.Scene
         }
 
         /// <summary>
-        /// 当前资源包名称。
-        /// </summary>
-        public string CurrentPackageName
-        {
-            get => m_ResourceManager.CurrentPackageName;
-            set => m_ResourceManager.CurrentPackageName = value;
-        }
-
-        /// <summary>
         /// 场景管理器轮询。
         /// </summary>
         /// <param name="elapseSeconds">逻辑流逝时间，以秒为单位。</param>
@@ -290,7 +281,7 @@ namespace EasyGameFramework.Core.Scene
         /// <summary>
         /// 检查场景资源是否存在。
         /// </summary>
-        /// <param name="sceneAssetName">要检查场景资源的名称。</param>
+        /// <param name="sceneAssetName">要检查场景资源的地址。</param>
         /// <returns>场景资源是否存在。</returns>
         public bool HasScene(AssetAddress sceneAssetName)
         {
@@ -299,17 +290,13 @@ namespace EasyGameFramework.Core.Scene
                 throw new GameFrameworkException("Scene asset name is invalid.");
             }
 
-            var previousPackageName = CurrentPackageName;
-            m_ResourceManager.CurrentPackageName = sceneAssetName.PackageName;
-            var result = m_ResourceManager.HasAsset(sceneAssetName.Location) != HasAssetResult.NotExist;
-            CurrentPackageName = previousPackageName;
-            return result;
+            return m_ResourceManager.HasAsset(sceneAssetName) != HasAssetResult.NotExist;
         }
 
         /// <summary>
         /// 加载场景。
         /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="sceneAssetName">场景资源地址。</param>
         /// <param name="customPriority">加载场景资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
         public void LoadScene(AssetAddress sceneAssetName, int? customPriority = null, object userData = null)
@@ -340,16 +327,13 @@ namespace EasyGameFramework.Core.Scene
             }
 
             m_LoadingSceneAssetNames.Add(sceneAssetName);
-            var previousPackageName = CurrentPackageName;
-            m_ResourceManager.CurrentPackageName = sceneAssetName.PackageName;
-            m_ResourceManager.LoadScene(sceneAssetName.Location, m_LoadSceneCallbacks, customPriority, userData);
-            CurrentPackageName = previousPackageName;
+            m_ResourceManager.LoadScene(sceneAssetName, m_LoadSceneCallbacks, customPriority, userData);
         }
 
         /// <summary>
         /// 卸载场景。
         /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="sceneAssetName">场景资源地址。</param>
         /// <param name="userData">用户自定义数据。</param>
         public void UnloadScene(AssetAddress sceneAssetName, object userData = null)
         {
@@ -379,10 +363,7 @@ namespace EasyGameFramework.Core.Scene
             }
 
             m_UnloadingSceneAssetNames.Add(sceneAssetName);
-            var previousPackageName = CurrentPackageName;
-            m_ResourceManager.CurrentPackageName = sceneAssetName.PackageName;
-            m_ResourceManager.UnloadScene(sceneAssetName.Location, m_UnloadSceneCallbacks, userData);
-            CurrentPackageName = previousPackageName;
+            m_ResourceManager.UnloadScene(sceneAssetName, m_UnloadSceneCallbacks, userData);
         }
 
         private void LoadSceneSuccessCallback(string packageName, string sceneAssetName, object sceneAsset, float duration, object userData)

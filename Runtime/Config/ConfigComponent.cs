@@ -131,41 +131,41 @@ namespace EasyGameFramework
         /// <summary>
         /// 读取全局配置。
         /// </summary>
-        /// <param name="configAssetName">全局配置资源名称。</param>
-        public void ReadData(string configAssetName)
+        /// <param name="configAssetAddress">全局配置资源地址。</param>
+        public void ReadData(AssetAddress configAssetAddress)
         {
-            m_ConfigManager.ReadData(configAssetName);
+            m_ConfigManager.ReadData(configAssetAddress);
         }
 
         /// <summary>
         /// 读取全局配置。
         /// </summary>
-        /// <param name="configAssetName">全局配置资源名称。</param>
+        /// <param name="configAssetAddress">全局配置资源地址。</param>
         /// <param name="priority">加载全局配置资源的优先级。</param>
-        public void ReadData(string configAssetName, int priority)
+        public void ReadData(AssetAddress configAssetAddress, int priority)
         {
-            m_ConfigManager.ReadData(configAssetName, priority);
+            m_ConfigManager.ReadData(configAssetAddress, priority);
         }
 
         /// <summary>
         /// 读取全局配置。
         /// </summary>
-        /// <param name="configAssetName">全局配置资源名称。</param>
+        /// <param name="configAssetAddress">全局配置资源地址。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string configAssetName, object userData)
+        public void ReadData(AssetAddress configAssetAddress, object userData)
         {
-            m_ConfigManager.ReadData(configAssetName, userData);
+            m_ConfigManager.ReadData(configAssetAddress, userData);
         }
 
         /// <summary>
         /// 读取全局配置。
         /// </summary>
-        /// <param name="configAssetName">全局配置资源名称。</param>
+        /// <param name="configAssetAddress">全局配置资源地址。</param>
         /// <param name="priority">加载全局配置资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ReadData(string configAssetName, int priority, object userData)
+        public void ReadData(AssetAddress configAssetAddress, int priority, object userData)
         {
-            m_ConfigManager.ReadData(configAssetName, priority, userData);
+            m_ConfigManager.ReadData(configAssetAddress, priority, userData);
         }
 
         /// <summary>

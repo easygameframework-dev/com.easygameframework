@@ -142,12 +142,6 @@ namespace EasyGameFramework
             set { m_ResourceManager.AssetPriority = m_AssetPriority = value; }
         }
 
-        public string CurrentPackageName
-        {
-            get => m_ResourceManager.CurrentPackageName;
-            set => m_ResourceManager.CurrentPackageName = value;
-        }
-
         public bool IsInitialized { get; private set; }
 
         private void Start()
@@ -193,7 +187,6 @@ namespace EasyGameFramework
             m_ResourceManager.AddLoadResourceAgentHelper(m_LoadResourceAgentHelper);
             m_ResourceManager.SetResourceHelper(m_ResourceHelper);
 
-            m_ResourceManager.CurrentPackageName = m_DefaultPackageName;
             m_ResourceManager.PlayMode = m_PlayMode;
             m_ResourceManager.FileVerifyLevel = m_FileVerifyLevel;
             m_ResourceManager.Milliseconds = m_Milliseconds;
@@ -206,43 +199,82 @@ namespace EasyGameFramework
         }
 
         /// <summary>
-        /// 检查资源是否存在。
+        /// 检查资源是否存在。（兼容重载）
         /// </summary>
         /// <param name="assetName">要检查资源的名称。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
         /// <returns>检查资源是否存在的结果。</returns>
         public HasAssetResult HasAsset(string assetName, string customPackageName = "")
         {
-            CurrentPackageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
-
-            return m_ResourceManager.HasAsset(assetName);
+            string packageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
+            var assetAddress = new AssetAddress(packageName, assetName);
+            return m_ResourceManager.HasAsset(assetAddress);
         }
 
         /// <summary>
-        /// 获取资源信息
+        /// 检查资源是否存在。（新 API）
+        /// </summary>
+        /// <param name="assetAddress">要检查资源的地址。</param>
+        /// <returns>检查资源是否存在的结果。</returns>
+        public HasAssetResult HasAsset(AssetAddress assetAddress)
+        {
+            return m_ResourceManager.HasAsset(assetAddress);
+        }
+
+        /// <summary>
+        /// 获取资源信息。（兼容重载）
         /// </summary>
         /// <param name="assetName">要获取资源信息的名称。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
         /// <returns></returns>
         public AssetInfo GetAssetInfo(string assetName, string customPackageName = "")
         {
-            CurrentPackageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
-
-            return m_ResourceManager.GetAssetInfo(assetName);
-        }
-
-        public AssetInfo[] GetAssetInfos(string[] tags, string customPackageName = "")
-        {
-            CurrentPackageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
-
-            return m_ResourceManager.GetAssetInfos(tags);
+            string packageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
+            var assetAddress = new AssetAddress(packageName, assetName);
+            return m_ResourceManager.GetAssetInfo(assetAddress);
         }
 
         /// <summary>
-        /// 异步加载资源。
+        /// 获取资源信息。（新 API）
+        /// </summary>
+        /// <param name="assetAddress">要获取资源信息的地址。</param>
+        /// <returns></returns>
+        public AssetInfo GetAssetInfo(AssetAddress assetAddress)
+        {
+            return m_ResourceManager.GetAssetInfo(assetAddress);
+        }
+
+        /// <summary>
+        /// 获取资源信息数组。（兼容重载）
+        /// </summary>
+        /// <param name="tags">资源标签数组。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
+        /// <returns>资源信息数组。</returns>
+        public AssetInfo[] GetAssetInfos(string[] tags, string customPackageName = "")
+        {
+            string packageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
+            return m_ResourceManager.GetAssetInfos(packageName, tags);
+        }
+
+        /// <summary>
+        /// 获取资源信息数组。（新 API）
+        /// </summary>
+        /// <param name="packageName">资源包名称。</param>
+        /// <param name="tags">资源标签数组。</param>
+        /// <returns>资源信息数组。</returns>
+        public AssetInfo[] GetAssetInfos(string packageName, params string[] tags)
+        {
+            return m_ResourceManager.GetAssetInfos(packageName, tags);
+        }
+
+        /// <summary>
+        /// 异步加载资源。（兼容重载）
         /// </summary>
         /// <param name="assetName">要加载资源的名称。</param>
         /// <param name="assetType">要加载资源的类型。</param>
         /// <param name="priority">加载资源的优先级。</param>
         /// <param name="loadAssetCallbacks">加载资源回调函数集。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
         /// <param name="userData">用户自定义数据。</param>
         public void LoadAsset(
             string assetName,
@@ -252,9 +284,27 @@ namespace EasyGameFramework
             int? priority = null,
             object userData = null)
         {
-            CurrentPackageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
+            string packageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
+            var assetAddress = new AssetAddress(packageName, assetName);
+            m_ResourceManager.LoadAsset(assetAddress, loadAssetCallbacks, assetType, priority, userData);
+        }
 
-            m_ResourceManager.LoadAsset(assetName, loadAssetCallbacks, assetType, priority, userData);
+        /// <summary>
+        /// 异步加载资源。（新 API）
+        /// </summary>
+        /// <param name="assetAddress">要加载资源的地址。</param>
+        /// <param name="loadAssetCallbacks">加载资源回调函数集。</param>
+        /// <param name="assetType">要加载资源的类型。</param>
+        /// <param name="priority">加载资源的优先级。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        public void LoadAsset(
+            AssetAddress assetAddress,
+            LoadAssetCallbacks loadAssetCallbacks,
+            Type assetType = null,
+            int? priority = null,
+            object userData = null)
+        {
+            m_ResourceManager.LoadAsset(assetAddress, loadAssetCallbacks, assetType, priority, userData);
         }
 
         public void UnloadAsset(object asset)
@@ -263,11 +313,12 @@ namespace EasyGameFramework
         }
 
         /// <summary>
-        /// 异步加载场景。
+        /// 异步加载场景。（兼容重载）
         /// </summary>
         /// <param name="sceneAssetName">要加载场景资源的名称。</param>
-        /// <param name="priority">加载场景资源的优先级。</param>
         /// <param name="loadSceneCallbacks">加载场景回调函数集。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
+        /// <param name="priority">加载场景资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
         public void LoadScene(
             string sceneAssetName,
@@ -276,21 +327,57 @@ namespace EasyGameFramework
             int? priority = null,
             object userData = null)
         {
-            CurrentPackageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
-
-            m_ResourceManager.LoadScene(sceneAssetName, loadSceneCallbacks, priority, userData);
+            string packageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
+            var sceneAssetAddress = new AssetAddress(packageName, sceneAssetName);
+            m_ResourceManager.LoadScene(sceneAssetAddress, loadSceneCallbacks, priority, userData);
         }
 
         /// <summary>
-        /// 异步卸载场景。
+        /// 异步加载场景。（新 API）
+        /// </summary>
+        /// <param name="sceneAssetAddress">要加载场景资源的地址。</param>
+        /// <param name="loadSceneCallbacks">加载场景回调函数集。</param>
+        /// <param name="priority">加载场景资源的优先级。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        public void LoadScene(
+            AssetAddress sceneAssetAddress,
+            LoadSceneCallbacks loadSceneCallbacks,
+            int? priority = null,
+            object userData = null)
+        {
+            m_ResourceManager.LoadScene(sceneAssetAddress, loadSceneCallbacks, priority, userData);
+        }
+
+        /// <summary>
+        /// 异步卸载场景。（兼容重载）
         /// </summary>
         /// <param name="sceneAssetName">要卸载场景资源的名称。</param>
         /// <param name="unloadSceneCallbacks">卸载场景回调函数集。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks,
+        public void UnloadScene(
+            string sceneAssetName,
+            UnloadSceneCallbacks unloadSceneCallbacks,
+            string customPackageName = "",
             object userData = null)
         {
-            m_ResourceManager.UnloadScene(sceneAssetName, unloadSceneCallbacks, userData);
+            string packageName = string.IsNullOrEmpty(customPackageName) ? m_DefaultPackageName : customPackageName;
+            var sceneAssetAddress = new AssetAddress(packageName, sceneAssetName);
+            m_ResourceManager.UnloadScene(sceneAssetAddress, unloadSceneCallbacks, userData);
+        }
+
+        /// <summary>
+        /// 异步卸载场景。（新 API）
+        /// </summary>
+        /// <param name="sceneAssetAddress">要卸载场景资源的地址。</param>
+        /// <param name="unloadSceneCallbacks">卸载场景回调函数集。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        public void UnloadScene(
+            AssetAddress sceneAssetAddress,
+            UnloadSceneCallbacks unloadSceneCallbacks,
+            object userData = null)
+        {
+            m_ResourceManager.UnloadScene(sceneAssetAddress, unloadSceneCallbacks, userData);
         }
 
         public void ClearAllCacheFiles(

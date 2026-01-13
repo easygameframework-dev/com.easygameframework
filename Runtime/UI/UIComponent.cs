@@ -470,6 +470,7 @@ namespace EasyGameFramework
         /// </summary>
         /// <param name="uiFormAssetName">界面资源名称。</param>
         /// <param name="uiGroupName">界面组名称。</param>
+        /// <param name="customPackageName">自定义资源包名称。</param>
         /// <param name="customPriority">加载界面资源的优先级。</param>
         /// <param name="pauseCoveredUIForm">是否暂停被覆盖的界面。</param>
         /// <param name="userData">用户自定义数据。</param>
@@ -482,12 +483,7 @@ namespace EasyGameFramework
             bool pauseCoveredUIForm = false,
             object userData = null)
         {
-            if (!string.IsNullOrEmpty(customPackageName))
-            {
-                m_ResourceManager.CurrentPackageName = customPackageName;
-            }
-
-            return m_UIManager.OpenUIForm(uiFormAssetName, uiGroupName, customPriority, pauseCoveredUIForm, userData);
+            return m_UIManager.OpenUIForm(uiFormAssetName, uiGroupName, customPackageName, customPriority, pauseCoveredUIForm, userData);
         }
 
         /// <summary>
