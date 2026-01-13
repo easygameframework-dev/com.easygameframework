@@ -50,7 +50,7 @@ namespace EasyGameFramework.Core.Event
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要订阅的事件处理函数。</param>
-        void Subscribe(int id, EventHandler<GameEventArgs> handler);
+        ISubscription Subscribe(int id, EventHandler<GameEventArgs> handler);
 
         /// <summary>
         /// 取消订阅事件处理函数。

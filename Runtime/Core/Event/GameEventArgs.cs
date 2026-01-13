@@ -20,7 +20,7 @@ namespace EasyGameFramework.Core.Event
             {
                 if (m_Id == null)
                 {
-                    m_Id = EventHelper.GetEventId(GetType());
+                    m_Id = EventExtensions.GetEventId(GetType());
                 }
                 
                 return m_Id.Value;

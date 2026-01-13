@@ -102,9 +102,10 @@ namespace EasyGameFramework.Core.Event
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要订阅的事件处理函数。</param>
-        public void Subscribe(int id, EventHandler<GameEventArgs> handler)
+        public ISubscription Subscribe(int id, EventHandler<GameEventArgs> handler)
         {
             m_EventPool.Subscribe(id, handler);
+            return new Subscription(() => Unsubscribe(id, handler));
         }
 
         /// <summary>
