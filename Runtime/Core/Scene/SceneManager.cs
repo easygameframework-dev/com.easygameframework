@@ -366,25 +366,25 @@ namespace EasyGameFramework.Core.Scene
             m_ResourceManager.UnloadScene(sceneAssetName, m_UnloadSceneCallbacks, userData);
         }
 
-        private void LoadSceneSuccessCallback(string packageName, string sceneAssetName, object sceneAsset, float duration, object userData)
+        private void LoadSceneSuccessCallback(AssetAddress sceneAssetAddress, object sceneAsset, float duration, object userData)
         {
-            m_LoadingSceneAssetNames.Remove(new AssetAddress(packageName, sceneAssetName));
-            m_LoadedSceneAssetNames.Add(new AssetAddress(packageName, sceneAssetName));
+            m_LoadingSceneAssetNames.Remove(sceneAssetAddress);
+            m_LoadedSceneAssetNames.Add(sceneAssetAddress);
             if (m_LoadSceneSuccessEventHandler != null)
             {
-                LoadSceneSuccessEventArgs loadSceneSuccessEventArgs = LoadSceneSuccessEventArgs.Create(packageName, sceneAssetName, sceneAsset, duration, userData);
+                LoadSceneSuccessEventArgs loadSceneSuccessEventArgs = LoadSceneSuccessEventArgs.Create(sceneAssetAddress, sceneAsset, duration, userData);
                 m_LoadSceneSuccessEventHandler(this, loadSceneSuccessEventArgs);
                 ReferencePool.Release(loadSceneSuccessEventArgs);
             }
         }
 
-        private void LoadSceneFailureCallback(string packageName, string sceneAssetName, LoadResourceStatus status, string errorMessage, object userData)
+        private void LoadSceneFailureCallback(AssetAddress sceneAssetAddress, LoadResourceStatus status, string errorMessage, object userData)
         {
-            m_LoadingSceneAssetNames.Remove(new AssetAddress(packageName, sceneAssetName));
-            string appendErrorMessage = Utility.Text.Format("Load scene failure, scene asset name '{0}', status '{1}', error message '{2}'.", sceneAssetName, status, errorMessage);
+            m_LoadingSceneAssetNames.Remove(sceneAssetAddress);
+            string appendErrorMessage = Utility.Text.Format("Load scene failure, scene asset name '{0}', status '{1}', error message '{2}'.", sceneAssetAddress, status, errorMessage);
             if (m_LoadSceneFailureEventHandler != null)
             {
-                LoadSceneFailureEventArgs loadSceneFailureEventArgs = LoadSceneFailureEventArgs.Create(packageName, sceneAssetName, appendErrorMessage, userData);
+                LoadSceneFailureEventArgs loadSceneFailureEventArgs = LoadSceneFailureEventArgs.Create(sceneAssetAddress, appendErrorMessage, userData);
                 m_LoadSceneFailureEventHandler(this, loadSceneFailureEventArgs);
                 ReferencePool.Release(loadSceneFailureEventArgs);
                 return;
@@ -393,30 +393,30 @@ namespace EasyGameFramework.Core.Scene
             throw new GameFrameworkException(appendErrorMessage);
         }
 
-        private void UnloadSceneSuccessCallback(string packageName, string sceneAssetName, object userData)
+        private void UnloadSceneSuccessCallback(AssetAddress sceneAssetAddress, object userData)
         {
-            m_UnloadingSceneAssetNames.Remove(new AssetAddress(packageName, sceneAssetName));
-            m_LoadedSceneAssetNames.Remove(new AssetAddress(packageName, sceneAssetName));
+            m_UnloadingSceneAssetNames.Remove(sceneAssetAddress);
+            m_LoadedSceneAssetNames.Remove(sceneAssetAddress);
             if (m_UnloadSceneSuccessEventHandler != null)
             {
-                UnloadSceneSuccessEventArgs unloadSceneSuccessEventArgs = UnloadSceneSuccessEventArgs.Create(packageName, sceneAssetName, userData);
+                UnloadSceneSuccessEventArgs unloadSceneSuccessEventArgs = UnloadSceneSuccessEventArgs.Create(sceneAssetAddress, userData);
                 m_UnloadSceneSuccessEventHandler(this, unloadSceneSuccessEventArgs);
                 ReferencePool.Release(unloadSceneSuccessEventArgs);
             }
         }
 
-        private void UnloadSceneFailureCallback(string packageName, string sceneAssetName, string errorMessage, object userData)
+        private void UnloadSceneFailureCallback(AssetAddress sceneAssetAddress, string errorMessage, object userData)
         {
-            m_UnloadingSceneAssetNames.Remove(new AssetAddress(packageName, sceneAssetName));
+            m_UnloadingSceneAssetNames.Remove(sceneAssetAddress);
             if (m_UnloadSceneFailureEventHandler != null)
             {
-                UnloadSceneFailureEventArgs unloadSceneFailureEventArgs = UnloadSceneFailureEventArgs.Create(packageName, sceneAssetName, errorMessage, userData);
+                UnloadSceneFailureEventArgs unloadSceneFailureEventArgs = UnloadSceneFailureEventArgs.Create(sceneAssetAddress, errorMessage, userData);
                 m_UnloadSceneFailureEventHandler(this, unloadSceneFailureEventArgs);
                 ReferencePool.Release(unloadSceneFailureEventArgs);
                 return;
             }
 
-            throw new GameFrameworkException(Utility.Text.Format("Unload scene failure, scene asset name '{0}'.", sceneAssetName));
+            throw new GameFrameworkException(Utility.Text.Format("Unload scene failure, scene asset name '{0}'.", sceneAssetAddress));
         }
     }
 }

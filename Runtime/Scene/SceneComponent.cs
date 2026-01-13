@@ -382,12 +382,10 @@ namespace EasyGameFramework
 
         private void OnLoadSceneSuccess(object sender, EasyGameFramework.Core.Scene.LoadSceneSuccessEventArgs e)
         {
-            //TODO unite packageName and assetName
-            var address = new AssetAddress(e.PackageName, e.SceneAssetName);
-            m_SceneAssetNameToSceneName[address] = ((Scene)e.SceneAsset).name;
-            if (!m_SceneOrder.ContainsKey(address))
+            m_SceneAssetNameToSceneName[e.SceneAssetAddress] = ((Scene)e.SceneAsset).name;
+            if (!m_SceneOrder.ContainsKey(e.SceneAssetAddress))
             {
-                m_SceneOrder.Add(address, 0);
+                m_SceneOrder.Add(e.SceneAssetAddress, 0);
             }
 
             m_EventComponent.Fire(this, LoadSceneSuccessEventArgs.Create(e));
@@ -396,24 +394,21 @@ namespace EasyGameFramework
 
         private void OnLoadSceneFailure(object sender, EasyGameFramework.Core.Scene.LoadSceneFailureEventArgs e)
         {
-            var address = new AssetAddress(e.PackageName, e.SceneAssetName);
-            Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", address, e.ErrorMessage);
+            Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", e.SceneAssetAddress, e.ErrorMessage);
             m_EventComponent.Fire(this, LoadSceneFailureEventArgs.Create(e));
         }
 
         private void OnUnloadSceneSuccess(object sender, EasyGameFramework.Core.Scene.UnloadSceneSuccessEventArgs e)
         {
-            var address = new AssetAddress(e.PackageName, e.SceneAssetName);
-            m_SceneAssetNameToSceneName.Remove(address);
+            m_SceneAssetNameToSceneName.Remove(e.SceneAssetAddress);
             m_EventComponent.Fire(this, UnloadSceneSuccessEventArgs.Create(e));
-            m_SceneOrder.Remove(address);
+            m_SceneOrder.Remove(e.SceneAssetAddress);
             RefreshSceneOrder();
         }
 
         private void OnUnloadSceneFailure(object sender, EasyGameFramework.Core.Scene.UnloadSceneFailureEventArgs e)
         {
-            var address = new AssetAddress(e.PackageName, e.SceneAssetName);
-            Log.Warning("Unload scene failure, scene asset name '{0}'.", address);
+            Log.Warning("Unload scene failure, scene asset name '{0}'.", e.SceneAssetAddress);
             m_EventComponent.Fire(this, UnloadSceneFailureEventArgs.Create(e));
         }
     }

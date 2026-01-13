@@ -1173,7 +1173,7 @@ namespace EasyGameFramework.Core.Entity
             m_RecycleQueue.Enqueue(entityInfo);
         }
 
-        private void LoadAssetSuccessCallback(string packageName, string entityAssetName, object entityAsset, float duration, object userData)
+        private void LoadAssetSuccessCallback(AssetAddress entityAssetAddress, object entityAsset, float duration, object userData)
         {
             ShowEntityInfo showEntityInfo = (ShowEntityInfo)userData;
             if (showEntityInfo == null)
@@ -1190,15 +1190,14 @@ namespace EasyGameFramework.Core.Entity
             }
 
             m_EntitiesBeingLoaded.Remove(showEntityInfo.EntityId);
-            EntityInstanceObject entityInstanceObject = EntityInstanceObject.Create(entityAssetName, entityAsset, m_EntityHelper.InstantiateEntity(entityAsset), m_EntityHelper);
+            EntityInstanceObject entityInstanceObject = EntityInstanceObject.Create(entityAssetAddress.Location, entityAsset, m_EntityHelper.InstantiateEntity(entityAsset), m_EntityHelper);
             showEntityInfo.EntityGroup.RegisterEntityInstanceObject(entityInstanceObject, true);
 
-            AssetAddress entityAssetAddress = new AssetAddress(packageName, entityAssetName);
             InternalShowEntity(showEntityInfo.EntityId, entityAssetAddress, showEntityInfo.EntityGroup, entityInstanceObject.Target, true, duration, showEntityInfo.UserData);
             ReferencePool.Release(showEntityInfo);
         }
 
-        private void LoadAssetFailureCallback(string packageName, string entityAssetName, LoadResourceStatus status, string errorMessage, object userData)
+        private void LoadAssetFailureCallback(AssetAddress entityAssetAddress, LoadResourceStatus status, string errorMessage, object userData)
         {
             ShowEntityInfo showEntityInfo = (ShowEntityInfo)userData;
             if (showEntityInfo == null)
@@ -1213,10 +1212,9 @@ namespace EasyGameFramework.Core.Entity
             }
 
             m_EntitiesBeingLoaded.Remove(showEntityInfo.EntityId);
-            string appendErrorMessage = Utility.Text.Format("Load entity failure, asset name '{0}', status '{1}', error message '{2}'.", entityAssetName, status, errorMessage);
+            string appendErrorMessage = Utility.Text.Format("Load entity failure, asset name '{0}', status '{1}', error message '{2}'.", entityAssetAddress, status, errorMessage);
             if (m_ShowEntityFailureEventHandler != null)
             {
-                AssetAddress entityAssetAddress = new AssetAddress(packageName, entityAssetName);
                 ShowEntityFailureEventArgs showEntityFailureEventArgs = ShowEntityFailureEventArgs.Create(showEntityInfo.EntityId, entityAssetAddress, showEntityInfo.EntityGroup.Name, appendErrorMessage, showEntityInfo.UserData);
                 m_ShowEntityFailureEventHandler(this, showEntityFailureEventArgs);
                 ReferencePool.Release(showEntityFailureEventArgs);

@@ -5,6 +5,8 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using EasyGameFramework.Core.Resource;
+
 namespace EasyGameFramework.Core.Scene
 {
     /// <summary>
@@ -17,26 +19,16 @@ namespace EasyGameFramework.Core.Scene
         /// </summary>
         public LoadSceneSuccessEventArgs()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
             SceneAsset = null;
             Duration = 0f;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取资源包名称。
+        /// 获取场景资源地址。
         /// </summary>
-        public string PackageName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取场景资源名称。
-        /// </summary>
-        public string SceneAssetName
+        public AssetAddress SceneAssetAddress
         {
             get;
             private set;
@@ -72,17 +64,15 @@ namespace EasyGameFramework.Core.Scene
         /// <summary>
         /// 创建加载场景成功事件。
         /// </summary>
-        /// <param name="packageName">资源包名称。</param>
-        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="sceneAssetAddress">场景资源地址。</param>
         /// <param name="sceneAsset">场景资源。</param>
         /// <param name="duration">加载持续时间。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的加载场景成功事件。</returns>
-        public static LoadSceneSuccessEventArgs Create(string packageName, string sceneAssetName, object sceneAsset, float duration, object userData)
+        public static LoadSceneSuccessEventArgs Create(AssetAddress sceneAssetAddress, object sceneAsset, float duration, object userData)
         {
             LoadSceneSuccessEventArgs loadSceneSuccessEventArgs = ReferencePool.Acquire<LoadSceneSuccessEventArgs>();
-            loadSceneSuccessEventArgs.PackageName = packageName;
-            loadSceneSuccessEventArgs.SceneAssetName = sceneAssetName;
+            loadSceneSuccessEventArgs.SceneAssetAddress = sceneAssetAddress;
             loadSceneSuccessEventArgs.SceneAsset = sceneAsset;
             loadSceneSuccessEventArgs.Duration = duration;
             loadSceneSuccessEventArgs.UserData = userData;
@@ -94,8 +84,7 @@ namespace EasyGameFramework.Core.Scene
         /// </summary>
         public override void Clear()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
             SceneAsset = null;
             Duration = 0f;
             UserData = null;

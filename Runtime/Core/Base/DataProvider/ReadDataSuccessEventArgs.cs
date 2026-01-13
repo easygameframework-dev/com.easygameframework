@@ -5,6 +5,8 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using EasyGameFramework.Core.Resource;
+
 namespace EasyGameFramework.Core
 {
     /// <summary>
@@ -17,15 +19,15 @@ namespace EasyGameFramework.Core
         /// </summary>
         public ReadDataSuccessEventArgs()
         {
-            DataAssetName = null;
+            DataAssetAddress = AssetAddress.Empty;
             Duration = 0f;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取内容资源名称。
+        /// 获取数据资源地址。
         /// </summary>
-        public string DataAssetName
+        public AssetAddress DataAssetAddress
         {
             get;
             private set;
@@ -52,14 +54,14 @@ namespace EasyGameFramework.Core
         /// <summary>
         /// 创建读取数据成功事件。
         /// </summary>
-        /// <param name="dataAssetName">内容资源名称。</param>
+        /// <param name="dataAssetAddress">数据资源地址。</param>
         /// <param name="duration">加载持续时间。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的读取数据成功事件。</returns>
-        public static ReadDataSuccessEventArgs Create(string dataAssetName, float duration, object userData)
+        public static ReadDataSuccessEventArgs Create(AssetAddress dataAssetAddress, float duration, object userData)
         {
             ReadDataSuccessEventArgs loadDataSuccessEventArgs = ReferencePool.Acquire<ReadDataSuccessEventArgs>();
-            loadDataSuccessEventArgs.DataAssetName = dataAssetName;
+            loadDataSuccessEventArgs.DataAssetAddress = dataAssetAddress;
             loadDataSuccessEventArgs.Duration = duration;
             loadDataSuccessEventArgs.UserData = userData;
             return loadDataSuccessEventArgs;
@@ -70,7 +72,7 @@ namespace EasyGameFramework.Core
         /// </summary>
         public override void Clear()
         {
-            DataAssetName = null;
+            DataAssetAddress = AssetAddress.Empty;
             Duration = 0f;
             UserData = null;
         }

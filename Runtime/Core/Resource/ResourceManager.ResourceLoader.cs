@@ -34,18 +34,18 @@ namespace EasyGameFramework.Core.Resource
             {
             }
 
-            public void RegisterAsset(string packageName, string assetName, AssetObject assetObject)
+            public void RegisterAsset(AssetAddress assetAddress, AssetObject assetObject)
             {
-                var key = $"{packageName}/{assetName}";
+                var key = assetAddress.ToString();
                 if (!m_AssetPathToAssetMap.TryAdd(key, assetObject))
                 {
                     throw new GameFrameworkException($"Asset '{key}' has been registered.");
                 }
             }
 
-            public AssetObject GetAssetObject(string packageName, string assetName)
+            public AssetObject GetAssetObject(AssetAddress assetAddress)
             {
-                var key = $"{packageName}/{assetName}";
+                var key = assetAddress.ToString();
                 if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
                     return assetObject;
@@ -88,17 +88,16 @@ namespace EasyGameFramework.Core.Resource
             /// <summary>
             /// 异步加载资源。
             /// </summary>
-            /// <param name="packageName">资源包名称</param>
-            /// <param name="assetName">要加载资源的名称。</param>
+            /// <param name="assetAddress">资源地址。</param>
             /// <param name="assetType">要加载资源的类型。</param>
             /// <param name="priority">加载资源的优先级。</param>
             /// <param name="loadAssetCallbacks">加载资源回调函数集。</param>
             /// <param name="userData">用户自定义数据。</param>
-            public void LoadAsset(string packageName, string assetName, Type assetType, int priority,
+            public void LoadAsset(AssetAddress assetAddress, Type assetType, int priority,
                 LoadAssetCallbacks loadAssetCallbacks,
                 object userData)
             {
-                var key = $"{packageName}/{assetName}";
+                var key = assetAddress.ToString();
                 if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
                     if (assetObject.IsScene)
@@ -106,11 +105,11 @@ namespace EasyGameFramework.Core.Resource
                         throw new GameFrameworkException($"Asset '{key}' is a scene asset, use LoadScene instead.");
                     }
 
-                    loadAssetCallbacks.LoadAssetSuccessCallback?.Invoke(packageName, assetName, assetObject.Asset, 0, userData);
+                    loadAssetCallbacks.LoadAssetSuccessCallback?.Invoke(assetAddress, assetObject.Asset, 0, userData);
                     return;
                 }
 
-                LoadAssetTask loadAssetTask = LoadAssetTask.Create(packageName, assetName, assetType, priority,
+                LoadAssetTask loadAssetTask = LoadAssetTask.Create(assetAddress, assetType, priority,
                     loadAssetCallbacks, userData);
 
                 m_TaskPool.AddTask(loadAssetTask);
@@ -134,9 +133,9 @@ namespace EasyGameFramework.Core.Resource
                 ReferencePool.Release(pair.Value);
             }
 
-            public void UnloadAsset(string packageName, string assetName)
+            public void UnloadAsset(AssetAddress assetAddress)
             {
-                var key = $"{packageName}/{assetName}";
+                var key = assetAddress.ToString();
 
                 if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
@@ -154,16 +153,15 @@ namespace EasyGameFramework.Core.Resource
             /// <summary>
             /// 异步加载场景。
             /// </summary>
-            /// <param name="packageName">资源包名称</param>
-            /// <param name="sceneAssetName">要加载场景的名称。</param>
+            /// <param name="sceneAssetAddress">场景资源地址。</param>
             /// <param name="priority">加载场景的优先级。</param>
             /// <param name="loadSceneCallbacks">加载场景回调函数集。</param>
             /// <param name="userData">用户自定义数据。</param>
-            public void LoadScene(string packageName, string sceneAssetName, int priority,
+            public void LoadScene(AssetAddress sceneAssetAddress, int priority,
                 LoadSceneCallbacks loadSceneCallbacks,
                 object userData)
             {
-                LoadSceneTask loadSceneTask = LoadSceneTask.Create(packageName, sceneAssetName, priority,
+                LoadSceneTask loadSceneTask = LoadSceneTask.Create(sceneAssetAddress, priority,
                     loadSceneCallbacks, userData);
                 m_TaskPool.AddTask(loadSceneTask);
             }
@@ -171,25 +169,24 @@ namespace EasyGameFramework.Core.Resource
             /// <summary>
             /// 异步卸载场景。
             /// </summary>
-            /// <param name="packageName">资源包名称。</param>
-            /// <param name="sceneAssetName">要卸载场景资源的名称。</param>
+            /// <param name="sceneAssetAddress">场景资源地址。</param>
             /// <param name="unloadSceneCallbacks">卸载场景回调函数集。</param>
             /// <param name="userData">用户自定义数据。</param>
-            public void UnloadScene(string packageName, string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks, object userData)
+            public void UnloadScene(AssetAddress sceneAssetAddress, UnloadSceneCallbacks unloadSceneCallbacks, object userData)
             {
                 if (m_ResourceManager.m_ResourceHelper == null)
                 {
                     throw new GameFrameworkException("You must set resource helper first.");
                 }
 
-                var key = $"{packageName}/{sceneAssetName}";
+                var key = sceneAssetAddress.ToString();
                 if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
                     if (!assetObject.IsScene)
                     {
                         throw new GameFrameworkException($"Asset '{key}' is not a scene asset, use UnloadAsset instead.");
                     }
-                    m_ResourceManager.m_ResourceHelper.UnloadScene(packageName, sceneAssetName, assetObject, unloadSceneCallbacks,
+                    m_ResourceManager.m_ResourceHelper.UnloadScene(sceneAssetAddress, assetObject, unloadSceneCallbacks,
                         userData);
 
                     m_AssetPathToAssetMap.Remove(key);
@@ -197,7 +194,7 @@ namespace EasyGameFramework.Core.Resource
                 }
                 else
                 {
-                    throw new GameFrameworkException($"The scene asset '{sceneAssetName}' is not loaded.");
+                    throw new GameFrameworkException($"The scene asset '{sceneAssetAddress}' is not loaded.");
                 }
             }
         }

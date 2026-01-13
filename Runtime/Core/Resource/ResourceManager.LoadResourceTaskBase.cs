@@ -8,12 +8,12 @@ namespace EasyGameFramework.Core.Resource
         {
             private static int s_Serial = 0;
 
-            private string m_PackageName;
-            private string m_AssetName;
+            private AssetAddress m_AssetAddress;
             private Type m_AssetType;
 
-            public string PackageName => m_PackageName;
-            public string AssetName => m_AssetName;
+            public AssetAddress Address => m_AssetAddress;
+            public string PackageName => m_AssetAddress.PackageName;
+            public string AssetName => m_AssetAddress.Location;
             public Type AssetType => m_AssetType;
 
             public DateTime StartTime { get; set; }
@@ -29,11 +29,10 @@ namespace EasyGameFramework.Core.Resource
             {
             }
 
-            protected void Initialize(string packageName, string assetName, Type assetType, int priority, object userData)
+            protected void Initialize(AssetAddress assetAddress, Type assetType, int priority, object userData)
             {
                 Initialize(++s_Serial, "LoadResourceTask", priority, userData);
-                m_PackageName = packageName;
-                m_AssetName = assetName;
+                m_AssetAddress = assetAddress;
                 m_AssetType = assetType;
             }
         }

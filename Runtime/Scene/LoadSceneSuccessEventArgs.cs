@@ -7,6 +7,7 @@
 
 using EasyGameFramework.Core;
 using EasyGameFramework.Core.Event;
+using EasyGameFramework.Core.Resource;
 
 namespace EasyGameFramework
 {
@@ -20,26 +21,16 @@ namespace EasyGameFramework
         /// </summary>
         public LoadSceneSuccessEventArgs()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
             SceneAsset = null;
             Duration = 0f;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取资源包名称。
+        /// 获取场景资源地址。
         /// </summary>
-        public string PackageName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取场景资源名称。
-        /// </summary>
-        public string SceneAssetName
+        public AssetAddress SceneAssetAddress
         {
             get;
             private set;
@@ -80,8 +71,7 @@ namespace EasyGameFramework
         public static LoadSceneSuccessEventArgs Create(EasyGameFramework.Core.Scene.LoadSceneSuccessEventArgs e)
         {
             LoadSceneSuccessEventArgs loadSceneSuccessEventArgs = ReferencePool.Acquire<LoadSceneSuccessEventArgs>();
-            loadSceneSuccessEventArgs.PackageName = e.PackageName;
-            loadSceneSuccessEventArgs.SceneAssetName = e.SceneAssetName;
+            loadSceneSuccessEventArgs.SceneAssetAddress = e.SceneAssetAddress;
             loadSceneSuccessEventArgs.SceneAsset = e.SceneAsset;
             loadSceneSuccessEventArgs.Duration = e.Duration;
             loadSceneSuccessEventArgs.UserData = e.UserData;
@@ -93,8 +83,7 @@ namespace EasyGameFramework
         /// </summary>
         public override void Clear()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
             SceneAsset = null;
             Duration = 0f;
             UserData = null;

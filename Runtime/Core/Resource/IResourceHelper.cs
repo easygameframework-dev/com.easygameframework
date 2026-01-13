@@ -13,12 +13,11 @@ namespace EasyGameFramework.Core.Resource
     public interface IResourceHelper
     {
         /// <summary>
-        /// 检查资源名称是否有效。
+        /// 检查资源地址是否有效。
         /// </summary>
-        /// <param name="packageName">资源包名称。</param>
-        /// <param name="assetName">资源名称。</param>
-        /// <returns>资源名称是否有效。</returns>
-        bool CheckAssetNameValid(string packageName, string assetName);
+        /// <param name="assetAddress">资源地址。</param>
+        /// <returns>资源地址是否有效。</returns>
+        bool CheckAssetAddressValid(AssetAddress assetAddress);
 
         /// <summary>
         /// 检查是否需要从远程下载资源。
@@ -30,10 +29,9 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 获取资源信息。
         /// </summary>
-        /// <param name="packageName">资源包名称。</param>
-        /// <param name="assetName">资源名称。</param>
+        /// <param name="assetAddress">资源地址。</param>
         /// <returns>资源信息。</returns>
-        AssetInfo GetAssetInfo(string packageName, string assetName);
+        AssetInfo GetAssetInfo(AssetAddress assetAddress);
 
         /// <summary>
         /// 获取资源信息数组。
@@ -46,12 +44,11 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 卸载场景。
         /// </summary>
-        /// <param name="packageName">资源包名称。</param>
-        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="sceneAssetAddress">场景资源地址。</param>
         /// <param name="sceneAssetObject">场景资源对象。</param>
         /// <param name="unloadSceneCallbacks">卸载场景回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        void UnloadScene(string packageName, string sceneAssetName, AssetObject sceneAssetObject, UnloadSceneCallbacks unloadSceneCallbacks, object userData);
+        void UnloadScene(AssetAddress sceneAssetAddress, AssetObject sceneAssetObject, UnloadSceneCallbacks unloadSceneCallbacks, object userData);
 
         /// <summary>
         /// 卸载资源。

@@ -5,6 +5,8 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using EasyGameFramework.Core.Resource;
+
 namespace EasyGameFramework.Core.Scene
 {
     /// <summary>
@@ -17,25 +19,15 @@ namespace EasyGameFramework.Core.Scene
         /// </summary>
         public LoadSceneFailureEventArgs()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
             ErrorMessage = null;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取资源包名称。
+        /// 获取场景资源地址。
         /// </summary>
-        public string PackageName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取场景资源名称。
-        /// </summary>
-        public string SceneAssetName
+        public AssetAddress SceneAssetAddress
         {
             get;
             private set;
@@ -62,16 +54,14 @@ namespace EasyGameFramework.Core.Scene
         /// <summary>
         /// 创建加载场景失败事件。
         /// </summary>
-        /// <param name="packageName">资源包名称。</param>
-        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="sceneAssetAddress">场景资源地址。</param>
         /// <param name="errorMessage">错误信息。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的加载场景失败事件。</returns>
-        public static LoadSceneFailureEventArgs Create(string packageName, string sceneAssetName, string errorMessage, object userData)
+        public static LoadSceneFailureEventArgs Create(AssetAddress sceneAssetAddress, string errorMessage, object userData)
         {
             LoadSceneFailureEventArgs loadSceneFailureEventArgs = ReferencePool.Acquire<LoadSceneFailureEventArgs>();
-            loadSceneFailureEventArgs.PackageName = packageName;
-            loadSceneFailureEventArgs.SceneAssetName = sceneAssetName;
+            loadSceneFailureEventArgs.SceneAssetAddress = sceneAssetAddress;
             loadSceneFailureEventArgs.ErrorMessage = errorMessage;
             loadSceneFailureEventArgs.UserData = userData;
             return loadSceneFailureEventArgs;
@@ -82,8 +72,7 @@ namespace EasyGameFramework.Core.Scene
         /// </summary>
         public override void Clear()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
             ErrorMessage = null;
             UserData = null;
         }

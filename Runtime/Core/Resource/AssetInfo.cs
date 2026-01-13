@@ -7,18 +7,20 @@ namespace EasyGameFramework.Core.Resource
     /// </summary>
     public class AssetInfo
     {
-        private readonly string m_PackageName;
+        private readonly AssetAddress m_AssetAddress;
         private readonly Type m_AssetType;
         private readonly string m_Error;
-        private readonly string m_AssetName;
-
         private readonly object m_UserData;
 
+        /// <summary>
+        /// 资源地址
+        /// </summary>
+        public AssetAddress Address => m_AssetAddress;
 
         /// <summary>
         /// 所属包裹
         /// </summary>
-        public string PackageName => m_PackageName;
+        public string PackageName => m_AssetAddress.PackageName;
 
         /// <summary>
         /// 资源类型
@@ -33,7 +35,7 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 资源名称
         /// </summary>
-        public string AssetName => m_AssetName;
+        public string AssetName => m_AssetAddress.Location;
 
         /// <summary>
         /// 引用对象
@@ -43,16 +45,14 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 初始化资源信息的新实例。
         /// </summary>
-        /// <param name="packageName">资源包名称。</param>
+        /// <param name="assetAddress">资源地址。</param>
         /// <param name="assetType">资源类型。</param>
-        /// <param name="assetName">资源名称。</param>
         /// <param name="error">错误信息。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public AssetInfo(string packageName, Type assetType, string assetName, string error, object userData)
+        public AssetInfo(AssetAddress assetAddress, Type assetType, string error, object userData)
         {
-            m_PackageName = packageName;
+            m_AssetAddress = assetAddress;
             m_AssetType = assetType;
-            m_AssetName = assetName;
             m_Error = error;
             m_UserData = userData;
         }

@@ -498,16 +498,13 @@ namespace EasyGameFramework.Core.Sound
             throw new GameFrameworkException(Utility.Text.Format("Can not find sound '{0}'.", serialId));
         }
 
-        private void LoadAssetSuccessCallback(string packageName, string soundAssetName, object soundAsset, float duration, object userData)
+        private void LoadAssetSuccessCallback(AssetAddress soundAssetAddress, object soundAsset, float duration, object userData)
         {
             PlaySoundInfo playSoundInfo = (PlaySoundInfo)userData;
             if (playSoundInfo == null)
             {
                 throw new GameFrameworkException("Play sound info is invalid.");
             }
-
-            // Reconstruct AssetAddress from callback parameters
-            AssetAddress soundAssetAddress = new AssetAddress(packageName, soundAssetName);
 
             if (m_SoundsToReleaseOnLoad.Contains(playSoundInfo.SerialId))
             {
@@ -546,7 +543,7 @@ namespace EasyGameFramework.Core.Sound
 
             m_SoundsToReleaseOnLoad.Remove(playSoundInfo.SerialId);
             m_SoundHelper.ReleaseSoundAsset(soundAsset);
-            string errorMessage = Utility.Text.Format("Sound group '{0}' play sound '{1}' failure.", playSoundInfo.SoundGroup.Name, soundAssetName);
+            string errorMessage = Utility.Text.Format("Sound group '{0}' play sound '{1}' failure.", playSoundInfo.SoundGroup.Name, soundAssetAddress);
             if (m_PlaySoundFailureEventHandler != null)
             {
                 PlaySoundFailureEventArgs playSoundFailureEventArgs = PlaySoundFailureEventArgs.Create(playSoundInfo.SerialId, soundAssetAddress, playSoundInfo.SoundGroup.Name, playSoundInfo.PlaySoundParams, errorCode.Value, errorMessage, playSoundInfo.UserData);
@@ -571,16 +568,13 @@ namespace EasyGameFramework.Core.Sound
             throw new GameFrameworkException(errorMessage);
         }
 
-        private void LoadAssetFailureCallback(string packageName, string soundAssetName, LoadResourceStatus status, string errorMessage, object userData)
+        private void LoadAssetFailureCallback(AssetAddress soundAssetAddress, LoadResourceStatus status, string errorMessage, object userData)
         {
             PlaySoundInfo playSoundInfo = (PlaySoundInfo)userData;
             if (playSoundInfo == null)
             {
                 throw new GameFrameworkException("Play sound info is invalid.");
             }
-
-            // Reconstruct AssetAddress from callback parameters
-            AssetAddress soundAssetAddress = new AssetAddress(packageName, soundAssetName);
 
             if (m_SoundsToReleaseOnLoad.Contains(playSoundInfo.SerialId))
             {
@@ -594,7 +588,7 @@ namespace EasyGameFramework.Core.Sound
             }
 
             m_SoundsBeingLoaded.Remove(playSoundInfo.SerialId);
-            string appendErrorMessage = Utility.Text.Format("Load sound failure, asset name '{0}', status '{1}', error message '{2}'.", soundAssetName, status, errorMessage);
+            string appendErrorMessage = Utility.Text.Format("Load sound failure, asset name '{0}', status '{1}', error message '{2}'.", soundAssetAddress, status, errorMessage);
             if (m_PlaySoundFailureEventHandler != null)
             {
                 PlaySoundFailureEventArgs playSoundFailureEventArgs = PlaySoundFailureEventArgs.Create(playSoundInfo.SerialId, soundAssetAddress, playSoundInfo.SoundGroup.Name, playSoundInfo.PlaySoundParams, PlaySoundErrorCode.LoadAssetFailure, appendErrorMessage, playSoundInfo.UserData);

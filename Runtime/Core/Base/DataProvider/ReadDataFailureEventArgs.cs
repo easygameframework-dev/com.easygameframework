@@ -5,6 +5,8 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using EasyGameFramework.Core.Resource;
+
 namespace EasyGameFramework.Core
 {
     /// <summary>
@@ -17,15 +19,15 @@ namespace EasyGameFramework.Core
         /// </summary>
         public ReadDataFailureEventArgs()
         {
-            DataAssetName = null;
+            DataAssetAddress = AssetAddress.Empty;
             ErrorMessage = null;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取内容资源名称。
+        /// 获取数据资源地址。
         /// </summary>
-        public string DataAssetName
+        public AssetAddress DataAssetAddress
         {
             get;
             private set;
@@ -52,14 +54,14 @@ namespace EasyGameFramework.Core
         /// <summary>
         /// 创建读取数据失败事件。
         /// </summary>
-        /// <param name="dataAssetName">内容资源名称。</param>
+        /// <param name="dataAssetAddress">数据资源地址。</param>
         /// <param name="errorMessage">错误信息。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的读取数据失败事件。</returns>
-        public static ReadDataFailureEventArgs Create(string dataAssetName, string errorMessage, object userData)
+        public static ReadDataFailureEventArgs Create(AssetAddress dataAssetAddress, string errorMessage, object userData)
         {
             ReadDataFailureEventArgs loadDataFailureEventArgs = ReferencePool.Acquire<ReadDataFailureEventArgs>();
-            loadDataFailureEventArgs.DataAssetName = dataAssetName;
+            loadDataFailureEventArgs.DataAssetAddress = dataAssetAddress;
             loadDataFailureEventArgs.ErrorMessage = errorMessage;
             loadDataFailureEventArgs.UserData = userData;
             return loadDataFailureEventArgs;
@@ -70,7 +72,7 @@ namespace EasyGameFramework.Core
         /// </summary>
         public override void Clear()
         {
-            DataAssetName = null;
+            DataAssetAddress = AssetAddress.Empty;
             ErrorMessage = null;
             UserData = null;
         }

@@ -10,8 +10,7 @@ namespace EasyGameFramework.Core.Resource
     /// <summary>
     /// 卸载场景成功回调函数。
     /// </summary>
-    /// <param name="packageName">资源包名称。</param>
-    /// <param name="sceneAssetName">要卸载的场景资源名称。</param>
+    /// <param name="sceneAssetAddress">要卸载的场景资源地址。</param>
     /// <param name="userData">用户自定义数据。</param>
-    public delegate void UnloadSceneSuccessCallback(string packageName, string sceneAssetName, object userData);
+    public delegate void UnloadSceneSuccessCallback(AssetAddress sceneAssetAddress, object userData);
 }

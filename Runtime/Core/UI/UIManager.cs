@@ -835,7 +835,7 @@ namespace EasyGameFramework.Core.UI
             }
         }
 
-        private void LoadAssetSuccessCallback(string packageName, string location, object uiFormAsset, float duration, object userData)
+        private void LoadAssetSuccessCallback(AssetAddress assetAddress, object uiFormAsset, float duration, object userData)
         {
             OpenUIFormInfo openUIFormInfo = (OpenUIFormInfo)userData;
             if (openUIFormInfo == null)
@@ -852,15 +852,14 @@ namespace EasyGameFramework.Core.UI
             }
 
             m_UIFormsBeingLoaded.Remove(openUIFormInfo.SerialId);
-            var uiFormAssetAddress = new AssetAddress(packageName, location);
-            UIFormInstanceObject uiFormInstanceObject = UIFormInstanceObject.Create(location, uiFormAsset, m_UIFormHelper.InstantiateUIForm(uiFormAsset), m_UIFormHelper);
+            UIFormInstanceObject uiFormInstanceObject = UIFormInstanceObject.Create(assetAddress.Location, uiFormAsset, m_UIFormHelper.InstantiateUIForm(uiFormAsset), m_UIFormHelper);
             m_InstancePool.Register(uiFormInstanceObject, true);
 
-            InternalOpenUIForm(openUIFormInfo.SerialId, uiFormAssetAddress, openUIFormInfo.UIGroup, uiFormInstanceObject.Target, openUIFormInfo.PauseCoveredUIForm, true, duration, openUIFormInfo.UserData);
+            InternalOpenUIForm(openUIFormInfo.SerialId, assetAddress, openUIFormInfo.UIGroup, uiFormInstanceObject.Target, openUIFormInfo.PauseCoveredUIForm, true, duration, openUIFormInfo.UserData);
             ReferencePool.Release(openUIFormInfo);
         }
 
-        private void LoadAssetFailureCallback(string packageName, string location, LoadResourceStatus status, string errorMessage, object userData)
+        private void LoadAssetFailureCallback(AssetAddress assetAddress, LoadResourceStatus status, string errorMessage, object userData)
         {
             OpenUIFormInfo openUIFormInfo = (OpenUIFormInfo)userData;
             if (openUIFormInfo == null)
@@ -875,11 +874,10 @@ namespace EasyGameFramework.Core.UI
             }
 
             m_UIFormsBeingLoaded.Remove(openUIFormInfo.SerialId);
-            var uiFormAssetAddress = new AssetAddress(packageName, location);
-            string appendErrorMessage = Utility.Text.Format("Load UI form failure, asset name '{0}', status '{1}', error message '{2}'.", uiFormAssetAddress, status, errorMessage);
+            string appendErrorMessage = Utility.Text.Format("Load UI form failure, asset name '{0}', status '{1}', error message '{2}'.", assetAddress, status, errorMessage);
             if (m_OpenUIFormFailureEventHandler != null)
             {
-                OpenUIFormFailureEventArgs openUIFormFailureEventArgs = OpenUIFormFailureEventArgs.Create(openUIFormInfo.SerialId, uiFormAssetAddress, openUIFormInfo.UIGroup.Name, openUIFormInfo.PauseCoveredUIForm, appendErrorMessage, openUIFormInfo.UserData);
+                OpenUIFormFailureEventArgs openUIFormFailureEventArgs = OpenUIFormFailureEventArgs.Create(openUIFormInfo.SerialId, assetAddress, openUIFormInfo.UIGroup.Name, openUIFormInfo.PauseCoveredUIForm, appendErrorMessage, openUIFormInfo.UserData);
                 m_OpenUIFormFailureEventHandler(this, openUIFormFailureEventArgs);
                 ReferencePool.Release(openUIFormFailureEventArgs);
                 return;

@@ -7,6 +7,7 @@
 
 using EasyGameFramework.Core;
 using EasyGameFramework.Core.Event;
+using EasyGameFramework.Core.Resource;
 
 namespace EasyGameFramework
 {
@@ -20,24 +21,14 @@ namespace EasyGameFramework
         /// </summary>
         public UnloadSceneFailureEventArgs()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取资源包名称。
+        /// 获取场景资源地址。
         /// </summary>
-        public string PackageName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取场景资源名称。
-        /// </summary>
-        public string SceneAssetName
+        public AssetAddress SceneAssetAddress
         {
             get;
             private set;
@@ -69,8 +60,7 @@ namespace EasyGameFramework
         public static UnloadSceneFailureEventArgs Create(EasyGameFramework.Core.Scene.UnloadSceneFailureEventArgs e)
         {
             UnloadSceneFailureEventArgs unloadSceneFailureEventArgs = ReferencePool.Acquire<UnloadSceneFailureEventArgs>();
-            unloadSceneFailureEventArgs.PackageName = e.PackageName;
-            unloadSceneFailureEventArgs.SceneAssetName = e.SceneAssetName;
+            unloadSceneFailureEventArgs.SceneAssetAddress = e.SceneAssetAddress;
             unloadSceneFailureEventArgs.ErrorMessage = e.ErrorMessage;
             unloadSceneFailureEventArgs.UserData = e.UserData;
             return unloadSceneFailureEventArgs;
@@ -81,8 +71,8 @@ namespace EasyGameFramework
         /// </summary>
         public override void Clear()
         {
-            PackageName = null;
-            SceneAssetName = null;
+            SceneAssetAddress = AssetAddress.Empty;
+            ErrorMessage = null;
             UserData = null;
         }
     }

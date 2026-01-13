@@ -27,12 +27,11 @@ namespace EasyGameFramework.Core.Resource
         /// <summary>
         /// 通过加载资源代理辅助器开始异步加载资源。
         /// </summary>
-        /// <param name="packageName">资源包名称。</param>
-        /// <param name="assetName">要加载的资源名称。</param>
+        /// <param name="assetAddress">资源地址。</param>
         /// <param name="assetType">要加载资源的类型。</param>
         /// <param name="isScene">要加载的资源是否是场景。</param>
         /// <param name="userData">用户自定义数据。</param>
-        void LoadAsset(string packageName, string assetName, Type assetType, bool isScene, object userData);
+        void LoadAsset(AssetAddress assetAddress, Type assetType, bool isScene, object userData);
 
         /// <summary>
         /// 重置加载资源代理辅助器。

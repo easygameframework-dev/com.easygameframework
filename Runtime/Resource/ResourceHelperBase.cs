@@ -15,14 +15,14 @@ namespace EasyGameFramework
     /// </summary>
     public abstract class ResourceHelperBase : MonoBehaviour, IResourceHelper
     {
-        public abstract bool CheckAssetNameValid(string packageName, string assetName);
+        public abstract bool CheckAssetAddressValid(AssetAddress assetAddress);
 
         public abstract bool IsNeedDownloadFromRemote(AssetInfo assetInfo);
 
-        public abstract AssetInfo GetAssetInfo(string packageName, string assetName);
+        public abstract AssetInfo GetAssetInfo(AssetAddress assetAddress);
         public abstract AssetInfo[] GetAssetInfos(string packageName, string[] tags);
 
-        public abstract void UnloadScene(string packageName, string sceneAssetName, AssetObject sceneAssetObject,
+        public abstract void UnloadScene(AssetAddress sceneAssetAddress, AssetObject sceneAssetObject,
             UnloadSceneCallbacks unloadSceneCallbacks, object userData);
 
         public abstract void UnloadAsset(AssetObject assetObject);

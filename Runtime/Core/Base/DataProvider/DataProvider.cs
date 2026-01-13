@@ -321,18 +321,19 @@ namespace EasyGameFramework.Core
             m_DataProviderHelper = dataProviderHelper;
         }
 
-        private void LoadAssetSuccessCallback(string packageName, string dataAssetName, object dataAsset, float duration, object userData)
+        private void LoadAssetSuccessCallback(AssetAddress assetAddress, object dataAsset, float duration, object userData)
         {
             try
             {
-                if (!m_DataProviderHelper.ReadData(m_Owner, dataAssetName, dataAsset, userData))
+                //TODO DataProviderHelper的api重构
+                if (!m_DataProviderHelper.ReadData(m_Owner, assetAddress.Location, dataAsset, userData))
                 {
-                    throw new GameFrameworkException(Utility.Text.Format("Load data failure in data provider helper, data asset name '{0}'.", dataAssetName));
+                    throw new GameFrameworkException(Utility.Text.Format("Load data failure in data provider helper, data asset name '{0}'.", assetAddress));
                 }
 
                 if (m_ReadDataSuccessEventHandler != null)
                 {
-                    ReadDataSuccessEventArgs loadDataSuccessEventArgs = ReadDataSuccessEventArgs.Create(dataAssetName, duration, userData);
+                    ReadDataSuccessEventArgs loadDataSuccessEventArgs = ReadDataSuccessEventArgs.Create(assetAddress, duration, userData);
                     m_ReadDataSuccessEventHandler(this, loadDataSuccessEventArgs);
                     ReferencePool.Release(loadDataSuccessEventArgs);
                 }
@@ -341,7 +342,7 @@ namespace EasyGameFramework.Core
             {
                 if (m_ReadDataFailureEventHandler != null)
                 {
-                    ReadDataFailureEventArgs loadDataFailureEventArgs = ReadDataFailureEventArgs.Create(dataAssetName, exception.ToString(), userData);
+                    ReadDataFailureEventArgs loadDataFailureEventArgs = ReadDataFailureEventArgs.Create(assetAddress, exception.ToString(), userData);
                     m_ReadDataFailureEventHandler(this, loadDataFailureEventArgs);
                     ReferencePool.Release(loadDataFailureEventArgs);
                     return;
@@ -355,12 +356,12 @@ namespace EasyGameFramework.Core
             }
         }
 
-        private void LoadAssetOrBinaryFailureCallback(string packageName, string dataAssetName, LoadResourceStatus status, string errorMessage, object userData)
+        private void LoadAssetOrBinaryFailureCallback(AssetAddress assetAddress, LoadResourceStatus status, string errorMessage, object userData)
         {
-            string appendErrorMessage = Utility.Text.Format("Load data failure, data asset name '{0}', status '{1}', error message '{2}'.", dataAssetName, status, errorMessage);
+            string appendErrorMessage = Utility.Text.Format("Load data failure, data asset name '{0}', status '{1}', error message '{2}'.", assetAddress, status, errorMessage);
             if (m_ReadDataFailureEventHandler != null)
             {
-                ReadDataFailureEventArgs loadDataFailureEventArgs = ReadDataFailureEventArgs.Create(dataAssetName, appendErrorMessage, userData);
+                ReadDataFailureEventArgs loadDataFailureEventArgs = ReadDataFailureEventArgs.Create(assetAddress, appendErrorMessage, userData);
                 m_ReadDataFailureEventHandler(this, loadDataFailureEventArgs);
                 ReferencePool.Release(loadDataFailureEventArgs);
                 return;

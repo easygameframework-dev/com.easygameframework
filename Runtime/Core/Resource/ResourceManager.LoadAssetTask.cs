@@ -14,7 +14,7 @@ namespace EasyGameFramework.Core.Resource
             {
                 if (m_LoadAssetCallbacks.LoadAssetSuccessCallback != null)
                 {
-                    m_LoadAssetCallbacks.LoadAssetSuccessCallback(PackageName, AssetName, assetObject.Asset, duration, UserData);
+                    m_LoadAssetCallbacks.LoadAssetSuccessCallback(Address, assetObject.Asset, duration, UserData);
                 }
             }
 
@@ -22,15 +22,15 @@ namespace EasyGameFramework.Core.Resource
             {
                 if (m_LoadAssetCallbacks.LoadAssetFailureCallback != null)
                 {
-                    m_LoadAssetCallbacks.LoadAssetFailureCallback(PackageName, AssetName, status, errorMessage, UserData);
+                    m_LoadAssetCallbacks.LoadAssetFailureCallback(Address, status, errorMessage, UserData);
                 }
             }
 
-            public static LoadAssetTask Create(string packageName, string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks,
+            public static LoadAssetTask Create(AssetAddress assetAddress, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks,
                 object userData)
             {
                 LoadAssetTask loadAssetTask = ReferencePool.Acquire<LoadAssetTask>();
-                loadAssetTask.Initialize(packageName, assetName, assetType, priority, userData);
+                loadAssetTask.Initialize(assetAddress, assetType, priority, userData);
                 loadAssetTask.m_LoadAssetCallbacks = loadAssetCallbacks;
                 return loadAssetTask;
             }

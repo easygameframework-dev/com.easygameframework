@@ -7,6 +7,7 @@
 
 using EasyGameFramework.Core;
 using EasyGameFramework.Core.Event;
+using EasyGameFramework.Core.Resource;
 
 namespace EasyGameFramework
 {
@@ -20,15 +21,15 @@ namespace EasyGameFramework
         /// </summary>
         public LoadConfigSuccessEventArgs()
         {
-            ConfigAssetName = null;
+            ConfigAssetAddress = AssetAddress.Empty;
             Duration = 0f;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取全局配置资源名称。
+        /// 获取全局配置资源地址。
         /// </summary>
-        public string ConfigAssetName
+        public AssetAddress ConfigAssetAddress
         {
             get;
             private set;
@@ -60,7 +61,7 @@ namespace EasyGameFramework
         public static LoadConfigSuccessEventArgs Create(ReadDataSuccessEventArgs e)
         {
             LoadConfigSuccessEventArgs loadConfigSuccessEventArgs = ReferencePool.Acquire<LoadConfigSuccessEventArgs>();
-            loadConfigSuccessEventArgs.ConfigAssetName = e.DataAssetName;
+            loadConfigSuccessEventArgs.ConfigAssetAddress = e.DataAssetAddress;
             loadConfigSuccessEventArgs.Duration = e.Duration;
             loadConfigSuccessEventArgs.UserData = e.UserData;
             return loadConfigSuccessEventArgs;
@@ -71,7 +72,7 @@ namespace EasyGameFramework
         /// </summary>
         public override void Clear()
         {
-            ConfigAssetName = null;
+            ConfigAssetAddress = AssetAddress.Empty;
             Duration = 0f;
             UserData = null;
         }

@@ -8,10 +8,10 @@
 
             public override bool IsScene => true;
 
-            public static LoadSceneTask Create(string packageName, string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData)
+            public static LoadSceneTask Create(AssetAddress sceneAssetAddress, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData)
             {
                 LoadSceneTask loadSceneTask = ReferencePool.Acquire<LoadSceneTask>();
-                loadSceneTask.Initialize(packageName, sceneAssetName, null, priority, userData);
+                loadSceneTask.Initialize(sceneAssetAddress, null, priority, userData);
                 loadSceneTask.m_LoadSceneCallbacks = loadSceneCallbacks;
                 return loadSceneTask;
             }
@@ -26,7 +26,7 @@
             {
                 if (m_LoadSceneCallbacks.LoadSceneSuccessCallback != null)
                 {
-                    m_LoadSceneCallbacks.LoadSceneSuccessCallback(PackageName, AssetName, assetObject.Asset, duration, UserData);
+                    m_LoadSceneCallbacks.LoadSceneSuccessCallback(Address, assetObject.Asset, duration, UserData);
                 }
             }
 
@@ -34,7 +34,7 @@
             {
                 if (m_LoadSceneCallbacks.LoadSceneFailureCallback != null)
                 {
-                    m_LoadSceneCallbacks.LoadSceneFailureCallback(PackageName, AssetName, status, errorMessage, UserData);
+                    m_LoadSceneCallbacks.LoadSceneFailureCallback(Address, status, errorMessage, UserData);
                 }
             }
         }

@@ -7,6 +7,7 @@
 
 using EasyGameFramework.Core;
 using EasyGameFramework.Core.Event;
+using EasyGameFramework.Core.Resource;
 
 namespace EasyGameFramework
 {
@@ -20,15 +21,15 @@ namespace EasyGameFramework
         /// </summary>
         public LoadDictionarySuccessEventArgs()
         {
-            DictionaryAssetName = null;
+            DictionaryAssetAddress = AssetAddress.Empty;
             Duration = 0f;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取字典资源名称。
+        /// 获取字典资源地址。
         /// </summary>
-        public string DictionaryAssetName
+        public AssetAddress DictionaryAssetAddress
         {
             get;
             private set;
@@ -60,7 +61,7 @@ namespace EasyGameFramework
         public static LoadDictionarySuccessEventArgs Create(ReadDataSuccessEventArgs e)
         {
             LoadDictionarySuccessEventArgs loadDictionarySuccessEventArgs = ReferencePool.Acquire<LoadDictionarySuccessEventArgs>();
-            loadDictionarySuccessEventArgs.DictionaryAssetName = e.DataAssetName;
+            loadDictionarySuccessEventArgs.DictionaryAssetAddress = e.DataAssetAddress;
             loadDictionarySuccessEventArgs.Duration = e.Duration;
             loadDictionarySuccessEventArgs.UserData = e.UserData;
             return loadDictionarySuccessEventArgs;
@@ -71,7 +72,7 @@ namespace EasyGameFramework
         /// </summary>
         public override void Clear()
         {
-            DictionaryAssetName = null;
+            DictionaryAssetAddress = AssetAddress.Empty;
             Duration = 0f;
             UserData = null;
         }

@@ -368,7 +368,7 @@ namespace EasyGameFramework
 
         private void OnReadDataFailure(object sender, ReadDataFailureEventArgs e)
         {
-            Log.Warning("Load config failure, asset name '{0}', error message '{1}'.", e.DataAssetName, e.ErrorMessage);
+            Log.Warning("Load config failure, asset name '{0}', error message '{1}'.", e.DataAssetAddress.Location, e.ErrorMessage);
             m_EventComponent.Fire(this, LoadConfigFailureEventArgs.Create(e));
         }
     }

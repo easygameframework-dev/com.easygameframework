@@ -176,7 +176,7 @@ namespace EasyGameFramework.Core.Resource
                 return HasAssetResult.NotExist;
             }
 
-            if (!m_ResourceHelper.CheckAssetNameValid(assetAddress.PackageName, assetAddress.Location))
+            if (!m_ResourceHelper.CheckAssetAddressValid(assetAddress))
             {
                 return HasAssetResult.NotExist;
             }
@@ -201,7 +201,7 @@ namespace EasyGameFramework.Core.Resource
                 return assetInfo;
             }
 
-            assetInfo = m_ResourceHelper.GetAssetInfo(assetAddress.PackageName, assetAddress.Location);
+            assetInfo = m_ResourceHelper.GetAssetInfo(assetAddress);
             m_AssetInfosCache[assetAddress] = assetInfo;
             return assetInfo;
         }
@@ -247,8 +247,7 @@ namespace EasyGameFramework.Core.Resource
             }
 
             m_ResourceLoader.LoadAsset(
-                assetAddress.PackageName,
-                assetAddress.Location,
+                assetAddress,
                 assetType,
                 customPriority ?? Constant.DefaultPriority,
                 loadAssetCallbacks,
@@ -286,8 +285,7 @@ namespace EasyGameFramework.Core.Resource
             }
 
             m_ResourceLoader.LoadScene(
-                sceneAssetAddress.PackageName,
-                sceneAssetAddress.Location,
+                sceneAssetAddress,
                 customPriority ?? Constant.DefaultPriority,
                 loadSceneCallbacks,
                 userData);
@@ -315,8 +313,7 @@ namespace EasyGameFramework.Core.Resource
             }
 
             m_ResourceLoader.UnloadScene(
-                sceneAssetAddress.PackageName,
-                sceneAssetAddress.Location,
+                sceneAssetAddress,
                 unloadSceneCallbacks,
                 userData);
         }

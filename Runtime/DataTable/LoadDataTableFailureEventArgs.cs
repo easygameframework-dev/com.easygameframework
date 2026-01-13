@@ -7,6 +7,7 @@
 
 using EasyGameFramework.Core;
 using EasyGameFramework.Core.Event;
+using EasyGameFramework.Core.Resource;
 
 namespace EasyGameFramework
 {
@@ -20,15 +21,15 @@ namespace EasyGameFramework
         /// </summary>
         public LoadDataTableFailureEventArgs()
         {
-            DataTableAssetName = null;
+            DataTableAssetAddress = AssetAddress.Empty;
             ErrorMessage = null;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取数据表资源名称。
+        /// 获取数据表资源地址。
         /// </summary>
-        public string DataTableAssetName
+        public AssetAddress DataTableAssetAddress
         {
             get;
             private set;
@@ -60,7 +61,7 @@ namespace EasyGameFramework
         public static LoadDataTableFailureEventArgs Create(ReadDataFailureEventArgs e)
         {
             LoadDataTableFailureEventArgs loadDataTableFailureEventArgs = ReferencePool.Acquire<LoadDataTableFailureEventArgs>();
-            loadDataTableFailureEventArgs.DataTableAssetName = e.DataAssetName;
+            loadDataTableFailureEventArgs.DataTableAssetAddress = e.DataAssetAddress;
             loadDataTableFailureEventArgs.ErrorMessage = e.ErrorMessage;
             loadDataTableFailureEventArgs.UserData = e.UserData;
             return loadDataTableFailureEventArgs;
@@ -71,7 +72,7 @@ namespace EasyGameFramework
         /// </summary>
         public override void Clear()
         {
-            DataTableAssetName = null;
+            DataTableAssetAddress = AssetAddress.Empty;
             ErrorMessage = null;
             UserData = null;
         }
