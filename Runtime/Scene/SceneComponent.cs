@@ -31,6 +31,26 @@ namespace EasyGameFramework
         private Scene _gameFrameworkScene = default(Scene);
 
         /// <summary>
+        /// 场景加载成功事件。
+        /// </summary>
+        public event EventHandler<LoadSceneSuccessEventArgs> LoadSceneSuccess;
+
+        /// <summary>
+        /// 场景加载失败事件。
+        /// </summary>
+        public event EventHandler<LoadSceneFailureEventArgs> LoadSceneFailure;
+
+        /// <summary>
+        /// 场景卸载成功事件。
+        /// </summary>
+        public event EventHandler<UnloadSceneSuccessEventArgs> UnloadSceneSuccess;
+
+        /// <summary>
+        /// 场景卸载失败事件。
+        /// </summary>
+        public event EventHandler<UnloadSceneFailureEventArgs> UnloadSceneFailure;
+
+        /// <summary>
         /// 获取当前场景主摄像机。
         /// </summary>
         public Camera MainCamera
@@ -361,20 +381,26 @@ namespace EasyGameFramework
                 _sceneOrder.Add(e.SceneAssetAddress, 0);
             }
 
-            _eventComponent.Fire(this, LoadSceneSuccessEventArgs.Create(e));
+            var args = LoadSceneSuccessEventArgs.Create(e);
+            _eventComponent.Fire(this, args);
+            LoadSceneSuccess?.Invoke(this, args);
             RefreshSceneOrder();
         }
 
         private void OnLoadSceneFailure(object sender, EasyGameFramework.Core.Scene.LoadSceneFailureEventArgs e)
         {
             Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", e.SceneAssetAddress, e.ErrorMessage);
-            _eventComponent.Fire(this, LoadSceneFailureEventArgs.Create(e));
+            var args = LoadSceneFailureEventArgs.Create(e);
+            _eventComponent.Fire(this, args);
+            LoadSceneFailure?.Invoke(this, args);
         }
 
         private void OnUnloadSceneSuccess(object sender, EasyGameFramework.Core.Scene.UnloadSceneSuccessEventArgs e)
         {
             _sceneAssetAddressToSceneName.Remove(e.SceneAssetAddress);
-            _eventComponent.Fire(this, UnloadSceneSuccessEventArgs.Create(e));
+            var args = UnloadSceneSuccessEventArgs.Create(e);
+            _eventComponent.Fire(this, args);
+            UnloadSceneSuccess?.Invoke(this, args);
             _sceneOrder.Remove(e.SceneAssetAddress);
             RefreshSceneOrder();
         }
@@ -382,7 +408,9 @@ namespace EasyGameFramework
         private void OnUnloadSceneFailure(object sender, EasyGameFramework.Core.Scene.UnloadSceneFailureEventArgs e)
         {
             Log.Warning("Unload scene failure, scene asset name '{0}'.", e.SceneAssetAddress);
-            _eventComponent.Fire(this, UnloadSceneFailureEventArgs.Create(e));
+            var args = UnloadSceneFailureEventArgs.Create(e);
+            _eventComponent.Fire(this, args);
+            UnloadSceneFailure?.Invoke(this, args);
         }
     }
 }
