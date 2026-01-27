@@ -14,11 +14,11 @@ namespace EasyGameFramework
     /// </summary>
     public abstract class UIFormLogic : MonoBehaviour
     {
-        private bool m_Available = false;
-        private bool m_Visible = false;
-        private UIForm m_UIForm = null;
-        private Transform m_CachedTransform = null;
-        private int m_OriginalLayer = 0;
+        private bool _available = false;
+        private bool _visible = false;
+        private UIForm _uIForm = null;
+        private Transform _cachedTransform = null;
+        private int _originalLayer = 0;
 
         /// <summary>
         /// 获取界面。
@@ -27,7 +27,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIForm;
+                return _uIForm;
             }
         }
 
@@ -53,7 +53,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_Available;
+                return _available;
             }
         }
 
@@ -64,22 +64,22 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_Available && m_Visible;
+                return _available && _visible;
             }
             set
             {
-                if (!m_Available)
+                if (!_available)
                 {
                     Log.Warning("UI form '{0}' is not available.", Name);
                     return;
                 }
 
-                if (m_Visible == value)
+                if (_visible == value)
                 {
                     return;
                 }
 
-                m_Visible = value;
+                _visible = value;
                 InternalSetVisible(value);
             }
         }
@@ -91,7 +91,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_CachedTransform;
+                return _cachedTransform;
             }
         }
 
@@ -101,13 +101,13 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         protected internal virtual void OnInit(object userData)
         {
-            if (m_CachedTransform == null)
+            if (_cachedTransform == null)
             {
-                m_CachedTransform = transform;
+                _cachedTransform = transform;
             }
 
-            m_UIForm = GetComponent<UIForm>();
-            m_OriginalLayer = gameObject.layer;
+            _uIForm = GetComponent<UIForm>();
+            _originalLayer = gameObject.layer;
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         protected internal virtual void OnOpen(object userData)
         {
-            m_Available = true;
+            _available = true;
             Visible = true;
         }
 
@@ -134,9 +134,9 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         protected internal virtual void OnClose(bool isShutdown, object userData)
         {
-            gameObject.SetLayerRecursively(m_OriginalLayer);
+            gameObject.SetLayerRecursively(_originalLayer);
             Visible = false;
-            m_Available = false;
+            _available = false;
         }
 
         /// <summary>

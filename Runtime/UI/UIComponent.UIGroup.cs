@@ -16,16 +16,16 @@ namespace EasyGameFramework
         private sealed class UIGroup
         {
             [SerializeField]
-            private string m_Name = null;
+            private string _name = null;
 
             [SerializeField]
-            private int m_Depth = 0;
+            private int _depth = 0;
 
             public string Name
             {
                 get
                 {
-                    return m_Name;
+                    return _name;
                 }
             }
 
@@ -33,7 +33,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_Depth;
+                    return _depth;
                 }
             }
         }

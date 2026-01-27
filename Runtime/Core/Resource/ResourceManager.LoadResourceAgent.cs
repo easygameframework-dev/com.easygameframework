@@ -7,28 +7,28 @@ namespace EasyGameFramework.Core.Resource
     {
         private class LoadResourceAgent : ITaskAgent<LoadResourceTaskBase>
         {
-            private LoadResourceTaskBase m_Task;
-            private readonly ILoadResourceAgentHelper m_LoadResourceAgentHelper;
-            private readonly ResourceLoader m_ResourceLoader;
-            private readonly string m_ReadOnlyPath;
-            private readonly string m_ReadWritePath;
+            private LoadResourceTaskBase _task;
+            private readonly ILoadResourceAgentHelper _loadResourceAgentHelper;
+            private readonly ResourceLoader _resourceLoader;
+            private readonly string _readOnlyPath;
+            private readonly string _readWritePath;
 
-            private static readonly HashSet<AssetAddress> s_LoadingAssetAddresses = new HashSet<AssetAddress>();
+            private static readonly HashSet<AssetAddress> s_loadingAssetAddresses = new HashSet<AssetAddress>();
 
             public LoadResourceAgent(ILoadResourceAgentHelper loadResourceAgentHelper,ResourceLoader resourceLoader, string readOnlyPath, string readWritePath)
             {
-                m_LoadResourceAgentHelper = loadResourceAgentHelper;
-                m_ResourceLoader = resourceLoader;
-                m_ReadOnlyPath = readOnlyPath;
-                m_ReadWritePath = readWritePath;
+                _loadResourceAgentHelper = loadResourceAgentHelper;
+                _resourceLoader = resourceLoader;
+                _readOnlyPath = readOnlyPath;
+                _readWritePath = readWritePath;
             }
 
-            public LoadResourceTaskBase Task => m_Task;
+            public LoadResourceTaskBase Task => _task;
 
             public void Initialize()
             {
-                m_LoadResourceAgentHelper.LoadComplete += OnLoadResourceAgentHelperLoadComplete;
-                m_LoadResourceAgentHelper.Error += OnLoadResourceAgentHelperError;
+                _loadResourceAgentHelper.LoadComplete += OnLoadResourceAgentHelperLoadComplete;
+                _loadResourceAgentHelper.Error += OnLoadResourceAgentHelperError;
             }
 
             public void Update(float elapseSeconds, float realElapseSeconds)
@@ -37,8 +37,8 @@ namespace EasyGameFramework.Core.Resource
 
             public void Shutdown()
             {
-                m_LoadResourceAgentHelper.LoadComplete -= OnLoadResourceAgentHelperLoadComplete;
-                m_LoadResourceAgentHelper.Error -= OnLoadResourceAgentHelperError;
+                _loadResourceAgentHelper.LoadComplete -= OnLoadResourceAgentHelperLoadComplete;
+                _loadResourceAgentHelper.Error -= OnLoadResourceAgentHelperError;
             }
 
             public StartTaskStatus Start(LoadResourceTaskBase task)
@@ -48,41 +48,41 @@ namespace EasyGameFramework.Core.Resource
                     throw new GameFrameworkException("Task is invalid.");
                 }
 
-                if (s_LoadingAssetAddresses.Contains(task.AssetAddress))
+                if (s_loadingAssetAddresses.Contains(task.AssetAddress))
                 {
-                    m_Task.StartTime = default(DateTime);
+                    _task.StartTime = default(DateTime);
                     return StartTaskStatus.HasToWait;
                 }
 
-                m_Task = task;
-                m_Task.StartTime = DateTime.UtcNow;
+                _task = task;
+                _task.StartTime = DateTime.UtcNow;
 
-                m_LoadResourceAgentHelper.LoadAsset(task.AssetAddress, task.AssetType, task.IsScene, task.UserData);
+                _loadResourceAgentHelper.LoadAsset(task.AssetAddress, task.AssetType, task.IsScene, task.UserData);
                 return StartTaskStatus.CanResume;
             }
 
             public void Reset()
             {
-                m_LoadResourceAgentHelper.Reset();
-                m_Task = null;
+                _loadResourceAgentHelper.Reset();
+                _task = null;
             }
 
             private void OnLoadResourceAgentHelperError(object sender, LoadResourceAgentHelperErrorEventArgs e)
             {
-                m_LoadResourceAgentHelper.Reset();
-                m_Task.OnLoadAssetFailure(this, e.Status, e.ErrorMessage);
-                s_LoadingAssetAddresses.Remove(m_Task.AssetAddress);
-                m_Task.Done = true;
+                _loadResourceAgentHelper.Reset();
+                _task.OnLoadAssetFailure(this, e.Status, e.ErrorMessage);
+                s_loadingAssetAddresses.Remove(_task.AssetAddress);
+                _task.Done = true;
             }
 
             private void OnLoadResourceAgentHelperLoadComplete(object sender, LoadResourceAgentHelperLoadCompleteEventArgs e)
             {
-                s_LoadingAssetAddresses.Remove(m_Task.AssetAddress);
-                m_LoadResourceAgentHelper.Reset();
+                s_loadingAssetAddresses.Remove(_task.AssetAddress);
+                _loadResourceAgentHelper.Reset();
 
-                m_ResourceLoader.RegisterAsset(m_Task.AssetAddress, e.AssetObject);
-                m_Task.OnLoadAssetSuccess(this, e.AssetObject, (float)(DateTime.UtcNow - m_Task.StartTime).TotalSeconds);
-                m_Task.Done = true;
+                _resourceLoader.RegisterAsset(_task.AssetAddress, e.AssetObject);
+                _task.OnLoadAssetSuccess(this, e.AssetObject, (float)(DateTime.UtcNow - _task.StartTime).TotalSeconds);
+                _task.Done = true;
             }
         }
     }

@@ -15,13 +15,13 @@ namespace EasyGameFramework.Editor
     [CustomEditor(typeof(EntityComponent))]
     internal sealed class EntityComponentInspector : GameFrameworkInspector
     {
-        // private SerializedProperty m_EnableShowEntityUpdateEvent = null;
-        // private SerializedProperty m_EnableShowEntityDependencyAssetEvent = null;
-        private SerializedProperty m_InstanceRoot = null;
-        private SerializedProperty m_EntityGroups = null;
+        // private SerializedProperty _enableShowEntityUpdateEvent = null;
+        // private SerializedProperty _enableShowEntityDependencyAssetEvent = null;
+        private SerializedProperty _instanceRoot = null;
+        private SerializedProperty _entityGroups = null;
 
-        private HelperInfo<EntityHelperBase> m_EntityHelperInfo = new HelperInfo<EntityHelperBase>("Entity");
-        private HelperInfo<EntityGroupHelperBase> m_EntityGroupHelperInfo = new HelperInfo<EntityGroupHelperBase>("EntityGroup");
+        private HelperInfo<EntityHelperBase> _entityHelperInfo = new HelperInfo<EntityHelperBase>("Entity");
+        private HelperInfo<EntityGroupHelperBase> _entityGroupHelperInfo = new HelperInfo<EntityGroupHelperBase>("EntityGroup");
 
         public override void OnInspectorGUI()
         {
@@ -33,12 +33,12 @@ namespace EasyGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                // EditorGUILayout.PropertyField(m_EnableShowEntityUpdateEvent);
-                // EditorGUILayout.PropertyField(m_EnableShowEntityDependencyAssetEvent);
-                EditorGUILayout.PropertyField(m_InstanceRoot);
-                m_EntityHelperInfo.Draw();
-                m_EntityGroupHelperInfo.Draw();
-                EditorGUILayout.PropertyField(m_EntityGroups, true);
+                // EditorGUILayout.PropertyField(_enableShowEntityUpdateEvent);
+                // EditorGUILayout.PropertyField(_enableShowEntityDependencyAssetEvent);
+                EditorGUILayout.PropertyField(_instanceRoot);
+                _entityHelperInfo.Draw();
+                _entityGroupHelperInfo.Draw();
+                EditorGUILayout.PropertyField(_entityGroups, true);
             }
             EditorGUI.EndDisabledGroup();
 
@@ -67,21 +67,21 @@ namespace EasyGameFramework.Editor
 
         private void OnEnable()
         {
-            // m_EnableShowEntityUpdateEvent = serializedObject.FindProperty("m_EnableShowEntityUpdateEvent");
-            // m_EnableShowEntityDependencyAssetEvent = serializedObject.FindProperty("m_EnableShowEntityDependencyAssetEvent");
-            m_InstanceRoot = serializedObject.FindProperty("m_InstanceRoot");
-            m_EntityGroups = serializedObject.FindProperty("m_EntityGroups");
+            // _enableShowEntityUpdateEvent = serializedObject.FindProperty("_enableShowEntityUpdateEvent");
+            // _enableShowEntityDependencyAssetEvent = serializedObject.FindProperty("_enableShowEntityDependencyAssetEvent");
+            _instanceRoot = serializedObject.FindProperty("_instanceRoot");
+            _entityGroups = serializedObject.FindProperty("_entityGroups");
 
-            m_EntityHelperInfo.Init(serializedObject);
-            m_EntityGroupHelperInfo.Init(serializedObject);
+            _entityHelperInfo.Init(serializedObject);
+            _entityGroupHelperInfo.Init(serializedObject);
 
             RefreshTypeNames();
         }
 
         private void RefreshTypeNames()
         {
-            m_EntityHelperInfo.Refresh();
-            m_EntityGroupHelperInfo.Refresh();
+            _entityHelperInfo.Refresh();
+            _entityGroupHelperInfo.Refresh();
             serializedObject.ApplyModifiedProperties();
         }
     }

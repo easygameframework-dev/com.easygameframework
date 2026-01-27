@@ -11,24 +11,24 @@ namespace EasyGameFramework.Core.Network
     {
         private sealed class HeartBeatState
         {
-            private float m_HeartBeatElapseSeconds;
-            private int m_MissHeartBeatCount;
+            private float _heartBeatElapseSeconds;
+            private int _missHeartBeatCount;
 
             public HeartBeatState()
             {
-                m_HeartBeatElapseSeconds = 0f;
-                m_MissHeartBeatCount = 0;
+                _heartBeatElapseSeconds = 0f;
+                _missHeartBeatCount = 0;
             }
 
             public float HeartBeatElapseSeconds
             {
                 get
                 {
-                    return m_HeartBeatElapseSeconds;
+                    return _heartBeatElapseSeconds;
                 }
                 set
                 {
-                    m_HeartBeatElapseSeconds = value;
+                    _heartBeatElapseSeconds = value;
                 }
             }
 
@@ -36,11 +36,11 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_MissHeartBeatCount;
+                    return _missHeartBeatCount;
                 }
                 set
                 {
-                    m_MissHeartBeatCount = value;
+                    _missHeartBeatCount = value;
                 }
             }
 
@@ -48,10 +48,10 @@ namespace EasyGameFramework.Core.Network
             {
                 if (resetHeartBeatElapseSeconds)
                 {
-                    m_HeartBeatElapseSeconds = 0f;
+                    _heartBeatElapseSeconds = 0f;
                 }
 
-                m_MissHeartBeatCount = 0;
+                _missHeartBeatCount = 0;
             }
         }
     }

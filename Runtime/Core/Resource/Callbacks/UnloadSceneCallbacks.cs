@@ -12,8 +12,8 @@ namespace EasyGameFramework.Core.Resource
     /// </summary>
     public sealed class UnloadSceneCallbacks
     {
-        private readonly UnloadSceneSuccessCallback m_UnloadSceneSuccessCallback;
-        private readonly UnloadSceneFailureCallback m_UnloadSceneFailureCallback;
+        private readonly UnloadSceneSuccessCallback _unloadSceneSuccessCallback;
+        private readonly UnloadSceneFailureCallback _unloadSceneFailureCallback;
 
         /// <summary>
         /// 初始化卸载场景回调函数集的新实例。
@@ -36,8 +36,8 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Unload scene success callback is invalid.");
             }
 
-            m_UnloadSceneSuccessCallback = unloadSceneSuccessCallback;
-            m_UnloadSceneFailureCallback = unloadSceneFailureCallback;
+            _unloadSceneSuccessCallback = unloadSceneSuccessCallback;
+            _unloadSceneFailureCallback = unloadSceneFailureCallback;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace EasyGameFramework.Core.Resource
         {
             get
             {
-                return m_UnloadSceneSuccessCallback;
+                return _unloadSceneSuccessCallback;
             }
         }
 
@@ -58,7 +58,7 @@ namespace EasyGameFramework.Core.Resource
         {
             get
             {
-                return m_UnloadSceneFailureCallback;
+                return _unloadSceneFailureCallback;
             }
         }
     }

@@ -21,50 +21,50 @@ namespace EasyGameFramework
     [AddComponentMenu("Game Framework/UI")]
     public sealed partial class UIComponent : GameFrameworkComponent
     {
-        private IUIManager m_UIManager = null;
-        private EventComponent m_EventComponent = null;
-        private IResourceManager m_ResourceManager = null;
+        private IUIManager _uIManager = null;
+        private EventComponent _eventComponent = null;
+        private IResourceManager _resourceManager = null;
 
-        private readonly List<IUIForm> m_InternalUIFormResults = new List<IUIForm>();
-
-        [SerializeField]
-        private bool m_EnableOpenUIFormSuccessEvent = true;
+        private readonly List<IUIForm> _internalUIFormResults = new List<IUIForm>();
 
         [SerializeField]
-        private bool m_EnableOpenUIFormFailureEvent = true;
+        private bool _enableOpenUIFormSuccessEvent = true;
 
         [SerializeField]
-        private bool m_EnableCloseUIFormCompleteEvent = true;
+        private bool _enableOpenUIFormFailureEvent = true;
 
         [SerializeField]
-        private float m_InstanceAutoReleaseInterval = 60f;
+        private bool _enableCloseUIFormCompleteEvent = true;
 
         [SerializeField]
-        private int m_InstanceCapacity = 16;
+        private float _instanceAutoReleaseInterval = 60f;
 
         [SerializeField]
-        private float m_InstanceExpireTime = 60f;
+        private int _instanceCapacity = 16;
 
         [SerializeField]
-        private int m_InstancePriority = 0;
+        private float _instanceExpireTime = 60f;
 
         [SerializeField]
-        private Transform m_InstanceRoot = null;
+        private int _instancePriority = 0;
 
         [SerializeField]
-        private string m_UIFormHelperTypeName = "UnityGameFramework.Runtime.DefaultUIFormHelper";
+        private Transform _instanceRoot = null;
 
         [SerializeField]
-        private UIFormHelperBase m_CustomUIFormHelper = null;
+        private string _uIFormHelperTypeName = "UnityGameFramework.Runtime.DefaultUIFormHelper";
 
         [SerializeField]
-        private string m_UIGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultUIGroupHelper";
+        private UIFormHelperBase _customUIFormHelper = null;
 
         [SerializeField]
-        private UIGroupHelperBase m_CustomUIGroupHelper = null;
+        private string _uIGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultUIGroupHelper";
 
         [SerializeField]
-        private UIGroup[] m_UIGroups = null;
+        private UIGroupHelperBase _customUIGroupHelper = null;
+
+        [SerializeField]
+        private UIGroup[] _uIGroups = null;
 
         /// <summary>
         /// 获取界面组数量。
@@ -73,7 +73,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIManager.UIGroupCount;
+                return _uIManager.UIGroupCount;
             }
         }
 
@@ -84,11 +84,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIManager.InstanceAutoReleaseInterval;
+                return _uIManager.InstanceAutoReleaseInterval;
             }
             set
             {
-                m_UIManager.InstanceAutoReleaseInterval = m_InstanceAutoReleaseInterval = value;
+                _uIManager.InstanceAutoReleaseInterval = _instanceAutoReleaseInterval = value;
             }
         }
 
@@ -99,11 +99,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIManager.InstanceCapacity;
+                return _uIManager.InstanceCapacity;
             }
             set
             {
-                m_UIManager.InstanceCapacity = m_InstanceCapacity = value;
+                _uIManager.InstanceCapacity = _instanceCapacity = value;
             }
         }
 
@@ -114,11 +114,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIManager.InstanceExpireTime;
+                return _uIManager.InstanceExpireTime;
             }
             set
             {
-                m_UIManager.InstanceExpireTime = m_InstanceExpireTime = value;
+                _uIManager.InstanceExpireTime = _instanceExpireTime = value;
             }
         }
 
@@ -129,11 +129,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIManager.InstancePriority;
+                return _uIManager.InstancePriority;
             }
             set
             {
-                m_UIManager.InstancePriority = m_InstancePriority = value;
+                _uIManager.InstancePriority = _instancePriority = value;
             }
         }
 
@@ -144,23 +144,23 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_UIManager = GameFrameworkEntry.GetModule<IUIManager>();
-            if (m_UIManager == null)
+            _uIManager = GameFrameworkEntry.GetModule<IUIManager>();
+            if (_uIManager == null)
             {
                 Log.Fatal("UI manager is invalid.");
                 return;
             }
 
-            if (m_EnableOpenUIFormSuccessEvent)
+            if (_enableOpenUIFormSuccessEvent)
             {
-                m_UIManager.OpenUIFormSuccess += OnOpenUIFormSuccess;
+                _uIManager.OpenUIFormSuccess += OnOpenUIFormSuccess;
             }
 
-            m_UIManager.OpenUIFormFailure += OnOpenUIFormFailure;
+            _uIManager.OpenUIFormFailure += OnOpenUIFormFailure;
 
-            if (m_EnableCloseUIFormCompleteEvent)
+            if (_enableCloseUIFormCompleteEvent)
             {
-                m_UIManager.CloseUIFormComplete += OnCloseUIFormComplete;
+                _uIManager.CloseUIFormComplete += OnCloseUIFormComplete;
             }
         }
 
@@ -173,23 +173,23 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            m_ResourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
-            m_UIManager.SetResourceManager(m_ResourceManager);
+            _resourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
+            _uIManager.SetResourceManager(_resourceManager);
 
-            m_UIManager.SetObjectPoolManager(GameFrameworkEntry.GetModule<IObjectPoolManager>());
-            m_UIManager.InstanceAutoReleaseInterval = m_InstanceAutoReleaseInterval;
-            m_UIManager.InstanceCapacity = m_InstanceCapacity;
-            m_UIManager.InstanceExpireTime = m_InstanceExpireTime;
-            m_UIManager.InstancePriority = m_InstancePriority;
+            _uIManager.SetObjectPoolManager(GameFrameworkEntry.GetModule<IObjectPoolManager>());
+            _uIManager.InstanceAutoReleaseInterval = _instanceAutoReleaseInterval;
+            _uIManager.InstanceCapacity = _instanceCapacity;
+            _uIManager.InstanceExpireTime = _instanceExpireTime;
+            _uIManager.InstancePriority = _instancePriority;
 
-            UIFormHelperBase uiFormHelper = Helper.CreateHelper(m_UIFormHelperTypeName, m_CustomUIFormHelper);
+            UIFormHelperBase uiFormHelper = Helper.CreateHelper(_uIFormHelperTypeName, _customUIFormHelper);
             if (uiFormHelper == null)
             {
                 Log.Error("Can not create UI form helper.");
@@ -201,22 +201,22 @@ namespace EasyGameFramework
             transform.SetParent(this.transform);
             transform.localScale = Vector3.one;
 
-            m_UIManager.SetUIFormHelper(uiFormHelper);
+            _uIManager.SetUIFormHelper(uiFormHelper);
 
-            if (m_InstanceRoot == null)
+            if (_instanceRoot == null)
             {
-                m_InstanceRoot = new GameObject("UI Form Instances").transform;
-                m_InstanceRoot.SetParent(gameObject.transform);
-                m_InstanceRoot.localScale = Vector3.one;
+                _instanceRoot = new GameObject("UI Form Instances").transform;
+                _instanceRoot.SetParent(gameObject.transform);
+                _instanceRoot.localScale = Vector3.one;
             }
 
-            m_InstanceRoot.gameObject.layer = LayerMask.NameToLayer("UI");
+            _instanceRoot.gameObject.layer = LayerMask.NameToLayer("UI");
 
-            for (int i = 0; i < m_UIGroups.Length; i++)
+            for (int i = 0; i < _uIGroups.Length; i++)
             {
-                if (!AddUIGroup(m_UIGroups[i].Name, m_UIGroups[i].Depth))
+                if (!AddUIGroup(_uIGroups[i].Name, _uIGroups[i].Depth))
                 {
-                    Log.Warning("Add UI group '{0}' failure.", m_UIGroups[i].Name);
+                    Log.Warning("Add UI group '{0}' failure.", _uIGroups[i].Name);
                     continue;
                 }
             }
@@ -229,7 +229,7 @@ namespace EasyGameFramework
         /// <returns>是否存在界面组。</returns>
         public bool HasUIGroup(string uiGroupName)
         {
-            return m_UIManager.HasUIGroup(uiGroupName);
+            return _uIManager.HasUIGroup(uiGroupName);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace EasyGameFramework
         /// <returns>要获取的界面组。</returns>
         public IUIGroup GetUIGroup(string uiGroupName)
         {
-            return m_UIManager.GetUIGroup(uiGroupName);
+            return _uIManager.GetUIGroup(uiGroupName);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace EasyGameFramework
         /// <returns>所有界面组。</returns>
         public IUIGroup[] GetAllUIGroups()
         {
-            return m_UIManager.GetAllUIGroups();
+            return _uIManager.GetAllUIGroups();
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace EasyGameFramework
         /// <param name="results">所有界面组。</param>
         public void GetAllUIGroups(List<IUIGroup> results)
         {
-            m_UIManager.GetAllUIGroups(results);
+            _uIManager.GetAllUIGroups(results);
         }
 
         /// <summary>
@@ -278,12 +278,12 @@ namespace EasyGameFramework
         /// <returns>是否增加界面组成功。</returns>
         public bool AddUIGroup(string uiGroupName, int depth)
         {
-            if (m_UIManager.HasUIGroup(uiGroupName))
+            if (_uIManager.HasUIGroup(uiGroupName))
             {
                 return false;
             }
 
-            UIGroupHelperBase uiGroupHelper = Helper.CreateHelper(m_UIGroupHelperTypeName, m_CustomUIGroupHelper, UIGroupCount);
+            UIGroupHelperBase uiGroupHelper = Helper.CreateHelper(_uIGroupHelperTypeName, _customUIGroupHelper, UIGroupCount);
             if (uiGroupHelper == null)
             {
                 Log.Error("Can not create UI group helper.");
@@ -293,14 +293,14 @@ namespace EasyGameFramework
             uiGroupHelper.name = Utility.Text.Format("UI Group - {0}", uiGroupName);
             uiGroupHelper.gameObject.layer = LayerMask.NameToLayer("UI");
             RectTransform rectTransform = uiGroupHelper.gameObject.GetOrAddComponent<RectTransform>();
-            rectTransform.SetParent(m_InstanceRoot);
+            rectTransform.SetParent(_instanceRoot);
             rectTransform.anchorMin = Vector2.zero;
             rectTransform.anchorMax = Vector2.one;
             rectTransform.anchoredPosition = Vector2.zero;
             rectTransform.sizeDelta = Vector2.zero;
             rectTransform.localScale = Vector3.one;
 
-            return m_UIManager.AddUIGroup(uiGroupName, depth, uiGroupHelper);
+            return _uIManager.AddUIGroup(uiGroupName, depth, uiGroupHelper);
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace EasyGameFramework
         /// <returns>是否存在界面。</returns>
         public bool HasUIForm(int serialId)
         {
-            return m_UIManager.HasUIForm(serialId);
+            return _uIManager.HasUIForm(serialId);
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace EasyGameFramework
         /// <returns>是否存在界面。</returns>
         public bool HasUIForm(AssetAddress uiFormAssetAddress)
         {
-            return m_UIManager.HasUIForm(uiFormAssetAddress);
+            return _uIManager.HasUIForm(uiFormAssetAddress);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace EasyGameFramework
         /// <returns>要获取的界面。</returns>
         public UIForm GetUIForm(int serialId)
         {
-            return (UIForm)m_UIManager.GetUIForm(serialId);
+            return (UIForm)_uIManager.GetUIForm(serialId);
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace EasyGameFramework
         /// <returns>要获取的界面。</returns>
         public UIForm GetUIForm(AssetAddress uiFormAssetAddress)
         {
-            return (UIForm)m_UIManager.GetUIForm(uiFormAssetAddress);
+            return (UIForm)_uIManager.GetUIForm(uiFormAssetAddress);
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace EasyGameFramework
         /// <returns>要获取的界面。</returns>
         public UIForm[] GetUIForms(AssetAddress uiFormAssetAddress)
         {
-            IUIForm[] uiForms = m_UIManager.GetUIForms(uiFormAssetAddress);
+            IUIForm[] uiForms = _uIManager.GetUIForms(uiFormAssetAddress);
             UIForm[] uiFormImpls = new UIForm[uiForms.Length];
             for (int i = 0; i < uiForms.Length; i++)
             {
@@ -374,8 +374,8 @@ namespace EasyGameFramework
             }
 
             results.Clear();
-            m_UIManager.GetUIForms(uiFormAssetAddress, m_InternalUIFormResults);
-            foreach (IUIForm uiForm in m_InternalUIFormResults)
+            _uIManager.GetUIForms(uiFormAssetAddress, _internalUIFormResults);
+            foreach (IUIForm uiForm in _internalUIFormResults)
             {
                 results.Add((UIForm)uiForm);
             }
@@ -387,7 +387,7 @@ namespace EasyGameFramework
         /// <returns>所有已加载的界面。</returns>
         public UIForm[] GetAllLoadedUIForms()
         {
-            IUIForm[] uiForms = m_UIManager.GetAllLoadedUIForms();
+            IUIForm[] uiForms = _uIManager.GetAllLoadedUIForms();
             UIForm[] uiFormImpls = new UIForm[uiForms.Length];
             for (int i = 0; i < uiForms.Length; i++)
             {
@@ -410,8 +410,8 @@ namespace EasyGameFramework
             }
 
             results.Clear();
-            m_UIManager.GetAllLoadedUIForms(m_InternalUIFormResults);
-            foreach (IUIForm uiForm in m_InternalUIFormResults)
+            _uIManager.GetAllLoadedUIForms(_internalUIFormResults);
+            foreach (IUIForm uiForm in _internalUIFormResults)
             {
                 results.Add((UIForm)uiForm);
             }
@@ -423,7 +423,7 @@ namespace EasyGameFramework
         /// <returns>所有正在加载界面的序列编号。</returns>
         public int[] GetAllLoadingUIFormSerialIds()
         {
-            return m_UIManager.GetAllLoadingUIFormSerialIds();
+            return _uIManager.GetAllLoadingUIFormSerialIds();
         }
 
         /// <summary>
@@ -432,7 +432,7 @@ namespace EasyGameFramework
         /// <param name="results">所有正在加载界面的序列编号。</param>
         public void GetAllLoadingUIFormSerialIds(List<int> results)
         {
-            m_UIManager.GetAllLoadingUIFormSerialIds(results);
+            _uIManager.GetAllLoadingUIFormSerialIds(results);
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace EasyGameFramework
         /// <returns>是否正在加载界面。</returns>
         public bool IsLoadingUIForm(int serialId)
         {
-            return m_UIManager.IsLoadingUIForm(serialId);
+            return _uIManager.IsLoadingUIForm(serialId);
         }
 
         /// <summary>
@@ -452,7 +452,7 @@ namespace EasyGameFramework
         /// <returns>是否正在加载界面。</returns>
         public bool IsLoadingUIForm(AssetAddress uiFormAssetAddress)
         {
-            return m_UIManager.IsLoadingUIForm(uiFormAssetAddress);
+            return _uIManager.IsLoadingUIForm(uiFormAssetAddress);
         }
 
         /// <summary>
@@ -462,7 +462,7 @@ namespace EasyGameFramework
         /// <returns>界面是否合法。</returns>
         public bool IsValidUIForm(UIForm uiForm)
         {
-            return m_UIManager.IsValidUIForm(uiForm);
+            return _uIManager.IsValidUIForm(uiForm);
         }
 
         /// <summary>
@@ -481,7 +481,7 @@ namespace EasyGameFramework
             bool pauseCoveredUIForm = false,
             object userData = null)
         {
-            return m_UIManager.OpenUIForm(uiFormAssetAddress, uiGroupName, customPriority, pauseCoveredUIForm, userData);
+            return _uIManager.OpenUIForm(uiFormAssetAddress, uiGroupName, customPriority, pauseCoveredUIForm, userData);
         }
 
         /// <summary>
@@ -491,7 +491,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void CloseUIForm(int serialId, object userData = null)
         {
-            m_UIManager.CloseUIForm(serialId, userData);
+            _uIManager.CloseUIForm(serialId, userData);
         }
 
         /// <summary>
@@ -501,7 +501,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void CloseUIForm(UIForm uiForm, object userData = null)
         {
-            m_UIManager.CloseUIForm(uiForm, userData);
+            _uIManager.CloseUIForm(uiForm, userData);
         }
 
         /// <summary>
@@ -509,7 +509,7 @@ namespace EasyGameFramework
         /// </summary>
         public void CloseAllLoadedUIForms()
         {
-            m_UIManager.CloseAllLoadedUIForms();
+            _uIManager.CloseAllLoadedUIForms();
         }
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void CloseAllLoadedUIForms(object userData)
         {
-            m_UIManager.CloseAllLoadedUIForms(userData);
+            _uIManager.CloseAllLoadedUIForms(userData);
         }
 
         /// <summary>
@@ -526,7 +526,7 @@ namespace EasyGameFramework
         /// </summary>
         public void CloseAllLoadingUIForms()
         {
-            m_UIManager.CloseAllLoadingUIForms();
+            _uIManager.CloseAllLoadingUIForms();
         }
 
         /// <summary>
@@ -535,7 +535,7 @@ namespace EasyGameFramework
         /// <param name="uiForm">要激活的界面。</param>
         public void RefocusUIForm(UIForm uiForm)
         {
-            m_UIManager.RefocusUIForm(uiForm);
+            _uIManager.RefocusUIForm(uiForm);
         }
 
         /// <summary>
@@ -545,7 +545,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void RefocusUIForm(UIForm uiForm, object userData)
         {
-            m_UIManager.RefocusUIForm(uiForm, userData);
+            _uIManager.RefocusUIForm(uiForm, userData);
         }
 
         /// <summary>
@@ -561,7 +561,7 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_UIManager.SetUIFormInstanceLocked(uiForm.gameObject, locked);
+            _uIManager.SetUIFormInstanceLocked(uiForm.gameObject, locked);
         }
 
         /// <summary>
@@ -577,26 +577,26 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_UIManager.SetUIFormInstancePriority(uiForm.gameObject, priority);
+            _uIManager.SetUIFormInstancePriority(uiForm.gameObject, priority);
         }
 
         private void OnOpenUIFormSuccess(object sender, EasyGameFramework.Core.UI.OpenUIFormSuccessEventArgs e)
         {
-            m_EventComponent.Fire(this, OpenUIFormSuccessEventArgs.Create(e));
+            _eventComponent.Fire(this, OpenUIFormSuccessEventArgs.Create(e));
         }
 
         private void OnOpenUIFormFailure(object sender, EasyGameFramework.Core.UI.OpenUIFormFailureEventArgs e)
         {
             Log.Warning("Open UI form failure, asset name '{0}', UI group name '{1}', pause covered UI form '{2}', error message '{3}'.", e.UIFormAssetAddress, e.UIGroupName, e.PauseCoveredUIForm, e.ErrorMessage);
-            if (m_EnableOpenUIFormFailureEvent)
+            if (_enableOpenUIFormFailureEvent)
             {
-                m_EventComponent.Fire(this, OpenUIFormFailureEventArgs.Create(e));
+                _eventComponent.Fire(this, OpenUIFormFailureEventArgs.Create(e));
             }
         }
 
         private void OnCloseUIFormComplete(object sender, EasyGameFramework.Core.UI.CloseUIFormCompleteEventArgs e)
         {
-            m_EventComponent.Fire(this, CloseUIFormCompleteEventArgs.Create(e));
+            _eventComponent.Fire(this, CloseUIFormCompleteEventArgs.Create(e));
         }
     }
 }

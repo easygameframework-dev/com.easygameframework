@@ -12,36 +12,36 @@ namespace EasyGameFramework.Core.Sound
     /// </summary>
     public sealed class PlaySoundParams : IReference
     {
-        private bool m_Referenced;
-        private float m_Time;
-        private bool m_MuteInSoundGroup;
-        private bool m_Loop;
-        private int m_Priority;
-        private float m_VolumeInSoundGroup;
-        private float m_FadeInSeconds;
-        private float m_Pitch;
-        private float m_PanStereo;
-        private float m_SpatialBlend;
-        private float m_MaxDistance;
-        private float m_DopplerLevel;
+        private bool _referenced;
+        private float _time;
+        private bool _muteInSoundGroup;
+        private bool _loop;
+        private int _priority;
+        private float _volumeInSoundGroup;
+        private float _fadeInSeconds;
+        private float _pitch;
+        private float _panStereo;
+        private float _spatialBlend;
+        private float _maxDistance;
+        private float _dopplerLevel;
 
         /// <summary>
         /// 初始化播放声音参数的新实例。
         /// </summary>
         public PlaySoundParams()
         {
-            m_Referenced = false;
-            m_Time = Constant.DefaultTime;
-            m_MuteInSoundGroup = Constant.DefaultMute;
-            m_Loop = Constant.DefaultLoop;
-            m_Priority = Constant.DefaultPriority;
-            m_VolumeInSoundGroup = Constant.DefaultVolume;
-            m_FadeInSeconds = Constant.DefaultFadeInSeconds;
-            m_Pitch = Constant.DefaultPitch;
-            m_PanStereo = Constant.DefaultPanStereo;
-            m_SpatialBlend = Constant.DefaultSpatialBlend;
-            m_MaxDistance = Constant.DefaultMaxDistance;
-            m_DopplerLevel = Constant.DefaultDopplerLevel;
+            _referenced = false;
+            _time = Constant.DefaultTime;
+            _muteInSoundGroup = Constant.DefaultMute;
+            _loop = Constant.DefaultLoop;
+            _priority = Constant.DefaultPriority;
+            _volumeInSoundGroup = Constant.DefaultVolume;
+            _fadeInSeconds = Constant.DefaultFadeInSeconds;
+            _pitch = Constant.DefaultPitch;
+            _panStereo = Constant.DefaultPanStereo;
+            _spatialBlend = Constant.DefaultSpatialBlend;
+            _maxDistance = Constant.DefaultMaxDistance;
+            _dopplerLevel = Constant.DefaultDopplerLevel;
         }
 
         /// <summary>
@@ -51,11 +51,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_Time;
+                return _time;
             }
             set
             {
-                m_Time = value;
+                _time = value;
             }
         }
 
@@ -66,11 +66,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_MuteInSoundGroup;
+                return _muteInSoundGroup;
             }
             set
             {
-                m_MuteInSoundGroup = value;
+                _muteInSoundGroup = value;
             }
         }
 
@@ -81,11 +81,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_Loop;
+                return _loop;
             }
             set
             {
-                m_Loop = value;
+                _loop = value;
             }
         }
 
@@ -96,11 +96,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_Priority;
+                return _priority;
             }
             set
             {
-                m_Priority = value;
+                _priority = value;
             }
         }
 
@@ -111,11 +111,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_VolumeInSoundGroup;
+                return _volumeInSoundGroup;
             }
             set
             {
-                m_VolumeInSoundGroup = value;
+                _volumeInSoundGroup = value;
             }
         }
 
@@ -126,11 +126,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_FadeInSeconds;
+                return _fadeInSeconds;
             }
             set
             {
-                m_FadeInSeconds = value;
+                _fadeInSeconds = value;
             }
         }
 
@@ -141,11 +141,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_Pitch;
+                return _pitch;
             }
             set
             {
-                m_Pitch = value;
+                _pitch = value;
             }
         }
 
@@ -156,11 +156,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_PanStereo;
+                return _panStereo;
             }
             set
             {
-                m_PanStereo = value;
+                _panStereo = value;
             }
         }
 
@@ -171,11 +171,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_SpatialBlend;
+                return _spatialBlend;
             }
             set
             {
-                m_SpatialBlend = value;
+                _spatialBlend = value;
             }
         }
 
@@ -186,11 +186,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_MaxDistance;
+                return _maxDistance;
             }
             set
             {
-                m_MaxDistance = value;
+                _maxDistance = value;
             }
         }
 
@@ -201,11 +201,11 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_DopplerLevel;
+                return _dopplerLevel;
             }
             set
             {
-                m_DopplerLevel = value;
+                _dopplerLevel = value;
             }
         }
 
@@ -213,7 +213,7 @@ namespace EasyGameFramework.Core.Sound
         {
             get
             {
-                return m_Referenced;
+                return _referenced;
             }
         }
 
@@ -224,7 +224,7 @@ namespace EasyGameFramework.Core.Sound
         public static PlaySoundParams Create()
         {
             PlaySoundParams playSoundParams = ReferencePool.Acquire<PlaySoundParams>();
-            playSoundParams.m_Referenced = true;
+            playSoundParams._referenced = true;
             return playSoundParams;
         }
 
@@ -233,17 +233,17 @@ namespace EasyGameFramework.Core.Sound
         /// </summary>
         public void Clear()
         {
-            m_Time = Constant.DefaultTime;
-            m_MuteInSoundGroup = Constant.DefaultMute;
-            m_Loop = Constant.DefaultLoop;
-            m_Priority = Constant.DefaultPriority;
-            m_VolumeInSoundGroup = Constant.DefaultVolume;
-            m_FadeInSeconds = Constant.DefaultFadeInSeconds;
-            m_Pitch = Constant.DefaultPitch;
-            m_PanStereo = Constant.DefaultPanStereo;
-            m_SpatialBlend = Constant.DefaultSpatialBlend;
-            m_MaxDistance = Constant.DefaultMaxDistance;
-            m_DopplerLevel = Constant.DefaultDopplerLevel;
+            _time = Constant.DefaultTime;
+            _muteInSoundGroup = Constant.DefaultMute;
+            _loop = Constant.DefaultLoop;
+            _priority = Constant.DefaultPriority;
+            _volumeInSoundGroup = Constant.DefaultVolume;
+            _fadeInSeconds = Constant.DefaultFadeInSeconds;
+            _pitch = Constant.DefaultPitch;
+            _panStereo = Constant.DefaultPanStereo;
+            _spatialBlend = Constant.DefaultSpatialBlend;
+            _maxDistance = Constant.DefaultMaxDistance;
+            _dopplerLevel = Constant.DefaultDopplerLevel;
         }
     }
 }

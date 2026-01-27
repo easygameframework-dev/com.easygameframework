@@ -16,8 +16,8 @@ namespace EasyGameFramework.Core
     [StructLayout(LayoutKind.Auto)]
     internal struct TypeNamePair : IEquatable<TypeNamePair>
     {
-        private readonly Type m_Type;
-        private readonly string m_Name;
+        private readonly Type _type;
+        private readonly string _name;
 
         /// <summary>
         /// 初始化类型和名称的组合值的新实例。
@@ -40,8 +40,8 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Type is invalid.");
             }
 
-            m_Type = type;
-            m_Name = name ?? string.Empty;
+            _type = type;
+            _name = name ?? string.Empty;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Type;
+                return _type;
             }
         }
 
@@ -62,7 +62,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Name;
+                return _name;
             }
         }
 
@@ -72,13 +72,13 @@ namespace EasyGameFramework.Core
         /// <returns>类型和名称的组合值字符串。</returns>
         public override string ToString()
         {
-            if (m_Type == null)
+            if (_type == null)
             {
                 throw new GameFrameworkException("Type is invalid.");
             }
 
-            string typeName = m_Type.FullName;
-            return string.IsNullOrEmpty(m_Name) ? typeName : Utility.Text.Format("{0}.{1}", typeName, m_Name);
+            string typeName = _type.FullName;
+            return string.IsNullOrEmpty(_name) ? typeName : Utility.Text.Format("{0}.{1}", typeName, _name);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace EasyGameFramework.Core
         /// <returns>对象的哈希值。</returns>
         public override int GetHashCode()
         {
-            return m_Type.GetHashCode() ^ m_Name.GetHashCode();
+            return _type.GetHashCode() ^ _name.GetHashCode();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace EasyGameFramework.Core
         /// <returns>被比较的对象是否与自身相等。</returns>
         public bool Equals(TypeNamePair value)
         {
-            return m_Type == value.m_Type && m_Name == value.m_Name;
+            return _type == value._type && _name == value._name;
         }
 
         /// <summary>

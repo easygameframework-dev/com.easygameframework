@@ -12,20 +12,20 @@ namespace EasyGameFramework
 {
     internal sealed class ShowEntityInfo : IReference
     {
-        private Type m_EntityLogicType;
-        private object m_UserData;
+        private Type _entityLogicType;
+        private object _userData;
 
         public ShowEntityInfo()
         {
-            m_EntityLogicType = null;
-            m_UserData = null;
+            _entityLogicType = null;
+            _userData = null;
         }
 
         public Type EntityLogicType
         {
             get
             {
-                return m_EntityLogicType;
+                return _entityLogicType;
             }
         }
 
@@ -33,22 +33,22 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UserData;
+                return _userData;
             }
         }
 
         public static ShowEntityInfo Create(Type entityLogicType, object userData)
         {
             ShowEntityInfo showEntityInfo = ReferencePool.Acquire<ShowEntityInfo>();
-            showEntityInfo.m_EntityLogicType = entityLogicType;
-            showEntityInfo.m_UserData = userData;
+            showEntityInfo._entityLogicType = entityLogicType;
+            showEntityInfo._userData = userData;
             return showEntityInfo;
         }
 
         public void Clear()
         {
-            m_EntityLogicType = null;
-            m_UserData = null;
+            _entityLogicType = null;
+            _userData = null;
         }
     }
 }

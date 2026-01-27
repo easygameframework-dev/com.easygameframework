@@ -16,13 +16,13 @@ namespace EasyGameFramework.Core.Entity
         /// </summary>
         private sealed class EntityInstanceObject : ObjectBase
         {
-            private object m_EntityAsset;
-            private IEntityHelper m_EntityHelper;
+            private object _entityAsset;
+            private IEntityHelper _entityHelper;
 
             public EntityInstanceObject()
             {
-                m_EntityAsset = null;
-                m_EntityHelper = null;
+                _entityAsset = null;
+                _entityHelper = null;
             }
 
             public static EntityInstanceObject Create(string name, object entityAsset, object entityInstance, IEntityHelper entityHelper)
@@ -39,21 +39,21 @@ namespace EasyGameFramework.Core.Entity
 
                 EntityInstanceObject entityInstanceObject = ReferencePool.Acquire<EntityInstanceObject>();
                 entityInstanceObject.Initialize(name, entityInstance);
-                entityInstanceObject.m_EntityAsset = entityAsset;
-                entityInstanceObject.m_EntityHelper = entityHelper;
+                entityInstanceObject._entityAsset = entityAsset;
+                entityInstanceObject._entityHelper = entityHelper;
                 return entityInstanceObject;
             }
 
             public override void Clear()
             {
                 base.Clear();
-                m_EntityAsset = null;
-                m_EntityHelper = null;
+                _entityAsset = null;
+                _entityHelper = null;
             }
 
             protected internal override void Release(bool isShutdown)
             {
-                m_EntityHelper.ReleaseEntity(m_EntityAsset, Target);
+                _entityHelper.ReleaseEntity(_entityAsset, Target);
             }
         }
     }

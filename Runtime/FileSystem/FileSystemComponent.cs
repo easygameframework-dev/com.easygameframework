@@ -19,13 +19,13 @@ namespace EasyGameFramework
     [AddComponentMenu("Game Framework/File System")]
     public sealed class FileSystemComponent : GameFrameworkComponent
     {
-        private IFileSystemManager m_FileSystemManager = null;
+        private IFileSystemManager _fileSystemManager = null;
 
         [SerializeField]
-        private string m_FileSystemHelperTypeName = "UnityGameFramework.Runtime.DefaultFileSystemHelper";
+        private string _fileSystemHelperTypeName = "UnityGameFramework.Runtime.DefaultFileSystemHelper";
 
         [SerializeField]
-        private FileSystemHelperBase m_CustomFileSystemHelper = null;
+        private FileSystemHelperBase _customFileSystemHelper = null;
 
         /// <summary>
         /// 获取文件系统数量。
@@ -34,7 +34,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_FileSystemManager.Count;
+                return _fileSystemManager.Count;
             }
         }
 
@@ -45,14 +45,14 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_FileSystemManager = GameFrameworkEntry.GetModule<IFileSystemManager>();
-            if (m_FileSystemManager == null)
+            _fileSystemManager = GameFrameworkEntry.GetModule<IFileSystemManager>();
+            if (_fileSystemManager == null)
             {
                 Log.Fatal("File system manager is invalid.");
                 return;
             }
 
-            FileSystemHelperBase fileSystemHelper = Helper.CreateHelper(m_FileSystemHelperTypeName, m_CustomFileSystemHelper);
+            FileSystemHelperBase fileSystemHelper = Helper.CreateHelper(_fileSystemHelperTypeName, _customFileSystemHelper);
             if (fileSystemHelper == null)
             {
                 Log.Error("Can not create fileSystem helper.");
@@ -64,7 +64,7 @@ namespace EasyGameFramework
             transform.SetParent(this.transform);
             transform.localScale = Vector3.one;
 
-            m_FileSystemManager.SetFileSystemHelper(fileSystemHelper);
+            _fileSystemManager.SetFileSystemHelper(fileSystemHelper);
         }
 
         private void Start()
@@ -78,7 +78,7 @@ namespace EasyGameFramework
         /// <returns>是否存在文件系统。</returns>
         public bool HasFileSystem(string fullPath)
         {
-            return m_FileSystemManager.HasFileSystem(fullPath);
+            return _fileSystemManager.HasFileSystem(fullPath);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace EasyGameFramework
         /// <returns>获取的文件系统。</returns>
         public IFileSystem GetFileSystem(string fullPath)
         {
-            return m_FileSystemManager.GetFileSystem(fullPath);
+            return _fileSystemManager.GetFileSystem(fullPath);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace EasyGameFramework
         /// <returns>创建的文件系统。</returns>
         public IFileSystem CreateFileSystem(string fullPath, FileSystemAccess access, int maxFileCount, int maxBlockCount)
         {
-            return m_FileSystemManager.CreateFileSystem(fullPath, access, maxFileCount, maxBlockCount);
+            return _fileSystemManager.CreateFileSystem(fullPath, access, maxFileCount, maxBlockCount);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace EasyGameFramework
         /// <returns>加载的文件系统。</returns>
         public IFileSystem LoadFileSystem(string fullPath, FileSystemAccess access)
         {
-            return m_FileSystemManager.LoadFileSystem(fullPath, access);
+            return _fileSystemManager.LoadFileSystem(fullPath, access);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace EasyGameFramework
         /// <param name="deletePhysicalFile">是否删除文件系统对应的物理文件。</param>
         public void DestroyFileSystem(IFileSystem fileSystem, bool deletePhysicalFile)
         {
-            m_FileSystemManager.DestroyFileSystem(fileSystem, deletePhysicalFile);
+            _fileSystemManager.DestroyFileSystem(fileSystem, deletePhysicalFile);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace EasyGameFramework
         /// <returns>获取的所有文件系统集合。</returns>
         public IFileSystem[] GetAllFileSystems()
         {
-            return m_FileSystemManager.GetAllFileSystems();
+            return _fileSystemManager.GetAllFileSystems();
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace EasyGameFramework
         /// <param name="results">获取的所有文件系统集合。</param>
         public void GetAllFileSystems(List<IFileSystem> results)
         {
-            m_FileSystemManager.GetAllFileSystems(results);
+            _fileSystemManager.GetAllFileSystems(results);
         }
     }
 }

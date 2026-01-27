@@ -17,7 +17,7 @@ namespace EasyGameFramework
     public abstract class SoundGroupHelperBase : MonoBehaviour, ISoundGroupHelper
     {
         [SerializeField]
-        private AudioMixerGroup m_AudioMixerGroup = null;
+        private AudioMixerGroup _audioMixerGroup = null;
 
         /// <summary>
         /// 获取或设置声音组辅助器所在的混音组。
@@ -26,11 +26,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioMixerGroup;
+                return _audioMixerGroup;
             }
             set
             {
-                m_AudioMixerGroup = value;
+                _audioMixerGroup = value;
             }
         }
     }

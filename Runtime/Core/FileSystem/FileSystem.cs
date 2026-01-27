@@ -21,26 +21,26 @@ namespace EasyGameFramework.Core.FileSystem
         private const int CachedBytesLength = 0x1000;
 
         private static readonly string[] EmptyStringArray = new string[] { };
-        private static readonly byte[] s_CachedBytes = new byte[CachedBytesLength];
+        private static readonly byte[] s_cachedBytes = new byte[CachedBytesLength];
 
         private static readonly int HeaderDataSize = Marshal.SizeOf(typeof(HeaderData));
         private static readonly int BlockDataSize = Marshal.SizeOf(typeof(BlockData));
         private static readonly int StringDataSize = Marshal.SizeOf(typeof(StringData));
 
-        private readonly string m_FullPath;
-        private readonly FileSystemAccess m_Access;
-        private readonly FileSystemStream m_Stream;
-        private readonly Dictionary<string, int> m_FileDatas;
-        private readonly List<BlockData> m_BlockDatas;
-        private readonly GameFrameworkMultiDictionary<int, int> m_FreeBlockIndexes;
-        private readonly SortedDictionary<int, StringData> m_StringDatas;
-        private readonly Queue<int> m_FreeStringIndexes;
-        private readonly Queue<StringData> m_FreeStringDatas;
+        private readonly string _fullPath;
+        private readonly FileSystemAccess _access;
+        private readonly FileSystemStream _stream;
+        private readonly Dictionary<string, int> _fileDatas;
+        private readonly List<BlockData> _blockDatas;
+        private readonly GameFrameworkMultiDictionary<int, int> _freeBlockIndexes;
+        private readonly SortedDictionary<int, StringData> _stringDatas;
+        private readonly Queue<int> _freeStringIndexes;
+        private readonly Queue<StringData> _freeStringDatas;
 
-        private HeaderData m_HeaderData;
-        private int m_BlockDataOffset;
-        private int m_StringDataOffset;
-        private int m_FileDataOffset;
+        private HeaderData _headerData;
+        private int _blockDataOffset;
+        private int _stringDataOffset;
+        private int _fileDataOffset;
 
         /// <summary>
         /// 初始化文件系统的新实例。
@@ -65,20 +65,20 @@ namespace EasyGameFramework.Core.FileSystem
                 throw new GameFrameworkException("Stream is invalid.");
             }
 
-            m_FullPath = fullPath;
-            m_Access = access;
-            m_Stream = stream;
-            m_FileDatas = new Dictionary<string, int>(StringComparer.Ordinal);
-            m_BlockDatas = new List<BlockData>();
-            m_FreeBlockIndexes = new GameFrameworkMultiDictionary<int, int>();
-            m_StringDatas = new SortedDictionary<int, StringData>();
-            m_FreeStringIndexes = new Queue<int>();
-            m_FreeStringDatas = new Queue<StringData>();
+            _fullPath = fullPath;
+            _access = access;
+            _stream = stream;
+            _fileDatas = new Dictionary<string, int>(StringComparer.Ordinal);
+            _blockDatas = new List<BlockData>();
+            _freeBlockIndexes = new GameFrameworkMultiDictionary<int, int>();
+            _stringDatas = new SortedDictionary<int, StringData>();
+            _freeStringIndexes = new Queue<int>();
+            _freeStringDatas = new Queue<StringData>();
 
-            m_HeaderData = default(HeaderData);
-            m_BlockDataOffset = 0;
-            m_StringDataOffset = 0;
-            m_FileDataOffset = 0;
+            _headerData = default(HeaderData);
+            _blockDataOffset = 0;
+            _stringDataOffset = 0;
+            _fileDataOffset = 0;
 
             Utility.Marshal.EnsureCachedHGlobalSize(CachedBytesLength);
         }
@@ -90,7 +90,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return m_FullPath;
+                return _fullPath;
             }
         }
 
@@ -101,7 +101,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return m_Access;
+                return _access;
             }
         }
 
@@ -112,7 +112,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return m_FileDatas.Count;
+                return _fileDatas.Count;
             }
         }
 
@@ -123,7 +123,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return m_HeaderData.MaxFileCount;
+                return _headerData.MaxFileCount;
             }
         }
 
@@ -154,14 +154,14 @@ namespace EasyGameFramework.Core.FileSystem
             }
 
             FileSystem fileSystem = new FileSystem(fullPath, access, stream);
-            fileSystem.m_HeaderData = new HeaderData(maxFileCount, maxBlockCount);
+            fileSystem._headerData = new HeaderData(maxFileCount, maxBlockCount);
             CalcOffsets(fileSystem);
-            Utility.Marshal.StructureToBytes(fileSystem.m_HeaderData, HeaderDataSize, s_CachedBytes);
+            Utility.Marshal.StructureToBytes(fileSystem._headerData, HeaderDataSize, s_cachedBytes);
 
             try
             {
-                stream.Write(s_CachedBytes, 0, HeaderDataSize);
-                stream.SetLength(fileSystem.m_FileDataOffset);
+                stream.Write(s_cachedBytes, 0, HeaderDataSize);
+                stream.SetLength(fileSystem._fileDataOffset);
                 return fileSystem;
             }
             catch
@@ -182,48 +182,48 @@ namespace EasyGameFramework.Core.FileSystem
         {
             FileSystem fileSystem = new FileSystem(fullPath, access, stream);
 
-            stream.Read(s_CachedBytes, 0, HeaderDataSize);
-            fileSystem.m_HeaderData = Utility.Marshal.BytesToStructure<HeaderData>(HeaderDataSize, s_CachedBytes);
-            if (!fileSystem.m_HeaderData.IsValid)
+            stream.Read(s_cachedBytes, 0, HeaderDataSize);
+            fileSystem._headerData = Utility.Marshal.BytesToStructure<HeaderData>(HeaderDataSize, s_cachedBytes);
+            if (!fileSystem._headerData.IsValid)
             {
                 return null;
             }
 
             CalcOffsets(fileSystem);
 
-            if (fileSystem.m_BlockDatas.Capacity < fileSystem.m_HeaderData.BlockCount)
+            if (fileSystem._blockDatas.Capacity < fileSystem._headerData.BlockCount)
             {
-                fileSystem.m_BlockDatas.Capacity = fileSystem.m_HeaderData.BlockCount;
+                fileSystem._blockDatas.Capacity = fileSystem._headerData.BlockCount;
             }
 
-            for (int i = 0; i < fileSystem.m_HeaderData.BlockCount; i++)
+            for (int i = 0; i < fileSystem._headerData.BlockCount; i++)
             {
-                stream.Read(s_CachedBytes, 0, BlockDataSize);
-                BlockData blockData = Utility.Marshal.BytesToStructure<BlockData>(BlockDataSize, s_CachedBytes);
-                fileSystem.m_BlockDatas.Add(blockData);
+                stream.Read(s_cachedBytes, 0, BlockDataSize);
+                BlockData blockData = Utility.Marshal.BytesToStructure<BlockData>(BlockDataSize, s_cachedBytes);
+                fileSystem._blockDatas.Add(blockData);
             }
 
-            for (int i = 0; i < fileSystem.m_BlockDatas.Count; i++)
+            for (int i = 0; i < fileSystem._blockDatas.Count; i++)
             {
-                BlockData blockData = fileSystem.m_BlockDatas[i];
+                BlockData blockData = fileSystem._blockDatas[i];
                 if (blockData.Using)
                 {
                     StringData stringData = fileSystem.ReadStringData(blockData.StringIndex);
-                    fileSystem.m_StringDatas.Add(blockData.StringIndex, stringData);
-                    fileSystem.m_FileDatas.Add(stringData.GetString(fileSystem.m_HeaderData.GetEncryptBytes()), i);
+                    fileSystem._stringDatas.Add(blockData.StringIndex, stringData);
+                    fileSystem._fileDatas.Add(stringData.GetString(fileSystem._headerData.GetEncryptBytes()), i);
                 }
                 else
                 {
-                    fileSystem.m_FreeBlockIndexes.Add(blockData.Length, i);
+                    fileSystem._freeBlockIndexes.Add(blockData.Length, i);
                 }
             }
 
             int index = 0;
-            foreach (KeyValuePair<int, StringData> i in fileSystem.m_StringDatas)
+            foreach (KeyValuePair<int, StringData> i in fileSystem._stringDatas)
             {
                 while (index < i.Key)
                 {
-                    fileSystem.m_FreeStringIndexes.Enqueue(index++);
+                    fileSystem._freeStringIndexes.Enqueue(index++);
                 }
 
                 index++;
@@ -237,18 +237,18 @@ namespace EasyGameFramework.Core.FileSystem
         /// </summary>
         public void Shutdown()
         {
-            m_Stream.Close();
+            _stream.Close();
 
-            m_FileDatas.Clear();
-            m_BlockDatas.Clear();
-            m_FreeBlockIndexes.Clear();
-            m_StringDatas.Clear();
-            m_FreeStringIndexes.Clear();
-            m_FreeStringDatas.Clear();
+            _fileDatas.Clear();
+            _blockDatas.Clear();
+            _freeBlockIndexes.Clear();
+            _stringDatas.Clear();
+            _freeStringIndexes.Clear();
+            _freeStringDatas.Clear();
 
-            m_BlockDataOffset = 0;
-            m_StringDataOffset = 0;
-            m_FileDataOffset = 0;
+            _blockDataOffset = 0;
+            _stringDataOffset = 0;
+            _fileDataOffset = 0;
         }
 
         /// <summary>
@@ -264,12 +264,12 @@ namespace EasyGameFramework.Core.FileSystem
             }
 
             int blockIndex = 0;
-            if (!m_FileDatas.TryGetValue(name, out blockIndex))
+            if (!_fileDatas.TryGetValue(name, out blockIndex))
             {
                 return default(FileInfo);
             }
 
-            BlockData blockData = m_BlockDatas[blockIndex];
+            BlockData blockData = _blockDatas[blockIndex];
             return new FileInfo(name, GetClusterOffset(blockData.ClusterIndex), blockData.Length);
         }
 
@@ -280,10 +280,10 @@ namespace EasyGameFramework.Core.FileSystem
         public FileInfo[] GetAllFileInfos()
         {
             int index = 0;
-            FileInfo[] results = new FileInfo[m_FileDatas.Count];
-            foreach (KeyValuePair<string, int> fileData in m_FileDatas)
+            FileInfo[] results = new FileInfo[_fileDatas.Count];
+            foreach (KeyValuePair<string, int> fileData in _fileDatas)
             {
-                BlockData blockData = m_BlockDatas[fileData.Value];
+                BlockData blockData = _blockDatas[fileData.Value];
                 results[index++] = new FileInfo(fileData.Key, GetClusterOffset(blockData.ClusterIndex), blockData.Length);
             }
 
@@ -302,9 +302,9 @@ namespace EasyGameFramework.Core.FileSystem
             }
 
             results.Clear();
-            foreach (KeyValuePair<string, int> fileData in m_FileDatas)
+            foreach (KeyValuePair<string, int> fileData in _fileDatas)
             {
-                BlockData blockData = m_BlockDatas[fileData.Value];
+                BlockData blockData = _blockDatas[fileData.Value];
                 results.Add(new FileInfo(fileData.Key, GetClusterOffset(blockData.ClusterIndex), blockData.Length));
             }
         }
@@ -321,7 +321,7 @@ namespace EasyGameFramework.Core.FileSystem
                 throw new GameFrameworkException("Name is invalid.");
             }
 
-            return m_FileDatas.ContainsKey(name);
+            return _fileDatas.ContainsKey(name);
         }
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>存储读取文件内容的二进制流。</returns>
         public byte[] ReadFile(string name)
         {
-            if (m_Access != FileSystemAccess.Read && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Read && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not readable.");
             }
@@ -351,8 +351,8 @@ namespace EasyGameFramework.Core.FileSystem
             byte[] buffer = new byte[length];
             if (length > 0)
             {
-                m_Stream.Position = fileInfo.Offset;
-                m_Stream.Read(buffer, 0, length);
+                _stream.Position = fileInfo.Offset;
+                _stream.Read(buffer, 0, length);
             }
 
             return buffer;
@@ -401,7 +401,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>实际读取了多少字节。</returns>
         public int ReadFile(string name, byte[] buffer, int startIndex, int length)
         {
-            if (m_Access != FileSystemAccess.Read && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Read && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not readable.");
             }
@@ -427,7 +427,7 @@ namespace EasyGameFramework.Core.FileSystem
                 return 0;
             }
 
-            m_Stream.Position = fileInfo.Offset;
+            _stream.Position = fileInfo.Offset;
             if (length > fileInfo.Length)
             {
                 length = fileInfo.Length;
@@ -435,7 +435,7 @@ namespace EasyGameFramework.Core.FileSystem
 
             if (length > 0)
             {
-                return m_Stream.Read(buffer, startIndex, length);
+                return _stream.Read(buffer, startIndex, length);
             }
 
             return 0;
@@ -449,7 +449,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>实际读取了多少字节。</returns>
         public int ReadFile(string name, Stream stream)
         {
-            if (m_Access != FileSystemAccess.Read && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Read && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not readable.");
             }
@@ -478,8 +478,8 @@ namespace EasyGameFramework.Core.FileSystem
             int length = fileInfo.Length;
             if (length > 0)
             {
-                m_Stream.Position = fileInfo.Offset;
-                return m_Stream.Read(stream, length);
+                _stream.Position = fileInfo.Offset;
+                return _stream.Read(stream, length);
             }
 
             return 0;
@@ -505,7 +505,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>存储读取文件片段内容的二进制流。</returns>
         public byte[] ReadFileSegment(string name, int offset, int length)
         {
-            if (m_Access != FileSystemAccess.Read && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Read && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not readable.");
             }
@@ -545,8 +545,8 @@ namespace EasyGameFramework.Core.FileSystem
             byte[] buffer = new byte[length];
             if (length > 0)
             {
-                m_Stream.Position = fileInfo.Offset + offset;
-                m_Stream.Read(buffer, 0, length);
+                _stream.Position = fileInfo.Offset + offset;
+                _stream.Read(buffer, 0, length);
             }
 
             return buffer;
@@ -634,7 +634,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>实际读取了多少字节。</returns>
         public int ReadFileSegment(string name, int offset, byte[] buffer, int startIndex, int length)
         {
-            if (m_Access != FileSystemAccess.Read && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Read && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not readable.");
             }
@@ -678,8 +678,8 @@ namespace EasyGameFramework.Core.FileSystem
 
             if (length > 0)
             {
-                m_Stream.Position = fileInfo.Offset + offset;
-                return m_Stream.Read(buffer, startIndex, length);
+                _stream.Position = fileInfo.Offset + offset;
+                return _stream.Read(buffer, startIndex, length);
             }
 
             return 0;
@@ -707,7 +707,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>实际读取了多少字节。</returns>
         public int ReadFileSegment(string name, int offset, Stream stream, int length)
         {
-            if (m_Access != FileSystemAccess.Read && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Read && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not readable.");
             }
@@ -756,8 +756,8 @@ namespace EasyGameFramework.Core.FileSystem
 
             if (length > 0)
             {
-                m_Stream.Position = fileInfo.Offset + offset;
-                return m_Stream.Read(stream, length);
+                _stream.Position = fileInfo.Offset + offset;
+                return _stream.Read(stream, length);
             }
 
             return 0;
@@ -806,7 +806,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>是否写入指定文件成功。</returns>
         public bool WriteFile(string name, byte[] buffer, int startIndex, int length)
         {
-            if (m_Access != FileSystemAccess.Write && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Write && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not writable.");
             }
@@ -833,12 +833,12 @@ namespace EasyGameFramework.Core.FileSystem
 
             bool hasFile = false;
             int oldBlockIndex = -1;
-            if (m_FileDatas.TryGetValue(name, out oldBlockIndex))
+            if (_fileDatas.TryGetValue(name, out oldBlockIndex))
             {
                 hasFile = true;
             }
 
-            if (!hasFile && m_FileDatas.Count >= m_HeaderData.MaxFileCount)
+            if (!hasFile && _fileDatas.Count >= _headerData.MaxFileCount)
             {
                 return false;
             }
@@ -851,12 +851,12 @@ namespace EasyGameFramework.Core.FileSystem
 
             if (length > 0)
             {
-                m_Stream.Position = GetClusterOffset(m_BlockDatas[blockIndex].ClusterIndex);
-                m_Stream.Write(buffer, startIndex, length);
+                _stream.Position = GetClusterOffset(_blockDatas[blockIndex].ClusterIndex);
+                _stream.Write(buffer, startIndex, length);
             }
 
             ProcessWriteFile(name, hasFile, oldBlockIndex, blockIndex, length);
-            m_Stream.Flush();
+            _stream.Flush();
             return true;
         }
 
@@ -868,7 +868,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>是否写入指定文件成功。</returns>
         public bool WriteFile(string name, Stream stream)
         {
-            if (m_Access != FileSystemAccess.Write && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Write && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not writable.");
             }
@@ -895,12 +895,12 @@ namespace EasyGameFramework.Core.FileSystem
 
             bool hasFile = false;
             int oldBlockIndex = -1;
-            if (m_FileDatas.TryGetValue(name, out oldBlockIndex))
+            if (_fileDatas.TryGetValue(name, out oldBlockIndex))
             {
                 hasFile = true;
             }
 
-            if (!hasFile && m_FileDatas.Count >= m_HeaderData.MaxFileCount)
+            if (!hasFile && _fileDatas.Count >= _headerData.MaxFileCount)
             {
                 return false;
             }
@@ -914,12 +914,12 @@ namespace EasyGameFramework.Core.FileSystem
 
             if (length > 0)
             {
-                m_Stream.Position = GetClusterOffset(m_BlockDatas[blockIndex].ClusterIndex);
-                m_Stream.Write(stream, length);
+                _stream.Position = GetClusterOffset(_blockDatas[blockIndex].ClusterIndex);
+                _stream.Write(stream, length);
             }
 
             ProcessWriteFile(name, hasFile, oldBlockIndex, blockIndex, length);
-            m_Stream.Flush();
+            _stream.Flush();
             return true;
         }
 
@@ -955,7 +955,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>是否将指定文件另存为物理文件成功。</returns>
         public bool SaveAsFile(string name, string filePath)
         {
-            if (m_Access != FileSystemAccess.Read && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Read && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not readable.");
             }
@@ -992,8 +992,8 @@ namespace EasyGameFramework.Core.FileSystem
                 int length = fileInfo.Length;
                 if (length > 0)
                 {
-                    m_Stream.Position = fileInfo.Offset;
-                    return m_Stream.Read(fileStream, length) == length;
+                    _stream.Position = fileInfo.Offset;
+                    return _stream.Read(fileStream, length) == length;
                 }
 
                 return true;
@@ -1008,7 +1008,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>是否重命名指定文件成功。</returns>
         public bool RenameFile(string oldName, string newName)
         {
-            if (m_Access != FileSystemAccess.Write && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Write && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not writable.");
             }
@@ -1033,24 +1033,24 @@ namespace EasyGameFramework.Core.FileSystem
                 return true;
             }
 
-            if (m_FileDatas.ContainsKey(newName))
+            if (_fileDatas.ContainsKey(newName))
             {
                 return false;
             }
 
             int blockIndex = 0;
-            if (!m_FileDatas.TryGetValue(oldName, out blockIndex))
+            if (!_fileDatas.TryGetValue(oldName, out blockIndex))
             {
                 return false;
             }
 
-            int stringIndex = m_BlockDatas[blockIndex].StringIndex;
-            StringData stringData = m_StringDatas[stringIndex].SetString(newName, m_HeaderData.GetEncryptBytes());
-            m_StringDatas[stringIndex] = stringData;
+            int stringIndex = _blockDatas[blockIndex].StringIndex;
+            StringData stringData = _stringDatas[stringIndex].SetString(newName, _headerData.GetEncryptBytes());
+            _stringDatas[stringIndex] = stringData;
             WriteStringData(stringIndex, stringData);
-            m_FileDatas.Add(newName, blockIndex);
-            m_FileDatas.Remove(oldName);
-            m_Stream.Flush();
+            _fileDatas.Add(newName, blockIndex);
+            _fileDatas.Remove(oldName);
+            _stream.Flush();
             return true;
         }
 
@@ -1061,7 +1061,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <returns>是否删除指定文件成功。</returns>
         public bool DeleteFile(string name)
         {
-            if (m_Access != FileSystemAccess.Write && m_Access != FileSystemAccess.ReadWrite)
+            if (_access != FileSystemAccess.Write && _access != FileSystemAccess.ReadWrite)
             {
                 throw new GameFrameworkException("File system is not writable.");
             }
@@ -1072,48 +1072,48 @@ namespace EasyGameFramework.Core.FileSystem
             }
 
             int blockIndex = 0;
-            if (!m_FileDatas.TryGetValue(name, out blockIndex))
+            if (!_fileDatas.TryGetValue(name, out blockIndex))
             {
                 return false;
             }
 
-            m_FileDatas.Remove(name);
+            _fileDatas.Remove(name);
 
-            BlockData blockData = m_BlockDatas[blockIndex];
+            BlockData blockData = _blockDatas[blockIndex];
             int stringIndex = blockData.StringIndex;
-            StringData stringData = m_StringDatas[stringIndex].Clear();
-            m_FreeStringIndexes.Enqueue(stringIndex);
-            m_FreeStringDatas.Enqueue(stringData);
-            m_StringDatas.Remove(stringIndex);
+            StringData stringData = _stringDatas[stringIndex].Clear();
+            _freeStringIndexes.Enqueue(stringIndex);
+            _freeStringDatas.Enqueue(stringData);
+            _stringDatas.Remove(stringIndex);
             WriteStringData(stringIndex, stringData);
 
             blockData = blockData.Free();
-            m_BlockDatas[blockIndex] = blockData;
+            _blockDatas[blockIndex] = blockData;
             if (!TryCombineFreeBlocks(blockIndex))
             {
-                m_FreeBlockIndexes.Add(blockData.Length, blockIndex);
+                _freeBlockIndexes.Add(blockData.Length, blockIndex);
                 WriteBlockData(blockIndex);
             }
 
-            m_Stream.Flush();
+            _stream.Flush();
             return true;
         }
 
         private void ProcessWriteFile(string name, bool hasFile, int oldBlockIndex, int blockIndex, int length)
         {
-            BlockData blockData = m_BlockDatas[blockIndex];
+            BlockData blockData = _blockDatas[blockIndex];
             if (hasFile)
             {
-                BlockData oldBlockData = m_BlockDatas[oldBlockIndex];
+                BlockData oldBlockData = _blockDatas[oldBlockIndex];
                 blockData = new BlockData(oldBlockData.StringIndex, blockData.ClusterIndex, length);
-                m_BlockDatas[blockIndex] = blockData;
+                _blockDatas[blockIndex] = blockData;
                 WriteBlockData(blockIndex);
 
                 oldBlockData = oldBlockData.Free();
-                m_BlockDatas[oldBlockIndex] = oldBlockData;
+                _blockDatas[oldBlockIndex] = oldBlockData;
                 if (!TryCombineFreeBlocks(oldBlockIndex))
                 {
-                    m_FreeBlockIndexes.Add(oldBlockData.Length, oldBlockIndex);
+                    _freeBlockIndexes.Add(oldBlockData.Length, oldBlockIndex);
                     WriteBlockData(oldBlockIndex);
                 }
             }
@@ -1121,23 +1121,23 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 int stringIndex = AllocString(name);
                 blockData = new BlockData(stringIndex, blockData.ClusterIndex, length);
-                m_BlockDatas[blockIndex] = blockData;
+                _blockDatas[blockIndex] = blockData;
                 WriteBlockData(blockIndex);
             }
 
             if (hasFile)
             {
-                m_FileDatas[name] = blockIndex;
+                _fileDatas[name] = blockIndex;
             }
             else
             {
-                m_FileDatas.Add(name, blockIndex);
+                _fileDatas.Add(name, blockIndex);
             }
         }
 
         private bool TryCombineFreeBlocks(int freeBlockIndex)
         {
-            BlockData freeBlockData = m_BlockDatas[freeBlockIndex];
+            BlockData freeBlockData = _blockDatas[freeBlockIndex];
             if (freeBlockData.Length <= 0)
             {
                 return false;
@@ -1146,7 +1146,7 @@ namespace EasyGameFramework.Core.FileSystem
             int previousFreeBlockIndex = -1;
             int nextFreeBlockIndex = -1;
             int nextBlockDataClusterIndex = freeBlockData.ClusterIndex + GetUpBoundClusterCount(freeBlockData.Length);
-            foreach (KeyValuePair<int, GameFrameworkLinkedListRange<int>> blockIndexes in m_FreeBlockIndexes)
+            foreach (KeyValuePair<int, GameFrameworkLinkedListRange<int>> blockIndexes in _freeBlockIndexes)
             {
                 if (blockIndexes.Key <= 0)
                 {
@@ -1156,7 +1156,7 @@ namespace EasyGameFramework.Core.FileSystem
                 int blockDataClusterCount = GetUpBoundClusterCount(blockIndexes.Key);
                 foreach (int blockIndex in blockIndexes.Value)
                 {
-                    BlockData blockData = m_BlockDatas[blockIndex];
+                    BlockData blockData = _blockDatas[blockIndex];
                     if (blockData.ClusterIndex + blockDataClusterCount == freeBlockData.ClusterIndex)
                     {
                         previousFreeBlockIndex = blockIndex;
@@ -1173,29 +1173,29 @@ namespace EasyGameFramework.Core.FileSystem
                 return false;
             }
 
-            m_FreeBlockIndexes.Remove(freeBlockData.Length, freeBlockIndex);
+            _freeBlockIndexes.Remove(freeBlockData.Length, freeBlockIndex);
             if (previousFreeBlockIndex >= 0)
             {
-                BlockData previousFreeBlockData = m_BlockDatas[previousFreeBlockIndex];
-                m_FreeBlockIndexes.Remove(previousFreeBlockData.Length, previousFreeBlockIndex);
+                BlockData previousFreeBlockData = _blockDatas[previousFreeBlockIndex];
+                _freeBlockIndexes.Remove(previousFreeBlockData.Length, previousFreeBlockIndex);
                 freeBlockData = new BlockData(previousFreeBlockData.ClusterIndex, previousFreeBlockData.Length + freeBlockData.Length);
-                m_BlockDatas[previousFreeBlockIndex] = BlockData.Empty;
-                m_FreeBlockIndexes.Add(0, previousFreeBlockIndex);
+                _blockDatas[previousFreeBlockIndex] = BlockData.Empty;
+                _freeBlockIndexes.Add(0, previousFreeBlockIndex);
                 WriteBlockData(previousFreeBlockIndex);
             }
 
             if (nextFreeBlockIndex >= 0)
             {
-                BlockData nextFreeBlockData = m_BlockDatas[nextFreeBlockIndex];
-                m_FreeBlockIndexes.Remove(nextFreeBlockData.Length, nextFreeBlockIndex);
+                BlockData nextFreeBlockData = _blockDatas[nextFreeBlockIndex];
+                _freeBlockIndexes.Remove(nextFreeBlockData.Length, nextFreeBlockIndex);
                 freeBlockData = new BlockData(freeBlockData.ClusterIndex, freeBlockData.Length + nextFreeBlockData.Length);
-                m_BlockDatas[nextFreeBlockIndex] = BlockData.Empty;
-                m_FreeBlockIndexes.Add(0, nextFreeBlockIndex);
+                _blockDatas[nextFreeBlockIndex] = BlockData.Empty;
+                _freeBlockIndexes.Add(0, nextFreeBlockIndex);
                 WriteBlockData(nextFreeBlockIndex);
             }
 
-            m_BlockDatas[freeBlockIndex] = freeBlockData;
-            m_FreeBlockIndexes.Add(freeBlockData.Length, freeBlockIndex);
+            _blockDatas[freeBlockIndex] = freeBlockData;
+            _freeBlockIndexes.Add(freeBlockData.Length, freeBlockIndex);
             WriteBlockData(freeBlockIndex);
             return true;
         }
@@ -1203,17 +1203,17 @@ namespace EasyGameFramework.Core.FileSystem
         private int GetEmptyBlockIndex()
         {
             GameFrameworkLinkedListRange<int> lengthRange = default(GameFrameworkLinkedListRange<int>);
-            if (m_FreeBlockIndexes.TryGetValue(0, out lengthRange))
+            if (_freeBlockIndexes.TryGetValue(0, out lengthRange))
             {
                 int blockIndex = lengthRange.First.Value;
-                m_FreeBlockIndexes.Remove(0, blockIndex);
+                _freeBlockIndexes.Remove(0, blockIndex);
                 return blockIndex;
             }
 
-            if (m_BlockDatas.Count < m_HeaderData.MaxBlockCount)
+            if (_blockDatas.Count < _headerData.MaxBlockCount)
             {
-                int blockIndex = m_BlockDatas.Count;
-                m_BlockDatas.Add(BlockData.Empty);
+                int blockIndex = _blockDatas.Count;
+                _blockDatas.Add(BlockData.Empty);
                 WriteHeaderData();
                 return blockIndex;
             }
@@ -1232,7 +1232,7 @@ namespace EasyGameFramework.Core.FileSystem
 
             int lengthFound = -1;
             GameFrameworkLinkedListRange<int> lengthRange = default(GameFrameworkLinkedListRange<int>);
-            foreach (KeyValuePair<int, GameFrameworkLinkedListRange<int>> i in m_FreeBlockIndexes)
+            foreach (KeyValuePair<int, GameFrameworkLinkedListRange<int>> i in _freeBlockIndexes)
             {
                 if (i.Key < length)
                 {
@@ -1250,23 +1250,23 @@ namespace EasyGameFramework.Core.FileSystem
 
             if (lengthFound >= 0)
             {
-                if (lengthFound > length && m_BlockDatas.Count >= m_HeaderData.MaxBlockCount)
+                if (lengthFound > length && _blockDatas.Count >= _headerData.MaxBlockCount)
                 {
                     return -1;
                 }
 
                 int blockIndex = lengthRange.First.Value;
-                m_FreeBlockIndexes.Remove(lengthFound, blockIndex);
+                _freeBlockIndexes.Remove(lengthFound, blockIndex);
                 if (lengthFound > length)
                 {
-                    BlockData blockData = m_BlockDatas[blockIndex];
-                    m_BlockDatas[blockIndex] = new BlockData(blockData.ClusterIndex, length);
+                    BlockData blockData = _blockDatas[blockIndex];
+                    _blockDatas[blockIndex] = new BlockData(blockData.ClusterIndex, length);
                     WriteBlockData(blockIndex);
 
                     int deltaLength = lengthFound - length;
                     int anotherBlockIndex = GetEmptyBlockIndex();
-                    m_BlockDatas[anotherBlockIndex] = new BlockData(blockData.ClusterIndex + GetUpBoundClusterCount(length), deltaLength);
-                    m_FreeBlockIndexes.Add(deltaLength, anotherBlockIndex);
+                    _blockDatas[anotherBlockIndex] = new BlockData(blockData.ClusterIndex + GetUpBoundClusterCount(length), deltaLength);
+                    _freeBlockIndexes.Add(deltaLength, anotherBlockIndex);
                     WriteBlockData(anotherBlockIndex);
                 }
 
@@ -1280,17 +1280,17 @@ namespace EasyGameFramework.Core.FileSystem
                     return -1;
                 }
 
-                long fileLength = m_Stream.Length;
+                long fileLength = _stream.Length;
                 try
                 {
-                    m_Stream.SetLength(fileLength + length);
+                    _stream.SetLength(fileLength + length);
                 }
                 catch
                 {
                     return -1;
                 }
 
-                m_BlockDatas[blockIndex] = new BlockData(GetUpBoundClusterCount(fileLength), length);
+                _blockDatas[blockIndex] = new BlockData(GetUpBoundClusterCount(fileLength), length);
                 WriteBlockData(blockIndex);
                 return blockIndex;
             }
@@ -1301,18 +1301,18 @@ namespace EasyGameFramework.Core.FileSystem
             int stringIndex = -1;
             StringData stringData = default(StringData);
 
-            if (m_FreeStringIndexes.Count > 0)
+            if (_freeStringIndexes.Count > 0)
             {
-                stringIndex = m_FreeStringIndexes.Dequeue();
+                stringIndex = _freeStringIndexes.Dequeue();
             }
             else
             {
-                stringIndex = m_StringDatas.Count;
+                stringIndex = _stringDatas.Count;
             }
 
-            if (m_FreeStringDatas.Count > 0)
+            if (_freeStringDatas.Count > 0)
             {
-                stringData = m_FreeStringDatas.Dequeue();
+                stringData = _freeStringDatas.Dequeue();
             }
             else
             {
@@ -1321,46 +1321,46 @@ namespace EasyGameFramework.Core.FileSystem
                 stringData = new StringData(0, bytes);
             }
 
-            stringData = stringData.SetString(value, m_HeaderData.GetEncryptBytes());
-            m_StringDatas.Add(stringIndex, stringData);
+            stringData = stringData.SetString(value, _headerData.GetEncryptBytes());
+            _stringDatas.Add(stringIndex, stringData);
             WriteStringData(stringIndex, stringData);
             return stringIndex;
         }
 
         private void WriteHeaderData()
         {
-            m_HeaderData = m_HeaderData.SetBlockCount(m_BlockDatas.Count);
-            Utility.Marshal.StructureToBytes(m_HeaderData, HeaderDataSize, s_CachedBytes);
-            m_Stream.Position = 0L;
-            m_Stream.Write(s_CachedBytes, 0, HeaderDataSize);
+            _headerData = _headerData.SetBlockCount(_blockDatas.Count);
+            Utility.Marshal.StructureToBytes(_headerData, HeaderDataSize, s_cachedBytes);
+            _stream.Position = 0L;
+            _stream.Write(s_cachedBytes, 0, HeaderDataSize);
         }
 
         private void WriteBlockData(int blockIndex)
         {
-            Utility.Marshal.StructureToBytes(m_BlockDatas[blockIndex], BlockDataSize, s_CachedBytes);
-            m_Stream.Position = m_BlockDataOffset + BlockDataSize * blockIndex;
-            m_Stream.Write(s_CachedBytes, 0, BlockDataSize);
+            Utility.Marshal.StructureToBytes(_blockDatas[blockIndex], BlockDataSize, s_cachedBytes);
+            _stream.Position = _blockDataOffset + BlockDataSize * blockIndex;
+            _stream.Write(s_cachedBytes, 0, BlockDataSize);
         }
 
         private StringData ReadStringData(int stringIndex)
         {
-            m_Stream.Position = m_StringDataOffset + StringDataSize * stringIndex;
-            m_Stream.Read(s_CachedBytes, 0, StringDataSize);
-            return Utility.Marshal.BytesToStructure<StringData>(StringDataSize, s_CachedBytes);
+            _stream.Position = _stringDataOffset + StringDataSize * stringIndex;
+            _stream.Read(s_cachedBytes, 0, StringDataSize);
+            return Utility.Marshal.BytesToStructure<StringData>(StringDataSize, s_cachedBytes);
         }
 
         private void WriteStringData(int stringIndex, StringData stringData)
         {
-            Utility.Marshal.StructureToBytes(stringData, StringDataSize, s_CachedBytes);
-            m_Stream.Position = m_StringDataOffset + StringDataSize * stringIndex;
-            m_Stream.Write(s_CachedBytes, 0, StringDataSize);
+            Utility.Marshal.StructureToBytes(stringData, StringDataSize, s_cachedBytes);
+            _stream.Position = _stringDataOffset + StringDataSize * stringIndex;
+            _stream.Write(s_cachedBytes, 0, StringDataSize);
         }
 
         private static void CalcOffsets(FileSystem fileSystem)
         {
-            fileSystem.m_BlockDataOffset = HeaderDataSize;
-            fileSystem.m_StringDataOffset = fileSystem.m_BlockDataOffset + BlockDataSize * fileSystem.m_HeaderData.MaxBlockCount;
-            fileSystem.m_FileDataOffset = (int)GetUpBoundClusterOffset(fileSystem.m_StringDataOffset + StringDataSize * fileSystem.m_HeaderData.MaxFileCount);
+            fileSystem._blockDataOffset = HeaderDataSize;
+            fileSystem._stringDataOffset = fileSystem._blockDataOffset + BlockDataSize * fileSystem._headerData.MaxBlockCount;
+            fileSystem._fileDataOffset = (int)GetUpBoundClusterOffset(fileSystem._stringDataOffset + StringDataSize * fileSystem._headerData.MaxFileCount);
         }
 
         private static long GetUpBoundClusterOffset(long offset)

@@ -23,15 +23,15 @@ namespace EasyGameFramework
     public partial class UnityWebRequestDownloadAgentHelper : DownloadAgentHelperBase, IDisposable
     {
         private const int CachedBytesLength = 0x1000;
-        private readonly byte[] m_CachedBytes = new byte[CachedBytesLength];
+        private readonly byte[] _cachedBytes = new byte[CachedBytesLength];
 
-        private UnityWebRequest m_UnityWebRequest = null;
-        private bool m_Disposed = false;
+        private UnityWebRequest _unityWebRequest = null;
+        private bool _disposed = false;
 
-        private EventHandler<DownloadAgentHelperUpdateBytesEventArgs> m_DownloadAgentHelperUpdateBytesEventHandler = null;
-        private EventHandler<DownloadAgentHelperUpdateLengthEventArgs> m_DownloadAgentHelperUpdateLengthEventHandler = null;
-        private EventHandler<DownloadAgentHelperCompleteEventArgs> m_DownloadAgentHelperCompleteEventHandler = null;
-        private EventHandler<DownloadAgentHelperErrorEventArgs> m_DownloadAgentHelperErrorEventHandler = null;
+        private EventHandler<DownloadAgentHelperUpdateBytesEventArgs> _downloadAgentHelperUpdateBytesEventHandler = null;
+        private EventHandler<DownloadAgentHelperUpdateLengthEventArgs> _downloadAgentHelperUpdateLengthEventHandler = null;
+        private EventHandler<DownloadAgentHelperCompleteEventArgs> _downloadAgentHelperCompleteEventHandler = null;
+        private EventHandler<DownloadAgentHelperErrorEventArgs> _downloadAgentHelperErrorEventHandler = null;
 
         /// <summary>
         /// 下载代理辅助器更新数据流事件。
@@ -40,11 +40,11 @@ namespace EasyGameFramework
         {
             add
             {
-                m_DownloadAgentHelperUpdateBytesEventHandler += value;
+                _downloadAgentHelperUpdateBytesEventHandler += value;
             }
             remove
             {
-                m_DownloadAgentHelperUpdateBytesEventHandler -= value;
+                _downloadAgentHelperUpdateBytesEventHandler -= value;
             }
         }
 
@@ -55,11 +55,11 @@ namespace EasyGameFramework
         {
             add
             {
-                m_DownloadAgentHelperUpdateLengthEventHandler += value;
+                _downloadAgentHelperUpdateLengthEventHandler += value;
             }
             remove
             {
-                m_DownloadAgentHelperUpdateLengthEventHandler -= value;
+                _downloadAgentHelperUpdateLengthEventHandler -= value;
             }
         }
 
@@ -70,11 +70,11 @@ namespace EasyGameFramework
         {
             add
             {
-                m_DownloadAgentHelperCompleteEventHandler += value;
+                _downloadAgentHelperCompleteEventHandler += value;
             }
             remove
             {
-                m_DownloadAgentHelperCompleteEventHandler -= value;
+                _downloadAgentHelperCompleteEventHandler -= value;
             }
         }
 
@@ -85,11 +85,11 @@ namespace EasyGameFramework
         {
             add
             {
-                m_DownloadAgentHelperErrorEventHandler += value;
+                _downloadAgentHelperErrorEventHandler += value;
             }
             remove
             {
-                m_DownloadAgentHelperErrorEventHandler -= value;
+                _downloadAgentHelperErrorEventHandler -= value;
             }
         }
 
@@ -100,18 +100,18 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public override void Download(string downloadUri, object userData)
         {
-            if (m_DownloadAgentHelperUpdateBytesEventHandler == null || m_DownloadAgentHelperUpdateLengthEventHandler == null || m_DownloadAgentHelperCompleteEventHandler == null || m_DownloadAgentHelperErrorEventHandler == null)
+            if (_downloadAgentHelperUpdateBytesEventHandler == null || _downloadAgentHelperUpdateLengthEventHandler == null || _downloadAgentHelperCompleteEventHandler == null || _downloadAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Download agent helper handler is invalid.");
                 return;
             }
 
-            m_UnityWebRequest = new UnityWebRequest(downloadUri);
-            m_UnityWebRequest.downloadHandler = new DownloadHandler(this);
+            _unityWebRequest = new UnityWebRequest(downloadUri);
+            _unityWebRequest.downloadHandler = new DownloadHandler(this);
 #if UNITY_2017_2_OR_NEWER
-            m_UnityWebRequest.SendWebRequest();
+            _unityWebRequest.SendWebRequest();
 #else
-            m_UnityWebRequest.Send();
+            _unityWebRequest.Send();
 #endif
         }
 
@@ -123,19 +123,19 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public override void Download(string downloadUri, long fromPosition, object userData)
         {
-            if (m_DownloadAgentHelperUpdateBytesEventHandler == null || m_DownloadAgentHelperUpdateLengthEventHandler == null || m_DownloadAgentHelperCompleteEventHandler == null || m_DownloadAgentHelperErrorEventHandler == null)
+            if (_downloadAgentHelperUpdateBytesEventHandler == null || _downloadAgentHelperUpdateLengthEventHandler == null || _downloadAgentHelperCompleteEventHandler == null || _downloadAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Download agent helper handler is invalid.");
                 return;
             }
 
-            m_UnityWebRequest = new UnityWebRequest(downloadUri);
-            m_UnityWebRequest.SetRequestHeader("Range", Utility.Text.Format("bytes={0}-", fromPosition));
-            m_UnityWebRequest.downloadHandler = new DownloadHandler(this);
+            _unityWebRequest = new UnityWebRequest(downloadUri);
+            _unityWebRequest.SetRequestHeader("Range", Utility.Text.Format("bytes={0}-", fromPosition));
+            _unityWebRequest.downloadHandler = new DownloadHandler(this);
 #if UNITY_2017_2_OR_NEWER
-            m_UnityWebRequest.SendWebRequest();
+            _unityWebRequest.SendWebRequest();
 #else
-            m_UnityWebRequest.Send();
+            _unityWebRequest.Send();
 #endif
         }
 
@@ -148,19 +148,19 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public override void Download(string downloadUri, long fromPosition, long toPosition, object userData)
         {
-            if (m_DownloadAgentHelperUpdateBytesEventHandler == null || m_DownloadAgentHelperUpdateLengthEventHandler == null || m_DownloadAgentHelperCompleteEventHandler == null || m_DownloadAgentHelperErrorEventHandler == null)
+            if (_downloadAgentHelperUpdateBytesEventHandler == null || _downloadAgentHelperUpdateLengthEventHandler == null || _downloadAgentHelperCompleteEventHandler == null || _downloadAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Download agent helper handler is invalid.");
                 return;
             }
 
-            m_UnityWebRequest = new UnityWebRequest(downloadUri);
-            m_UnityWebRequest.SetRequestHeader("Range", Utility.Text.Format("bytes={0}-{1}", fromPosition, toPosition));
-            m_UnityWebRequest.downloadHandler = new DownloadHandler(this);
+            _unityWebRequest = new UnityWebRequest(downloadUri);
+            _unityWebRequest.SetRequestHeader("Range", Utility.Text.Format("bytes={0}-{1}", fromPosition, toPosition));
+            _unityWebRequest.downloadHandler = new DownloadHandler(this);
 #if UNITY_2017_2_OR_NEWER
-            m_UnityWebRequest.SendWebRequest();
+            _unityWebRequest.SendWebRequest();
 #else
-            m_UnityWebRequest.Send();
+            _unityWebRequest.Send();
 #endif
         }
 
@@ -169,14 +169,14 @@ namespace EasyGameFramework
         /// </summary>
         public override void Reset()
         {
-            if (m_UnityWebRequest != null)
+            if (_unityWebRequest != null)
             {
-                m_UnityWebRequest.Abort();
-                m_UnityWebRequest.Dispose();
-                m_UnityWebRequest = null;
+                _unityWebRequest.Abort();
+                _unityWebRequest.Dispose();
+                _unityWebRequest = null;
             }
 
-            Array.Clear(m_CachedBytes, 0, CachedBytesLength);
+            Array.Clear(_cachedBytes, 0, CachedBytesLength);
         }
 
         /// <summary>
@@ -194,53 +194,53 @@ namespace EasyGameFramework
         /// <param name="disposing">释放资源标记。</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (m_Disposed)
+            if (_disposed)
             {
                 return;
             }
 
             if (disposing)
             {
-                if (m_UnityWebRequest != null)
+                if (_unityWebRequest != null)
                 {
-                    m_UnityWebRequest.Dispose();
-                    m_UnityWebRequest = null;
+                    _unityWebRequest.Dispose();
+                    _unityWebRequest = null;
                 }
             }
 
-            m_Disposed = true;
+            _disposed = true;
         }
 
         private void Update()
         {
-            if (m_UnityWebRequest == null)
+            if (_unityWebRequest == null)
             {
                 return;
             }
 
-            if (!m_UnityWebRequest.isDone)
+            if (!_unityWebRequest.isDone)
             {
                 return;
             }
 
             bool isError = false;
 #if UNITY_2020_2_OR_NEWER
-            isError = m_UnityWebRequest.result != UnityWebRequest.Result.Success;
+            isError = _unityWebRequest.result != UnityWebRequest.Result.Success;
 #elif UNITY_2017_1_OR_NEWER
-            isError = m_UnityWebRequest.isNetworkError || m_UnityWebRequest.isHttpError;
+            isError = _unityWebRequest.isNetworkError || _unityWebRequest.isHttpError;
 #else
-            isError = m_UnityWebRequest.isError;
+            isError = _unityWebRequest.isError;
 #endif
             if (isError)
             {
-                DownloadAgentHelperErrorEventArgs downloadAgentHelperErrorEventArgs = DownloadAgentHelperErrorEventArgs.Create(m_UnityWebRequest.responseCode == RangeNotSatisfiableErrorCode, m_UnityWebRequest.error);
-                m_DownloadAgentHelperErrorEventHandler(this, downloadAgentHelperErrorEventArgs);
+                DownloadAgentHelperErrorEventArgs downloadAgentHelperErrorEventArgs = DownloadAgentHelperErrorEventArgs.Create(_unityWebRequest.responseCode == RangeNotSatisfiableErrorCode, _unityWebRequest.error);
+                _downloadAgentHelperErrorEventHandler(this, downloadAgentHelperErrorEventArgs);
                 ReferencePool.Release(downloadAgentHelperErrorEventArgs);
             }
             else
             {
-                DownloadAgentHelperCompleteEventArgs downloadAgentHelperCompleteEventArgs = DownloadAgentHelperCompleteEventArgs.Create((long)m_UnityWebRequest.downloadedBytes);
-                m_DownloadAgentHelperCompleteEventHandler(this, downloadAgentHelperCompleteEventArgs);
+                DownloadAgentHelperCompleteEventArgs downloadAgentHelperCompleteEventArgs = DownloadAgentHelperCompleteEventArgs.Create((long)_unityWebRequest.downloadedBytes);
+                _downloadAgentHelperCompleteEventHandler(this, downloadAgentHelperCompleteEventArgs);
                 ReferencePool.Release(downloadAgentHelperCompleteEventArgs);
             }
         }

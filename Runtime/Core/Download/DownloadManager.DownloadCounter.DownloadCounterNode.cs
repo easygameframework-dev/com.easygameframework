@@ -13,20 +13,20 @@ namespace EasyGameFramework.Core.Download
         {
             private sealed class DownloadCounterNode : IReference
             {
-                private long m_DeltaLength;
-                private float m_ElapseSeconds;
+                private long _deltaLength;
+                private float _elapseSeconds;
 
                 public DownloadCounterNode()
                 {
-                    m_DeltaLength = 0L;
-                    m_ElapseSeconds = 0f;
+                    _deltaLength = 0L;
+                    _elapseSeconds = 0f;
                 }
 
                 public long DeltaLength
                 {
                     get
                     {
-                        return m_DeltaLength;
+                        return _deltaLength;
                     }
                 }
 
@@ -34,7 +34,7 @@ namespace EasyGameFramework.Core.Download
                 {
                     get
                     {
-                        return m_ElapseSeconds;
+                        return _elapseSeconds;
                     }
                 }
 
@@ -45,18 +45,18 @@ namespace EasyGameFramework.Core.Download
 
                 public void Update(float elapseSeconds, float realElapseSeconds)
                 {
-                    m_ElapseSeconds += realElapseSeconds;
+                    _elapseSeconds += realElapseSeconds;
                 }
 
                 public void AddDeltaLength(int deltaLength)
                 {
-                    m_DeltaLength += deltaLength;
+                    _deltaLength += deltaLength;
                 }
 
                 public void Clear()
                 {
-                    m_DeltaLength = 0L;
-                    m_ElapseSeconds = 0f;
+                    _deltaLength = 0L;
+                    _elapseSeconds = 0f;
                 }
             }
         }

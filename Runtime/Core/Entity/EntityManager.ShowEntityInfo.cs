@@ -11,24 +11,24 @@ namespace EasyGameFramework.Core.Entity
     {
         private sealed class ShowEntityInfo : IReference
         {
-            private int m_SerialId;
-            private int m_EntityId;
-            private EntityGroup m_EntityGroup;
-            private object m_UserData;
+            private int _serialId;
+            private int _entityId;
+            private EntityGroup _entityGroup;
+            private object _userData;
 
             public ShowEntityInfo()
             {
-                m_SerialId = 0;
-                m_EntityId = 0;
-                m_EntityGroup = null;
-                m_UserData = null;
+                _serialId = 0;
+                _entityId = 0;
+                _entityGroup = null;
+                _userData = null;
             }
 
             public int SerialId
             {
                 get
                 {
-                    return m_SerialId;
+                    return _serialId;
                 }
             }
 
@@ -36,7 +36,7 @@ namespace EasyGameFramework.Core.Entity
             {
                 get
                 {
-                    return m_EntityId;
+                    return _entityId;
                 }
             }
 
@@ -44,7 +44,7 @@ namespace EasyGameFramework.Core.Entity
             {
                 get
                 {
-                    return m_EntityGroup;
+                    return _entityGroup;
                 }
             }
 
@@ -52,26 +52,26 @@ namespace EasyGameFramework.Core.Entity
             {
                 get
                 {
-                    return m_UserData;
+                    return _userData;
                 }
             }
 
             public static ShowEntityInfo Create(int serialId, int entityId, EntityGroup entityGroup, object userData)
             {
                 ShowEntityInfo showEntityInfo = ReferencePool.Acquire<ShowEntityInfo>();
-                showEntityInfo.m_SerialId = serialId;
-                showEntityInfo.m_EntityId = entityId;
-                showEntityInfo.m_EntityGroup = entityGroup;
-                showEntityInfo.m_UserData = userData;
+                showEntityInfo._serialId = serialId;
+                showEntityInfo._entityId = entityId;
+                showEntityInfo._entityGroup = entityGroup;
+                showEntityInfo._userData = userData;
                 return showEntityInfo;
             }
 
             public void Clear()
             {
-                m_SerialId = 0;
-                m_EntityId = 0;
-                m_EntityGroup = null;
-                m_UserData = null;
+                _serialId = 0;
+                _entityId = 0;
+                _entityGroup = null;
+                _userData = null;
             }
         }
     }

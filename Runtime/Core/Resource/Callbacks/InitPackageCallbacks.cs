@@ -19,8 +19,8 @@
     /// </summary>
     public class InitPackageCallbacks
     {
-        private readonly InitPackageSuccessCallback m_InitPackageSuccess;
-        private readonly InitPackageFailureCallback m_InitPackageFailure;
+        private readonly InitPackageSuccessCallback _initPackageSuccess;
+        private readonly InitPackageFailureCallback _initPackageFailure;
 
         /// <summary>
         /// 初始化资源包回调函数集的新实例。
@@ -30,19 +30,19 @@
         public InitPackageCallbacks(InitPackageSuccessCallback initPackageSuccessCallback,
             InitPackageFailureCallback initPackageFailureCallback)
         {
-            m_InitPackageSuccess = initPackageSuccessCallback;
-            m_InitPackageFailure = initPackageFailureCallback;
+            _initPackageSuccess = initPackageSuccessCallback;
+            _initPackageFailure = initPackageFailureCallback;
         }
 
         /// <summary>
         /// 获取初始化资源包成功时的回调函数。
         /// </summary>
-        public InitPackageSuccessCallback InitPackageSuccess => m_InitPackageSuccess;
+        public InitPackageSuccessCallback InitPackageSuccess => _initPackageSuccess;
 
         /// <summary>
         /// 获取初始化资源包失败时的回调函数。
         /// </summary>
-        public InitPackageFailureCallback InitPackageFailure => m_InitPackageFailure;
+        public InitPackageFailureCallback InitPackageFailure => _initPackageFailure;
     }
 
 }

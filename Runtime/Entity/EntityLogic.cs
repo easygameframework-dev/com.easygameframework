@@ -14,12 +14,12 @@ namespace EasyGameFramework
     /// </summary>
     public abstract class EntityLogic : MonoBehaviour
     {
-        private bool m_Available = false;
-        private bool m_Visible = false;
-        private Entity m_Entity = null;
-        private Transform m_CachedTransform = null;
-        private int m_OriginalLayer = 0;
-        private Transform m_OriginalTransform = null;
+        private bool _available = false;
+        private bool _visible = false;
+        private Entity _entity = null;
+        private Transform _cachedTransform = null;
+        private int _originalLayer = 0;
+        private Transform _originalTransform = null;
 
         /// <summary>
         /// 获取实体。
@@ -28,7 +28,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_Entity;
+                return _entity;
             }
         }
 
@@ -54,7 +54,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_Available;
+                return _available;
             }
         }
 
@@ -65,22 +65,22 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_Available && m_Visible;
+                return _available && _visible;
             }
             set
             {
-                if (!m_Available)
+                if (!_available)
                 {
                     Log.Warning("Entity '{0}' is not available.", Name);
                     return;
                 }
 
-                if (m_Visible == value)
+                if (_visible == value)
                 {
                     return;
                 }
 
-                m_Visible = value;
+                _visible = value;
                 InternalSetVisible(value);
             }
         }
@@ -92,7 +92,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_CachedTransform;
+                return _cachedTransform;
             }
         }
 
@@ -102,14 +102,14 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         protected internal virtual void OnInit(object userData)
         {
-            if (m_CachedTransform == null)
+            if (_cachedTransform == null)
             {
-                m_CachedTransform = transform;
+                _cachedTransform = transform;
             }
 
-            m_Entity = GetComponent<Entity>();
-            m_OriginalLayer = gameObject.layer;
-            m_OriginalTransform = CachedTransform.parent;
+            _entity = GetComponent<Entity>();
+            _originalLayer = gameObject.layer;
+            _originalTransform = CachedTransform.parent;
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         protected internal virtual void OnShow(object userData)
         {
-            m_Available = true;
+            _available = true;
             Visible = true;
         }
 
@@ -136,9 +136,9 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         protected internal virtual void OnHide(bool isShutdown, object userData)
         {
-            gameObject.SetLayerRecursively(m_OriginalLayer);
+            gameObject.SetLayerRecursively(_originalLayer);
             Visible = false;
-            m_Available = false;
+            _available = false;
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         protected internal virtual void OnDetachFrom(EntityLogic parentEntity, object userData)
         {
-            CachedTransform.SetParent(m_OriginalTransform);
+            CachedTransform.SetParent(_originalTransform);
         }
 
         /// <summary>

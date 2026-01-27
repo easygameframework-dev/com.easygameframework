@@ -15,22 +15,22 @@ namespace EasyGameFramework.Core.Network
         private sealed class ReceiveState : IDisposable
         {
             private const int DefaultBufferLength = 1024 * 64;
-            private MemoryStream m_Stream;
-            private IPacketHeader m_PacketHeader;
-            private bool m_Disposed;
+            private MemoryStream _stream;
+            private IPacketHeader _packetHeader;
+            private bool _disposed;
 
             public ReceiveState()
             {
-                m_Stream = new MemoryStream(DefaultBufferLength);
-                m_PacketHeader = null;
-                m_Disposed = false;
+                _stream = new MemoryStream(DefaultBufferLength);
+                _packetHeader = null;
+                _disposed = false;
             }
 
             public MemoryStream Stream
             {
                 get
                 {
-                    return m_Stream;
+                    return _stream;
                 }
             }
 
@@ -38,7 +38,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_PacketHeader;
+                    return _packetHeader;
                 }
             }
 
@@ -65,21 +65,21 @@ namespace EasyGameFramework.Core.Network
 
             private void Dispose(bool disposing)
             {
-                if (m_Disposed)
+                if (_disposed)
                 {
                     return;
                 }
 
                 if (disposing)
                 {
-                    if (m_Stream != null)
+                    if (_stream != null)
                     {
-                        m_Stream.Dispose();
-                        m_Stream = null;
+                        _stream.Dispose();
+                        _stream = null;
                     }
                 }
 
-                m_Disposed = true;
+                _disposed = true;
             }
 
             private void Reset(int targetLength, IPacketHeader packetHeader)
@@ -89,9 +89,9 @@ namespace EasyGameFramework.Core.Network
                     throw new GameFrameworkException("Target length is invalid.");
                 }
 
-                m_Stream.Position = 0L;
-                m_Stream.SetLength(targetLength);
-                m_PacketHeader = packetHeader;
+                _stream.Position = 0L;
+                _stream.SetLength(targetLength);
+                _packetHeader = packetHeader;
             }
         }
     }

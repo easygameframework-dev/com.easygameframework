@@ -17,23 +17,23 @@ namespace EasyGameFramework.Core
         /// </summary>
         public const int DefaultPriority = 0;
 
-        private int m_SerialId;
-        private string m_Tag;
-        private int m_Priority;
-        private object m_UserData;
+        private int _serialId;
+        private string _tag;
+        private int _priority;
+        private object _userData;
 
-        private bool m_Done;
+        private bool _done;
 
         /// <summary>
         /// 初始化任务基类的新实例。
         /// </summary>
         public TaskBase()
         {
-            m_SerialId = 0;
-            m_Tag = null;
-            m_Priority = DefaultPriority;
-            m_Done = false;
-            m_UserData = null;
+            _serialId = 0;
+            _tag = null;
+            _priority = DefaultPriority;
+            _done = false;
+            _userData = null;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_SerialId;
+                return _serialId;
             }
         }
 
@@ -54,7 +54,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Tag;
+                return _tag;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Priority;
+                return _priority;
             }
         }
 
@@ -76,7 +76,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_UserData;
+                return _userData;
             }
         }
 
@@ -87,11 +87,11 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Done;
+                return _done;
             }
             set
             {
-                m_Done = value;
+                _done = value;
             }
         }
 
@@ -115,11 +115,11 @@ namespace EasyGameFramework.Core
         /// <param name="userData">任务的用户自定义数据。</param>
         internal void Initialize(int serialId, string tag, int priority, object userData)
         {
-            m_SerialId = serialId;
-            m_Tag = tag;
-            m_Priority = priority;
-            m_UserData = userData;
-            m_Done = false;
+            _serialId = serialId;
+            _tag = tag;
+            _priority = priority;
+            _userData = userData;
+            _done = false;
         }
 
         /// <summary>
@@ -127,11 +127,11 @@ namespace EasyGameFramework.Core
         /// </summary>
         public virtual void Clear()
         {
-            m_SerialId = 0;
-            m_Tag = null;
-            m_Priority = DefaultPriority;
-            m_UserData = null;
-            m_Done = false;
+            _serialId = 0;
+            _tag = null;
+            _priority = DefaultPriority;
+            _userData = null;
+            _done = false;
         }
     }
 }

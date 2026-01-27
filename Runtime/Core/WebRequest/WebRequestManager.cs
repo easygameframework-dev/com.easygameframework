@@ -15,22 +15,22 @@ namespace EasyGameFramework.Core.WebRequest
     /// </summary>
     internal sealed partial class WebRequestManager : GameFrameworkModule, IWebRequestManager
     {
-        private readonly TaskPool<WebRequestTask> m_TaskPool;
-        private float m_Timeout;
-        private EventHandler<WebRequestStartEventArgs> m_WebRequestStartEventHandler;
-        private EventHandler<WebRequestSuccessEventArgs> m_WebRequestSuccessEventHandler;
-        private EventHandler<WebRequestFailureEventArgs> m_WebRequestFailureEventHandler;
+        private readonly TaskPool<WebRequestTask> _taskPool;
+        private float _timeout;
+        private EventHandler<WebRequestStartEventArgs> _webRequestStartEventHandler;
+        private EventHandler<WebRequestSuccessEventArgs> _webRequestSuccessEventHandler;
+        private EventHandler<WebRequestFailureEventArgs> _webRequestFailureEventHandler;
 
         /// <summary>
         /// 初始化 Web 请求管理器的新实例。
         /// </summary>
         public WebRequestManager()
         {
-            m_TaskPool = new TaskPool<WebRequestTask>();
-            m_Timeout = 30f;
-            m_WebRequestStartEventHandler = null;
-            m_WebRequestSuccessEventHandler = null;
-            m_WebRequestFailureEventHandler = null;
+            _taskPool = new TaskPool<WebRequestTask>();
+            _timeout = 30f;
+            _webRequestStartEventHandler = null;
+            _webRequestSuccessEventHandler = null;
+            _webRequestFailureEventHandler = null;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace EasyGameFramework.Core.WebRequest
         {
             get
             {
-                return m_TaskPool.TotalAgentCount;
+                return _taskPool.TotalAgentCount;
             }
         }
 
@@ -51,7 +51,7 @@ namespace EasyGameFramework.Core.WebRequest
         {
             get
             {
-                return m_TaskPool.FreeAgentCount;
+                return _taskPool.FreeAgentCount;
             }
         }
 
@@ -62,7 +62,7 @@ namespace EasyGameFramework.Core.WebRequest
         {
             get
             {
-                return m_TaskPool.WorkingAgentCount;
+                return _taskPool.WorkingAgentCount;
             }
         }
 
@@ -73,7 +73,7 @@ namespace EasyGameFramework.Core.WebRequest
         {
             get
             {
-                return m_TaskPool.WaitingTaskCount;
+                return _taskPool.WaitingTaskCount;
             }
         }
 
@@ -84,11 +84,11 @@ namespace EasyGameFramework.Core.WebRequest
         {
             get
             {
-                return m_Timeout;
+                return _timeout;
             }
             set
             {
-                m_Timeout = value;
+                _timeout = value;
             }
         }
 
@@ -99,11 +99,11 @@ namespace EasyGameFramework.Core.WebRequest
         {
             add
             {
-                m_WebRequestStartEventHandler += value;
+                _webRequestStartEventHandler += value;
             }
             remove
             {
-                m_WebRequestStartEventHandler -= value;
+                _webRequestStartEventHandler -= value;
             }
         }
 
@@ -114,11 +114,11 @@ namespace EasyGameFramework.Core.WebRequest
         {
             add
             {
-                m_WebRequestSuccessEventHandler += value;
+                _webRequestSuccessEventHandler += value;
             }
             remove
             {
-                m_WebRequestSuccessEventHandler -= value;
+                _webRequestSuccessEventHandler -= value;
             }
         }
 
@@ -129,11 +129,11 @@ namespace EasyGameFramework.Core.WebRequest
         {
             add
             {
-                m_WebRequestFailureEventHandler += value;
+                _webRequestFailureEventHandler += value;
             }
             remove
             {
-                m_WebRequestFailureEventHandler -= value;
+                _webRequestFailureEventHandler -= value;
             }
         }
 
@@ -144,7 +144,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            m_TaskPool.Update(elapseSeconds, realElapseSeconds);
+            _taskPool.Update(elapseSeconds, realElapseSeconds);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// </summary>
         internal override void Shutdown()
         {
-            m_TaskPool.Shutdown();
+            _taskPool.Shutdown();
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace EasyGameFramework.Core.WebRequest
             agent.WebRequestAgentSuccess += OnWebRequestAgentSuccess;
             agent.WebRequestAgentFailure += OnWebRequestAgentFailure;
 
-            m_TaskPool.AddAgent(agent);
+            _taskPool.AddAgent(agent);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <returns>Web 请求任务的信息。</returns>
         public TaskInfo GetWebRequestInfo(int serialId)
         {
-            return m_TaskPool.GetTaskInfo(serialId);
+            return _taskPool.GetTaskInfo(serialId);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <returns>Web 请求任务的信息。</returns>
         public TaskInfo[] GetWebRequestInfos(string tag)
         {
-            return m_TaskPool.GetTaskInfos(tag);
+            return _taskPool.GetTaskInfos(tag);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <param name="results">Web 请求任务的信息。</param>
         public void GetAllWebRequestInfos(string tag, List<TaskInfo> results)
         {
-            m_TaskPool.GetTaskInfos(tag, results);
+            _taskPool.GetTaskInfos(tag, results);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <returns>所有 Web 请求任务的信息。</returns>
         public TaskInfo[] GetAllWebRequestInfos()
         {
-            return m_TaskPool.GetAllTaskInfos();
+            return _taskPool.GetAllTaskInfos();
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <param name="results">所有 Web 请求任务的信息。</param>
         public void GetAllWebRequestInfos(List<TaskInfo> results)
         {
-            m_TaskPool.GetAllTaskInfos(results);
+            _taskPool.GetAllTaskInfos(results);
         }
 
         /// <summary>
@@ -416,8 +416,8 @@ namespace EasyGameFramework.Core.WebRequest
                 throw new GameFrameworkException("You must add web request agent first.");
             }
 
-            WebRequestTask webRequestTask = WebRequestTask.Create(webRequestUri, postData, tag, priority, m_Timeout, userData);
-            m_TaskPool.AddTask(webRequestTask);
+            WebRequestTask webRequestTask = WebRequestTask.Create(webRequestUri, postData, tag, priority, _timeout, userData);
+            _taskPool.AddTask(webRequestTask);
             return webRequestTask.SerialId;
         }
 
@@ -428,7 +428,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <returns>是否移除 Web 请求任务成功。</returns>
         public bool RemoveWebRequest(int serialId)
         {
-            return m_TaskPool.RemoveTask(serialId);
+            return _taskPool.RemoveTask(serialId);
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace EasyGameFramework.Core.WebRequest
         /// <returns>移除 Web 请求任务的数量。</returns>
         public int RemoveWebRequests(string tag)
         {
-            return m_TaskPool.RemoveTasks(tag);
+            return _taskPool.RemoveTasks(tag);
         }
 
         /// <summary>
@@ -447,35 +447,35 @@ namespace EasyGameFramework.Core.WebRequest
         /// <returns>移除 Web 请求任务的数量。</returns>
         public int RemoveAllWebRequests()
         {
-            return m_TaskPool.RemoveAllTasks();
+            return _taskPool.RemoveAllTasks();
         }
 
         private void OnWebRequestAgentStart(WebRequestAgent sender)
         {
-            if (m_WebRequestStartEventHandler != null)
+            if (_webRequestStartEventHandler != null)
             {
                 WebRequestStartEventArgs webRequestStartEventArgs = WebRequestStartEventArgs.Create(sender.Task.SerialId, sender.Task.WebRequestUri, sender.Task.UserData);
-                m_WebRequestStartEventHandler(this, webRequestStartEventArgs);
+                _webRequestStartEventHandler(this, webRequestStartEventArgs);
                 ReferencePool.Release(webRequestStartEventArgs);
             }
         }
 
         private void OnWebRequestAgentSuccess(WebRequestAgent sender, byte[] webResponseBytes)
         {
-            if (m_WebRequestSuccessEventHandler != null)
+            if (_webRequestSuccessEventHandler != null)
             {
                 WebRequestSuccessEventArgs webRequestSuccessEventArgs = WebRequestSuccessEventArgs.Create(sender.Task.SerialId, sender.Task.WebRequestUri, webResponseBytes, sender.Task.UserData);
-                m_WebRequestSuccessEventHandler(this, webRequestSuccessEventArgs);
+                _webRequestSuccessEventHandler(this, webRequestSuccessEventArgs);
                 ReferencePool.Release(webRequestSuccessEventArgs);
             }
         }
 
         private void OnWebRequestAgentFailure(WebRequestAgent sender, string errorMessage)
         {
-            if (m_WebRequestFailureEventHandler != null)
+            if (_webRequestFailureEventHandler != null)
             {
                 WebRequestFailureEventArgs webRequestFailureEventArgs = WebRequestFailureEventArgs.Create(sender.Task.SerialId, sender.Task.WebRequestUri, errorMessage, sender.Task.UserData);
-                m_WebRequestFailureEventHandler(this, webRequestFailureEventArgs);
+                _webRequestFailureEventHandler(this, webRequestFailureEventArgs);
                 ReferencePool.Release(webRequestFailureEventArgs);
             }
         }

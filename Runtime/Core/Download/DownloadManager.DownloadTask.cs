@@ -14,24 +14,24 @@ namespace EasyGameFramework.Core.Download
         /// </summary>
         private sealed class DownloadTask : TaskBase
         {
-            private static int s_Serial = 0;
+            private static int s_serial = 0;
 
-            private DownloadTaskStatus m_Status;
-            private string m_DownloadPath;
-            private string m_DownloadUri;
-            private int m_FlushSize;
-            private float m_Timeout;
+            private DownloadTaskStatus _status;
+            private string _downloadPath;
+            private string _downloadUri;
+            private int _flushSize;
+            private float _timeout;
 
             /// <summary>
             /// 初始化下载任务的新实例。
             /// </summary>
             public DownloadTask()
             {
-                m_Status = DownloadTaskStatus.Todo;
-                m_DownloadPath = null;
-                m_DownloadUri = null;
-                m_FlushSize = 0;
-                m_Timeout = 0f;
+                _status = DownloadTaskStatus.Todo;
+                _downloadPath = null;
+                _downloadUri = null;
+                _flushSize = 0;
+                _timeout = 0f;
             }
 
             /// <summary>
@@ -41,11 +41,11 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_Status;
+                    return _status;
                 }
                 set
                 {
-                    m_Status = value;
+                    _status = value;
                 }
             }
 
@@ -56,7 +56,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_DownloadPath;
+                    return _downloadPath;
                 }
             }
 
@@ -67,7 +67,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_DownloadUri;
+                    return _downloadUri;
                 }
             }
 
@@ -78,7 +78,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_FlushSize;
+                    return _flushSize;
                 }
             }
 
@@ -89,7 +89,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_Timeout;
+                    return _timeout;
                 }
             }
 
@@ -100,7 +100,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_DownloadPath;
+                    return _downloadPath;
                 }
             }
 
@@ -118,11 +118,11 @@ namespace EasyGameFramework.Core.Download
             public static DownloadTask Create(string downloadPath, string downloadUri, string tag, int priority, int flushSize, float timeout, object userData)
             {
                 DownloadTask downloadTask = ReferencePool.Acquire<DownloadTask>();
-                downloadTask.Initialize(++s_Serial, tag, priority, userData);
-                downloadTask.m_DownloadPath = downloadPath;
-                downloadTask.m_DownloadUri = downloadUri;
-                downloadTask.m_FlushSize = flushSize;
-                downloadTask.m_Timeout = timeout;
+                downloadTask.Initialize(++s_serial, tag, priority, userData);
+                downloadTask._downloadPath = downloadPath;
+                downloadTask._downloadUri = downloadUri;
+                downloadTask._flushSize = flushSize;
+                downloadTask._timeout = timeout;
                 return downloadTask;
             }
 
@@ -132,11 +132,11 @@ namespace EasyGameFramework.Core.Download
             public override void Clear()
             {
                 base.Clear();
-                m_Status = DownloadTaskStatus.Todo;
-                m_DownloadPath = null;
-                m_DownloadUri = null;
-                m_FlushSize = 0;
-                m_Timeout = 0f;
+                _status = DownloadTaskStatus.Todo;
+                _downloadPath = null;
+                _downloadUri = null;
+                _flushSize = 0;
+                _timeout = 0f;
             }
         }
     }

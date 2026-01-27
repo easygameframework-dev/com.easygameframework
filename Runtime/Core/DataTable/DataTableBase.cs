@@ -15,8 +15,8 @@ namespace EasyGameFramework.Core.DataTable
     /// </summary>
     public abstract class DataTableBase : IDataProvider<DataTableBase>
     {
-        private readonly string m_Name;
-        private readonly DataProvider<DataTableBase> m_DataProvider;
+        private readonly string _name;
+        private readonly DataProvider<DataTableBase> _dataProvider;
 
         /// <summary>
         /// 初始化数据表基类的新实例。
@@ -32,8 +32,8 @@ namespace EasyGameFramework.Core.DataTable
         /// <param name="name">数据表名称。</param>
         public DataTableBase(string name)
         {
-            m_Name = name ?? string.Empty;
-            m_DataProvider = new DataProvider<DataTableBase>(this);
+            _name = name ?? string.Empty;
+            _dataProvider = new DataProvider<DataTableBase>(this);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace EasyGameFramework.Core.DataTable
         {
             get
             {
-                return m_Name;
+                return _name;
             }
         }
 
@@ -54,7 +54,7 @@ namespace EasyGameFramework.Core.DataTable
         {
             get
             {
-                return new TypeNamePair(Type, m_Name).ToString();
+                return new TypeNamePair(Type, _name).ToString();
             }
         }
 
@@ -81,11 +81,11 @@ namespace EasyGameFramework.Core.DataTable
         {
             add
             {
-                m_DataProvider.ReadDataSuccess += value;
+                _dataProvider.ReadDataSuccess += value;
             }
             remove
             {
-                m_DataProvider.ReadDataSuccess -= value;
+                _dataProvider.ReadDataSuccess -= value;
             }
         }
 
@@ -96,11 +96,11 @@ namespace EasyGameFramework.Core.DataTable
         {
             add
             {
-                m_DataProvider.ReadDataFailure += value;
+                _dataProvider.ReadDataFailure += value;
             }
             remove
             {
-                m_DataProvider.ReadDataFailure -= value;
+                _dataProvider.ReadDataFailure -= value;
             }
         }
 
@@ -110,7 +110,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <param name="dataTableAssetAddress">数据表资源地址。</param>
         public void ReadData(AssetAddress dataTableAssetAddress)
         {
-            m_DataProvider.ReadData(dataTableAssetAddress);
+            _dataProvider.ReadData(dataTableAssetAddress);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <param name="priority">加载数据表资源的优先级。</param>
         public void ReadData(AssetAddress dataTableAssetAddress, int priority)
         {
-            m_DataProvider.ReadData(dataTableAssetAddress, priority);
+            _dataProvider.ReadData(dataTableAssetAddress, priority);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(AssetAddress dataTableAssetAddress, object userData)
         {
-            m_DataProvider.ReadData(dataTableAssetAddress, userData);
+            _dataProvider.ReadData(dataTableAssetAddress, userData);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(AssetAddress dataTableAssetAddress, int priority, object userData)
         {
-            m_DataProvider.ReadData(dataTableAssetAddress, priority, userData);
+            _dataProvider.ReadData(dataTableAssetAddress, priority, userData);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <returns>是否解析数据表成功。</returns>
         public bool ParseData(string dataTableString)
         {
-            return m_DataProvider.ParseData(dataTableString);
+            return _dataProvider.ParseData(dataTableString);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <returns>是否解析数据表成功。</returns>
         public bool ParseData(string dataTableString, object userData)
         {
-            return m_DataProvider.ParseData(dataTableString, userData);
+            return _dataProvider.ParseData(dataTableString, userData);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <returns>是否解析数据表成功。</returns>
         public bool ParseData(byte[] dataTableBytes)
         {
-            return m_DataProvider.ParseData(dataTableBytes);
+            return _dataProvider.ParseData(dataTableBytes);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <returns>是否解析数据表成功。</returns>
         public bool ParseData(byte[] dataTableBytes, object userData)
         {
-            return m_DataProvider.ParseData(dataTableBytes, userData);
+            return _dataProvider.ParseData(dataTableBytes, userData);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <returns>是否解析数据表成功。</returns>
         public bool ParseData(byte[] dataTableBytes, int startIndex, int length)
         {
-            return m_DataProvider.ParseData(dataTableBytes, startIndex, length);
+            return _dataProvider.ParseData(dataTableBytes, startIndex, length);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <returns>是否解析数据表成功。</returns>
         public bool ParseData(byte[] dataTableBytes, int startIndex, int length, object userData)
         {
-            return m_DataProvider.ParseData(dataTableBytes, startIndex, length, userData);
+            return _dataProvider.ParseData(dataTableBytes, startIndex, length, userData);
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <param name="resourceManager">资源管理器。</param>
         internal void SetResourceManager(IResourceManager resourceManager)
         {
-            m_DataProvider.SetResourceManager(resourceManager);
+            _dataProvider.SetResourceManager(resourceManager);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace EasyGameFramework.Core.DataTable
         /// <param name="dataProviderHelper">数据提供者辅助器。</param>
         internal void SetDataProviderHelper(IDataProviderHelper<DataTableBase> dataProviderHelper)
         {
-            m_DataProvider.SetDataProviderHelper(dataProviderHelper);
+            _dataProvider.SetDataProviderHelper(dataProviderHelper);
         }
 
         /// <summary>

@@ -22,26 +22,26 @@ namespace EasyGameFramework
         private const int DefaultPriority = 0;
         private const int OneMegaBytes = 1024 * 1024;
 
-        private IDownloadManager m_DownloadManager = null;
-        private EventComponent m_EventComponent = null;
+        private IDownloadManager _downloadManager = null;
+        private EventComponent _eventComponent = null;
 
         [SerializeField]
-        private Transform m_InstanceRoot = null;
+        private Transform _instanceRoot = null;
 
         [SerializeField]
-        private string m_DownloadAgentHelperTypeName = "UnityGameFramework.Runtime.UnityWebRequestDownloadAgentHelper";
+        private string _downloadAgentHelperTypeName = "UnityGameFramework.Runtime.UnityWebRequestDownloadAgentHelper";
 
         [SerializeField]
-        private DownloadAgentHelperBase m_CustomDownloadAgentHelper = null;
+        private DownloadAgentHelperBase _customDownloadAgentHelper = null;
 
         [SerializeField]
-        private int m_DownloadAgentHelperCount = 3;
+        private int _downloadAgentHelperCount = 3;
 
         [SerializeField]
-        private float m_Timeout = 30f;
+        private float _timeout = 30f;
 
         [SerializeField]
-        private int m_FlushSize = OneMegaBytes;
+        private int _flushSize = OneMegaBytes;
 
         /// <summary>
         /// 获取或设置下载是否被暂停。
@@ -50,11 +50,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.Paused;
+                return _downloadManager.Paused;
             }
             set
             {
-                m_DownloadManager.Paused = value;
+                _downloadManager.Paused = value;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.TotalAgentCount;
+                return _downloadManager.TotalAgentCount;
             }
         }
 
@@ -76,7 +76,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.FreeAgentCount;
+                return _downloadManager.FreeAgentCount;
             }
         }
 
@@ -87,7 +87,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.WorkingAgentCount;
+                return _downloadManager.WorkingAgentCount;
             }
         }
 
@@ -98,7 +98,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.WaitingTaskCount;
+                return _downloadManager.WaitingTaskCount;
             }
         }
 
@@ -109,11 +109,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.Timeout;
+                return _downloadManager.Timeout;
             }
             set
             {
-                m_DownloadManager.Timeout = m_Timeout = value;
+                _downloadManager.Timeout = _timeout = value;
             }
         }
 
@@ -124,11 +124,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.FlushSize;
+                return _downloadManager.FlushSize;
             }
             set
             {
-                m_DownloadManager.FlushSize = m_FlushSize = value;
+                _downloadManager.FlushSize = _flushSize = value;
             }
         }
 
@@ -139,7 +139,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DownloadManager.CurrentSpeed;
+                return _downloadManager.CurrentSpeed;
             }
         }
 
@@ -150,38 +150,38 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_DownloadManager = GameFrameworkEntry.GetModule<IDownloadManager>();
-            if (m_DownloadManager == null)
+            _downloadManager = GameFrameworkEntry.GetModule<IDownloadManager>();
+            if (_downloadManager == null)
             {
                 Log.Fatal("Download manager is invalid.");
                 return;
             }
 
-            m_DownloadManager.DownloadStart += OnDownloadStart;
-            m_DownloadManager.DownloadUpdate += OnDownloadUpdate;
-            m_DownloadManager.DownloadSuccess += OnDownloadSuccess;
-            m_DownloadManager.DownloadFailure += OnDownloadFailure;
-            m_DownloadManager.FlushSize = m_FlushSize;
-            m_DownloadManager.Timeout = m_Timeout;
+            _downloadManager.DownloadStart += OnDownloadStart;
+            _downloadManager.DownloadUpdate += OnDownloadUpdate;
+            _downloadManager.DownloadSuccess += OnDownloadSuccess;
+            _downloadManager.DownloadFailure += OnDownloadFailure;
+            _downloadManager.FlushSize = _flushSize;
+            _downloadManager.Timeout = _timeout;
         }
 
         private void Start()
         {
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            if (m_InstanceRoot == null)
+            if (_instanceRoot == null)
             {
-                m_InstanceRoot = new GameObject("Download Agent Instances").transform;
-                m_InstanceRoot.SetParent(gameObject.transform);
-                m_InstanceRoot.localScale = Vector3.one;
+                _instanceRoot = new GameObject("Download Agent Instances").transform;
+                _instanceRoot.SetParent(gameObject.transform);
+                _instanceRoot.localScale = Vector3.one;
             }
 
-            for (int i = 0; i < m_DownloadAgentHelperCount; i++)
+            for (int i = 0; i < _downloadAgentHelperCount; i++)
             {
                 AddDownloadAgentHelper(i);
             }
@@ -194,7 +194,7 @@ namespace EasyGameFramework
         /// <returns>下载任务的信息。</returns>
         public TaskInfo GetDownloadInfo(int serialId)
         {
-            return m_DownloadManager.GetDownloadInfo(serialId);
+            return _downloadManager.GetDownloadInfo(serialId);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace EasyGameFramework
         /// <returns>下载任务的信息。</returns>
         public TaskInfo[] GetDownloadInfos(string tag)
         {
-            return m_DownloadManager.GetDownloadInfos(tag);
+            return _downloadManager.GetDownloadInfos(tag);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace EasyGameFramework
         /// <param name="results">下载任务的信息。</param>
         public void GetDownloadInfos(string tag, List<TaskInfo> results)
         {
-            m_DownloadManager.GetDownloadInfos(tag, results);
+            _downloadManager.GetDownloadInfos(tag, results);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace EasyGameFramework
         /// <returns>所有下载任务的信息。</returns>
         public TaskInfo[] GetAllDownloadInfos()
         {
-            return m_DownloadManager.GetAllDownloadInfos();
+            return _downloadManager.GetAllDownloadInfos();
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace EasyGameFramework
         /// <param name="results">所有下载任务的信息。</param>
         public void GetAllDownloadInfos(List<TaskInfo> results)
         {
-            m_DownloadManager.GetAllDownloadInfos(results);
+            _downloadManager.GetAllDownloadInfos(results);
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace EasyGameFramework
         /// <returns>新增下载任务的序列编号。</returns>
         public int AddDownload(string downloadPath, string downloadUri, string tag, int priority, object userData)
         {
-            return m_DownloadManager.AddDownload(downloadPath, downloadUri, tag, priority, userData);
+            return _downloadManager.AddDownload(downloadPath, downloadUri, tag, priority, userData);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace EasyGameFramework
         /// <returns>是否移除下载任务成功。</returns>
         public bool RemoveDownload(int serialId)
         {
-            return m_DownloadManager.RemoveDownload(serialId);
+            return _downloadManager.RemoveDownload(serialId);
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace EasyGameFramework
         /// <returns>移除下载任务的数量。</returns>
         public int RemoveDownloads(string tag)
         {
-            return m_DownloadManager.RemoveDownloads(tag);
+            return _downloadManager.RemoveDownloads(tag);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace EasyGameFramework
         /// <returns>移除下载任务的数量。</returns>
         public int RemoveAllDownloads()
         {
-            return m_DownloadManager.RemoveAllDownloads();
+            return _downloadManager.RemoveAllDownloads();
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace EasyGameFramework
         /// <param name="index">下载代理辅助器索引。</param>
         private void AddDownloadAgentHelper(int index)
         {
-            DownloadAgentHelperBase downloadAgentHelper = Helper.CreateHelper(m_DownloadAgentHelperTypeName, m_CustomDownloadAgentHelper, index);
+            DownloadAgentHelperBase downloadAgentHelper = Helper.CreateHelper(_downloadAgentHelperTypeName, _customDownloadAgentHelper, index);
             if (downloadAgentHelper == null)
             {
                 Log.Error("Can not create download agent helper.");
@@ -379,31 +379,31 @@ namespace EasyGameFramework
 
             downloadAgentHelper.name = Utility.Text.Format("Download Agent Helper - {0}", index);
             Transform transform = downloadAgentHelper.transform;
-            transform.SetParent(m_InstanceRoot);
+            transform.SetParent(_instanceRoot);
             transform.localScale = Vector3.one;
 
-            m_DownloadManager.AddDownloadAgentHelper(downloadAgentHelper);
+            _downloadManager.AddDownloadAgentHelper(downloadAgentHelper);
         }
 
         private void OnDownloadStart(object sender, EasyGameFramework.Core.Download.DownloadStartEventArgs e)
         {
-            m_EventComponent.Fire(this, DownloadStartEventArgs.Create(e));
+            _eventComponent.Fire(this, DownloadStartEventArgs.Create(e));
         }
 
         private void OnDownloadUpdate(object sender, EasyGameFramework.Core.Download.DownloadUpdateEventArgs e)
         {
-            m_EventComponent.Fire(this, DownloadUpdateEventArgs.Create(e));
+            _eventComponent.Fire(this, DownloadUpdateEventArgs.Create(e));
         }
 
         private void OnDownloadSuccess(object sender, EasyGameFramework.Core.Download.DownloadSuccessEventArgs e)
         {
-            m_EventComponent.Fire(this, DownloadSuccessEventArgs.Create(e));
+            _eventComponent.Fire(this, DownloadSuccessEventArgs.Create(e));
         }
 
         private void OnDownloadFailure(object sender, EasyGameFramework.Core.Download.DownloadFailureEventArgs e)
         {
             Log.Warning("Download failure, download serial id '{0}', download path '{1}', download uri '{2}', error message '{3}'.", e.SerialId, e.DownloadPath, e.DownloadUri, e.ErrorMessage);
-            m_EventComponent.Fire(this, DownloadFailureEventArgs.Create(e));
+            _eventComponent.Fire(this, DownloadFailureEventArgs.Create(e));
         }
     }
 }

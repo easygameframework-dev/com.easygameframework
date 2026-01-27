@@ -27,37 +27,37 @@ namespace EasyGameFramework
     {
         private const int DefaultPriority = 0;
 
-        private ISoundManager m_SoundManager = null;
-        private EventComponent m_EventComponent = null;
-        private AudioListener m_AudioListener = null;
-        private IResourceManager m_ResourceManager = null;
+        private ISoundManager _soundManager = null;
+        private EventComponent _eventComponent = null;
+        private AudioListener _audioListener = null;
+        private IResourceManager _resourceManager = null;
 
         [SerializeField]
-        private Transform m_InstanceRoot = null;
+        private Transform _instanceRoot = null;
 
         [SerializeField]
-        private AudioMixer m_AudioMixer = null;
+        private AudioMixer _audioMixer = null;
 
         [SerializeField]
-        private string m_SoundHelperTypeName = "UnityGameFramework.Runtime.DefaultSoundHelper";
+        private string _soundHelperTypeName = "UnityGameFramework.Runtime.DefaultSoundHelper";
 
         [SerializeField]
-        private SoundHelperBase m_CustomSoundHelper = null;
+        private SoundHelperBase _customSoundHelper = null;
 
         [SerializeField]
-        private string m_SoundGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultSoundGroupHelper";
+        private string _soundGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultSoundGroupHelper";
 
         [SerializeField]
-        private SoundGroupHelperBase m_CustomSoundGroupHelper = null;
+        private SoundGroupHelperBase _customSoundGroupHelper = null;
 
         [SerializeField]
-        private string m_SoundAgentHelperTypeName = "UnityGameFramework.Runtime.DefaultSoundAgentHelper";
+        private string _soundAgentHelperTypeName = "UnityGameFramework.Runtime.DefaultSoundAgentHelper";
 
         [SerializeField]
-        private SoundAgentHelperBase m_CustomSoundAgentHelper = null;
+        private SoundAgentHelperBase _customSoundAgentHelper = null;
 
         [SerializeField]
-        private SoundGroup[] m_SoundGroups = null;
+        private SoundGroup[] _soundGroups = null;
 
         /// <summary>
         /// 获取声音组数量。
@@ -66,7 +66,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_SoundManager.SoundGroupCount;
+                return _soundManager.SoundGroupCount;
             }
         }
 
@@ -77,7 +77,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioMixer;
+                return _audioMixer;
             }
         }
 
@@ -88,17 +88,17 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_SoundManager = GameFrameworkEntry.GetModule<ISoundManager>();
-            if (m_SoundManager == null)
+            _soundManager = GameFrameworkEntry.GetModule<ISoundManager>();
+            if (_soundManager == null)
             {
                 Log.Fatal("Sound manager is invalid.");
                 return;
             }
 
-            m_SoundManager.PlaySoundSuccess += OnPlaySoundSuccess;
-            m_SoundManager.PlaySoundFailure += OnPlaySoundFailure;
+            _soundManager.PlaySoundSuccess += OnPlaySoundSuccess;
+            _soundManager.PlaySoundFailure += OnPlaySoundFailure;
 
-            m_AudioListener = gameObject.GetOrAddComponent<AudioListener>();
+            _audioListener = gameObject.GetOrAddComponent<AudioListener>();
 
 #if UNITY_5_4_OR_NEWER
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -127,17 +127,17 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            m_ResourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
-            m_SoundManager.SetResourceManager(m_ResourceManager);
+            _resourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
+            _soundManager.SetResourceManager(_resourceManager);
 
-            SoundHelperBase soundHelper = Helper.CreateHelper(m_SoundHelperTypeName, m_CustomSoundHelper);
+            SoundHelperBase soundHelper = Helper.CreateHelper(_soundHelperTypeName, _customSoundHelper);
             if (soundHelper == null)
             {
                 Log.Error("Can not create sound helper.");
@@ -149,20 +149,20 @@ namespace EasyGameFramework
             transform.SetParent(this.transform);
             transform.localScale = Vector3.one;
 
-            m_SoundManager.SetSoundHelper(soundHelper);
+            _soundManager.SetSoundHelper(soundHelper);
 
-            if (m_InstanceRoot == null)
+            if (_instanceRoot == null)
             {
-                m_InstanceRoot = new GameObject("Sound Instances").transform;
-                m_InstanceRoot.SetParent(gameObject.transform);
-                m_InstanceRoot.localScale = Vector3.one;
+                _instanceRoot = new GameObject("Sound Instances").transform;
+                _instanceRoot.SetParent(gameObject.transform);
+                _instanceRoot.localScale = Vector3.one;
             }
 
-            for (int i = 0; i < m_SoundGroups.Length; i++)
+            for (int i = 0; i < _soundGroups.Length; i++)
             {
-                if (!AddSoundGroup(m_SoundGroups[i].Name, m_SoundGroups[i].AvoidBeingReplacedBySamePriority, m_SoundGroups[i].Mute, m_SoundGroups[i].Volume, m_SoundGroups[i].AgentHelperCount))
+                if (!AddSoundGroup(_soundGroups[i].Name, _soundGroups[i].AvoidBeingReplacedBySamePriority, _soundGroups[i].Mute, _soundGroups[i].Volume, _soundGroups[i].AgentHelperCount))
                 {
-                    Log.Warning("Add sound group '{0}' failure.", m_SoundGroups[i].Name);
+                    Log.Warning("Add sound group '{0}' failure.", _soundGroups[i].Name);
                     continue;
                 }
             }
@@ -183,7 +183,7 @@ namespace EasyGameFramework
         /// <returns>指定声音组是否存在。</returns>
         public bool HasSoundGroup(string soundGroupName)
         {
-            return m_SoundManager.HasSoundGroup(soundGroupName);
+            return _soundManager.HasSoundGroup(soundGroupName);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace EasyGameFramework
         /// <returns>要获取的声音组。</returns>
         public ISoundGroup GetSoundGroup(string soundGroupName)
         {
-            return m_SoundManager.GetSoundGroup(soundGroupName);
+            return _soundManager.GetSoundGroup(soundGroupName);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace EasyGameFramework
         /// <returns>所有声音组。</returns>
         public ISoundGroup[] GetAllSoundGroups()
         {
-            return m_SoundManager.GetAllSoundGroups();
+            return _soundManager.GetAllSoundGroups();
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace EasyGameFramework
         /// <param name="results">所有声音组。</param>
         public void GetAllSoundGroups(List<ISoundGroup> results)
         {
-            m_SoundManager.GetAllSoundGroups(results);
+            _soundManager.GetAllSoundGroups(results);
         }
 
         /// <summary>
@@ -236,12 +236,12 @@ namespace EasyGameFramework
         /// <returns>是否增加声音组成功。</returns>
         public bool AddSoundGroup(string soundGroupName, bool soundGroupAvoidBeingReplacedBySamePriority, bool soundGroupMute, float soundGroupVolume, int soundAgentHelperCount)
         {
-            if (m_SoundManager.HasSoundGroup(soundGroupName))
+            if (_soundManager.HasSoundGroup(soundGroupName))
             {
                 return false;
             }
 
-            SoundGroupHelperBase soundGroupHelper = Helper.CreateHelper(m_SoundGroupHelperTypeName, m_CustomSoundGroupHelper, SoundGroupCount);
+            SoundGroupHelperBase soundGroupHelper = Helper.CreateHelper(_soundGroupHelperTypeName, _customSoundGroupHelper, SoundGroupCount);
             if (soundGroupHelper == null)
             {
                 Log.Error("Can not create sound group helper.");
@@ -250,23 +250,23 @@ namespace EasyGameFramework
 
             soundGroupHelper.name = Utility.Text.Format("Sound Group - {0}", soundGroupName);
             Transform transform = soundGroupHelper.transform;
-            transform.SetParent(m_InstanceRoot);
+            transform.SetParent(_instanceRoot);
             transform.localScale = Vector3.one;
 
-            if (m_AudioMixer != null)
+            if (_audioMixer != null)
             {
-                AudioMixerGroup[] audioMixerGroups = m_AudioMixer.FindMatchingGroups(Utility.Text.Format("Master/{0}", soundGroupName));
+                AudioMixerGroup[] audioMixerGroups = _audioMixer.FindMatchingGroups(Utility.Text.Format("Master/{0}", soundGroupName));
                 if (audioMixerGroups.Length > 0)
                 {
                     soundGroupHelper.AudioMixerGroup = audioMixerGroups[0];
                 }
                 else
                 {
-                    soundGroupHelper.AudioMixerGroup = m_AudioMixer.FindMatchingGroups("Master")[0];
+                    soundGroupHelper.AudioMixerGroup = _audioMixer.FindMatchingGroups("Master")[0];
                 }
             }
 
-            if (!m_SoundManager.AddSoundGroup(soundGroupName, soundGroupAvoidBeingReplacedBySamePriority, soundGroupMute, soundGroupVolume, soundGroupHelper))
+            if (!_soundManager.AddSoundGroup(soundGroupName, soundGroupAvoidBeingReplacedBySamePriority, soundGroupMute, soundGroupVolume, soundGroupHelper))
             {
                 return false;
             }
@@ -288,7 +288,7 @@ namespace EasyGameFramework
         /// <returns>所有正在加载声音的序列编号。</returns>
         public int[] GetAllLoadingSoundSerialIds()
         {
-            return m_SoundManager.GetAllLoadingSoundSerialIds();
+            return _soundManager.GetAllLoadingSoundSerialIds();
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace EasyGameFramework
         /// <param name="results">所有正在加载声音的序列编号。</param>
         public void GetAllLoadingSoundSerialIds(List<int> results)
         {
-            m_SoundManager.GetAllLoadingSoundSerialIds(results);
+            _soundManager.GetAllLoadingSoundSerialIds(results);
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace EasyGameFramework
         /// <returns>是否正在加载声音。</returns>
         public bool IsLoadingSound(int serialId)
         {
-            return m_SoundManager.IsLoadingSound(serialId);
+            return _soundManager.IsLoadingSound(serialId);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace EasyGameFramework
             int? customPriority = null,
             object userData = null)
         {
-            return m_SoundManager.PlaySound(soundAssetAddress, soundGroupName, playSoundParams, customPriority, PlaySoundInfo.Create(bindingEntity, worldPosition, userData));
+            return _soundManager.PlaySound(soundAssetAddress, soundGroupName, playSoundParams, customPriority, PlaySoundInfo.Create(bindingEntity, worldPosition, userData));
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace EasyGameFramework
         /// <returns>是否停止播放声音成功。</returns>
         public bool StopSound(int serialId)
         {
-            return m_SoundManager.StopSound(serialId);
+            return _soundManager.StopSound(serialId);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace EasyGameFramework
         /// <returns>是否停止播放声音成功。</returns>
         public bool StopSound(int serialId, float fadeOutSeconds)
         {
-            return m_SoundManager.StopSound(serialId, fadeOutSeconds);
+            return _soundManager.StopSound(serialId, fadeOutSeconds);
         }
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace EasyGameFramework
         /// </summary>
         public void StopAllLoadedSounds()
         {
-            m_SoundManager.StopAllLoadedSounds();
+            _soundManager.StopAllLoadedSounds();
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace EasyGameFramework
         /// <param name="fadeOutSeconds">声音淡出时间，以秒为单位。</param>
         public void StopAllLoadedSounds(float fadeOutSeconds)
         {
-            m_SoundManager.StopAllLoadedSounds(fadeOutSeconds);
+            _soundManager.StopAllLoadedSounds(fadeOutSeconds);
         }
 
         /// <summary>
@@ -376,7 +376,7 @@ namespace EasyGameFramework
         /// </summary>
         public void StopAllLoadingSounds()
         {
-            m_SoundManager.StopAllLoadingSounds();
+            _soundManager.StopAllLoadingSounds();
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace EasyGameFramework
         /// <param name="serialId">要暂停播放声音的序列编号。</param>
         public void PauseSound(int serialId)
         {
-            m_SoundManager.PauseSound(serialId);
+            _soundManager.PauseSound(serialId);
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace EasyGameFramework
         /// <param name="fadeOutSeconds">声音淡出时间，以秒为单位。</param>
         public void PauseSound(int serialId, float fadeOutSeconds)
         {
-            m_SoundManager.PauseSound(serialId, fadeOutSeconds);
+            _soundManager.PauseSound(serialId, fadeOutSeconds);
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace EasyGameFramework
         /// <param name="serialId">要恢复播放声音的序列编号。</param>
         public void ResumeSound(int serialId)
         {
-            m_SoundManager.ResumeSound(serialId);
+            _soundManager.ResumeSound(serialId);
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace EasyGameFramework
         /// <param name="fadeInSeconds">声音淡入时间，以秒为单位。</param>
         public void ResumeSound(int serialId, float fadeInSeconds)
         {
-            m_SoundManager.ResumeSound(serialId, fadeInSeconds);
+            _soundManager.ResumeSound(serialId, fadeInSeconds);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace EasyGameFramework
         /// <returns>是否增加声音代理辅助器成功。</returns>
         private bool AddSoundAgentHelper(string soundGroupName, SoundGroupHelperBase soundGroupHelper, int index)
         {
-            SoundAgentHelperBase soundAgentHelper = Helper.CreateHelper(m_SoundAgentHelperTypeName, m_CustomSoundAgentHelper, index);
+            SoundAgentHelperBase soundAgentHelper = Helper.CreateHelper(_soundAgentHelperTypeName, _customSoundAgentHelper, index);
             if (soundAgentHelper == null)
             {
                 Log.Error("Can not create sound agent helper.");
@@ -438,9 +438,9 @@ namespace EasyGameFramework
             transform.SetParent(soundGroupHelper.transform);
             transform.localScale = Vector3.one;
 
-            if (m_AudioMixer != null)
+            if (_audioMixer != null)
             {
-                AudioMixerGroup[] audioMixerGroups = m_AudioMixer.FindMatchingGroups(Utility.Text.Format("Master/{0}/{1}", soundGroupName, index));
+                AudioMixerGroup[] audioMixerGroups = _audioMixer.FindMatchingGroups(Utility.Text.Format("Master/{0}/{1}", soundGroupName, index));
                 if (audioMixerGroups.Length > 0)
                 {
                     soundAgentHelper.AudioMixerGroup = audioMixerGroups[0];
@@ -451,7 +451,7 @@ namespace EasyGameFramework
                 }
             }
 
-            m_SoundManager.AddSoundAgentHelper(soundGroupName, soundAgentHelper);
+            _soundManager.AddSoundAgentHelper(soundGroupName, soundAgentHelper);
 
             return true;
         }
@@ -472,7 +472,7 @@ namespace EasyGameFramework
                 }
             }
 
-            m_EventComponent.Fire(this, PlaySoundSuccessEventArgs.Create(e));
+            _eventComponent.Fire(this, PlaySoundSuccessEventArgs.Create(e));
         }
 
         private void OnPlaySoundFailure(object sender, EasyGameFramework.Core.Sound.PlaySoundFailureEventArgs e)
@@ -487,7 +487,7 @@ namespace EasyGameFramework
                 Log.Warning(logMessage);
             }
 
-            m_EventComponent.Fire(this, PlaySoundFailureEventArgs.Create(e));
+            _eventComponent.Fire(this, PlaySoundFailureEventArgs.Create(e));
         }
 
         private void OnLoadSceneSuccess(object sender, EasyGameFramework.Core.Scene.LoadSceneSuccessEventArgs e)
@@ -522,7 +522,7 @@ namespace EasyGameFramework
 
         private void RefreshAudioListener()
         {
-            m_AudioListener.enabled = FindObjectsOfType<AudioListener>().Length <= 1;
+            _audioListener.enabled = FindObjectsOfType<AudioListener>().Length <= 1;
         }
     }
 }

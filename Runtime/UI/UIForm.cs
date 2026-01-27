@@ -17,12 +17,12 @@ namespace EasyGameFramework
     /// </summary>
     public sealed class UIForm : MonoBehaviour, IUIForm
     {
-        private int m_SerialId;
-        private AssetAddress m_UIFormAssetAddress;
-        private IUIGroup m_UIGroup;
-        private int m_DepthInUIGroup;
-        private bool m_PauseCoveredUIForm;
-        private UIFormLogic m_UIFormLogic;
+        private int _serialId;
+        private AssetAddress _uIFormAssetAddress;
+        private IUIGroup _uIGroup;
+        private int _depthInUIGroup;
+        private bool _pauseCoveredUIForm;
+        private UIFormLogic _uIFormLogic;
 
         /// <summary>
         /// 获取界面序列编号。
@@ -31,7 +31,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_SerialId;
+                return _serialId;
             }
         }
 
@@ -42,7 +42,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIFormAssetAddress;
+                return _uIFormAssetAddress;
             }
         }
 
@@ -64,7 +64,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIGroup;
+                return _uIGroup;
             }
         }
 
@@ -75,7 +75,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DepthInUIGroup;
+                return _depthInUIGroup;
             }
         }
 
@@ -86,7 +86,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_PauseCoveredUIForm;
+                return _pauseCoveredUIForm;
             }
         }
 
@@ -97,7 +97,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UIFormLogic;
+                return _uIFormLogic;
             }
         }
 
@@ -112,19 +112,19 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void OnInit(int serialId, AssetAddress uiFormAssetAddress, IUIGroup uiGroup, bool pauseCoveredUIForm, bool isNewInstance, object userData)
         {
-            m_SerialId = serialId;
-            m_UIFormAssetAddress = uiFormAssetAddress;
-            m_UIGroup = uiGroup;
-            m_DepthInUIGroup = 0;
-            m_PauseCoveredUIForm = pauseCoveredUIForm;
+            _serialId = serialId;
+            _uIFormAssetAddress = uiFormAssetAddress;
+            _uIGroup = uiGroup;
+            _depthInUIGroup = 0;
+            _pauseCoveredUIForm = pauseCoveredUIForm;
 
             if (!isNewInstance)
             {
                 return;
             }
 
-            m_UIFormLogic = GetComponent<UIFormLogic>();
-            if (m_UIFormLogic == null)
+            _uIFormLogic = GetComponent<UIFormLogic>();
+            if (_uIFormLogic == null)
             {
                 Log.Error("UI form '{0}' can not get UI form logic.", uiFormAssetAddress);
                 return;
@@ -132,11 +132,11 @@ namespace EasyGameFramework
 
             try
             {
-                m_UIFormLogic.OnInit(userData);
+                _uIFormLogic.OnInit(userData);
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnInit with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnInit with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -147,16 +147,16 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnRecycle();
+                _uIFormLogic.OnRecycle();
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnRecycle with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnRecycle with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
 
-            m_SerialId = 0;
-            m_DepthInUIGroup = 0;
-            m_PauseCoveredUIForm = true;
+            _serialId = 0;
+            _depthInUIGroup = 0;
+            _pauseCoveredUIForm = true;
         }
 
         /// <summary>
@@ -167,11 +167,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnOpen(userData);
+                _uIFormLogic.OnOpen(userData);
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnOpen with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnOpen with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -184,11 +184,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnClose(isShutdown, userData);
+                _uIFormLogic.OnClose(isShutdown, userData);
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnClose with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnClose with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -199,11 +199,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnPause();
+                _uIFormLogic.OnPause();
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnPause with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnPause with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -214,11 +214,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnResume();
+                _uIFormLogic.OnResume();
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnResume with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnResume with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -229,11 +229,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnCover();
+                _uIFormLogic.OnCover();
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnCover with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnCover with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -244,11 +244,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnReveal();
+                _uIFormLogic.OnReveal();
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnReveal with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnReveal with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -260,11 +260,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnRefocus(userData);
+                _uIFormLogic.OnRefocus(userData);
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnRefocus with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnRefocus with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -277,11 +277,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_UIFormLogic.OnUpdate(elapseSeconds, realElapseSeconds);
+                _uIFormLogic.OnUpdate(elapseSeconds, realElapseSeconds);
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnUpdate with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnUpdate with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
 
@@ -292,14 +292,14 @@ namespace EasyGameFramework
         /// <param name="depthInUIGroup">界面在界面组中的深度。</param>
         public void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
         {
-            m_DepthInUIGroup = depthInUIGroup;
+            _depthInUIGroup = depthInUIGroup;
             try
             {
-                m_UIFormLogic.OnDepthChanged(uiGroupDepth, depthInUIGroup);
+                _uIFormLogic.OnDepthChanged(uiGroupDepth, depthInUIGroup);
             }
             catch (Exception exception)
             {
-                Log.Error("UI form '[{0}]{1}' OnDepthChanged with exception '{2}'.", m_SerialId, m_UIFormAssetAddress, exception);
+                Log.Error("UI form '[{0}]{1}' OnDepthChanged with exception '{2}'.", _serialId, _uIFormAssetAddress, exception);
             }
         }
     }

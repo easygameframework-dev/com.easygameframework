@@ -18,11 +18,11 @@ namespace EasyGameFramework.Editor
     [CustomEditor(typeof(WebRequestComponent))]
     internal sealed class WebRequestComponentInspector : GameFrameworkInspector
     {
-        private SerializedProperty m_InstanceRoot = null;
-        private SerializedProperty m_WebRequestAgentHelperCount = null;
-        private SerializedProperty m_Timeout = null;
+        private SerializedProperty _instanceRoot = null;
+        private SerializedProperty _webRequestAgentHelperCount = null;
+        private SerializedProperty _timeout = null;
 
-        private HelperInfo<WebRequestAgentHelperBase> m_WebRequestAgentHelperInfo = new HelperInfo<WebRequestAgentHelperBase>("WebRequestAgent");
+        private HelperInfo<WebRequestAgentHelperBase> _webRequestAgentHelperInfo = new HelperInfo<WebRequestAgentHelperBase>("WebRequestAgent");
 
         public override void OnInspectorGUI()
         {
@@ -34,16 +34,16 @@ namespace EasyGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                EditorGUILayout.PropertyField(m_InstanceRoot);
+                EditorGUILayout.PropertyField(_instanceRoot);
 
-                m_WebRequestAgentHelperInfo.Draw();
+                _webRequestAgentHelperInfo.Draw();
 
-                m_WebRequestAgentHelperCount.intValue = EditorGUILayout.IntSlider("Web Request Agent Helper Count", m_WebRequestAgentHelperCount.intValue, 1, 16);
+                _webRequestAgentHelperCount.intValue = EditorGUILayout.IntSlider("Web Request Agent Helper Count", _webRequestAgentHelperCount.intValue, 1, 16);
             }
             EditorGUI.EndDisabledGroup();
 
-            float timeout = EditorGUILayout.Slider("Timeout", m_Timeout.floatValue, 0f, 120f);
-            if (timeout != m_Timeout.floatValue)
+            float timeout = EditorGUILayout.Slider("Timeout", _timeout.floatValue, 0f, 120f);
+            if (timeout != _timeout.floatValue)
             {
                 if (EditorApplication.isPlaying)
                 {
@@ -51,7 +51,7 @@ namespace EasyGameFramework.Editor
                 }
                 else
                 {
-                    m_Timeout.floatValue = timeout;
+                    _timeout.floatValue = timeout;
                 }
             }
 
@@ -118,11 +118,11 @@ namespace EasyGameFramework.Editor
 
         private void OnEnable()
         {
-            m_InstanceRoot = serializedObject.FindProperty("m_InstanceRoot");
-            m_WebRequestAgentHelperCount = serializedObject.FindProperty("m_WebRequestAgentHelperCount");
-            m_Timeout = serializedObject.FindProperty("m_Timeout");
+            _instanceRoot = serializedObject.FindProperty("_instanceRoot");
+            _webRequestAgentHelperCount = serializedObject.FindProperty("_webRequestAgentHelperCount");
+            _timeout = serializedObject.FindProperty("_timeout");
 
-            m_WebRequestAgentHelperInfo.Init(serializedObject);
+            _webRequestAgentHelperInfo.Init(serializedObject);
 
             RefreshTypeNames();
         }
@@ -134,7 +134,7 @@ namespace EasyGameFramework.Editor
 
         private void RefreshTypeNames()
         {
-            m_WebRequestAgentHelperInfo.Refresh();
+            _webRequestAgentHelperInfo.Refresh();
             serializedObject.ApplyModifiedProperties();
         }
     }

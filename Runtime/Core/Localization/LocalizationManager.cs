@@ -16,20 +16,20 @@ namespace EasyGameFramework.Core.Localization
     /// </summary>
     internal sealed partial class LocalizationManager : GameFrameworkModule, ILocalizationManager
     {
-        private readonly Dictionary<string, string> m_Dictionary;
-        private readonly DataProvider<ILocalizationManager> m_DataProvider;
-        private ILocalizationHelper m_LocalizationHelper;
-        private Language m_Language;
+        private readonly Dictionary<string, string> _dictionary;
+        private readonly DataProvider<ILocalizationManager> _dataProvider;
+        private ILocalizationHelper _localizationHelper;
+        private Language _language;
 
         /// <summary>
         /// 初始化本地化管理器的新实例。
         /// </summary>
         public LocalizationManager()
         {
-            m_Dictionary = new Dictionary<string, string>(StringComparer.Ordinal);
-            m_DataProvider = new DataProvider<ILocalizationManager>(this);
-            m_LocalizationHelper = null;
-            m_Language = Language.Unspecified;
+            _dictionary = new Dictionary<string, string>(StringComparer.Ordinal);
+            _dataProvider = new DataProvider<ILocalizationManager>(this);
+            _localizationHelper = null;
+            _language = Language.Unspecified;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace EasyGameFramework.Core.Localization
         {
             get
             {
-                return m_Language;
+                return _language;
             }
             set
             {
@@ -48,7 +48,7 @@ namespace EasyGameFramework.Core.Localization
                     throw new GameFrameworkException("Language is invalid.");
                 }
 
-                m_Language = value;
+                _language = value;
             }
         }
 
@@ -59,12 +59,12 @@ namespace EasyGameFramework.Core.Localization
         {
             get
             {
-                if (m_LocalizationHelper == null)
+                if (_localizationHelper == null)
                 {
                     throw new GameFrameworkException("You must set localization helper first.");
                 }
 
-                return m_LocalizationHelper.SystemLanguage;
+                return _localizationHelper.SystemLanguage;
             }
         }
 
@@ -75,7 +75,7 @@ namespace EasyGameFramework.Core.Localization
         {
             get
             {
-                return m_Dictionary.Count;
+                return _dictionary.Count;
             }
         }
 
@@ -97,11 +97,11 @@ namespace EasyGameFramework.Core.Localization
         {
             add
             {
-                m_DataProvider.ReadDataSuccess += value;
+                _dataProvider.ReadDataSuccess += value;
             }
             remove
             {
-                m_DataProvider.ReadDataSuccess -= value;
+                _dataProvider.ReadDataSuccess -= value;
             }
         }
 
@@ -112,11 +112,11 @@ namespace EasyGameFramework.Core.Localization
         {
             add
             {
-                m_DataProvider.ReadDataFailure += value;
+                _dataProvider.ReadDataFailure += value;
             }
             remove
             {
-                m_DataProvider.ReadDataFailure -= value;
+                _dataProvider.ReadDataFailure -= value;
             }
         }
 
@@ -142,7 +142,7 @@ namespace EasyGameFramework.Core.Localization
         /// <param name="resourceManager">资源管理器。</param>
         public void SetResourceManager(IResourceManager resourceManager)
         {
-            m_DataProvider.SetResourceManager(resourceManager);
+            _dataProvider.SetResourceManager(resourceManager);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace EasyGameFramework.Core.Localization
         /// <param name="dataProviderHelper">本地化数据提供者辅助器。</param>
         public void SetDataProviderHelper(IDataProviderHelper<ILocalizationManager> dataProviderHelper)
         {
-            m_DataProvider.SetDataProviderHelper(dataProviderHelper);
+            _dataProvider.SetDataProviderHelper(dataProviderHelper);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace EasyGameFramework.Core.Localization
                 throw new GameFrameworkException("Localization helper is invalid.");
             }
 
-            m_LocalizationHelper = localizationHelper;
+            _localizationHelper = localizationHelper;
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace EasyGameFramework.Core.Localization
         /// <param name="dictionaryAssetAddress">字典资源地址。</param>
         public void ReadData(AssetAddress dictionaryAssetAddress)
         {
-            m_DataProvider.ReadData(dictionaryAssetAddress);
+            _dataProvider.ReadData(dictionaryAssetAddress);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace EasyGameFramework.Core.Localization
         /// <param name="priority">加载字典资源的优先级。</param>
         public void ReadData(AssetAddress dictionaryAssetAddress, int priority)
         {
-            m_DataProvider.ReadData(dictionaryAssetAddress, priority);
+            _dataProvider.ReadData(dictionaryAssetAddress, priority);
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace EasyGameFramework.Core.Localization
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(AssetAddress dictionaryAssetAddress, object userData)
         {
-            m_DataProvider.ReadData(dictionaryAssetAddress, userData);
+            _dataProvider.ReadData(dictionaryAssetAddress, userData);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace EasyGameFramework.Core.Localization
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(AssetAddress dictionaryAssetAddress, int priority, object userData)
         {
-            m_DataProvider.ReadData(dictionaryAssetAddress, priority, userData);
+            _dataProvider.ReadData(dictionaryAssetAddress, priority, userData);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace EasyGameFramework.Core.Localization
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(string dictionaryString)
         {
-            return m_DataProvider.ParseData(dictionaryString);
+            return _dataProvider.ParseData(dictionaryString);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace EasyGameFramework.Core.Localization
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(string dictionaryString, object userData)
         {
-            return m_DataProvider.ParseData(dictionaryString, userData);
+            return _dataProvider.ParseData(dictionaryString, userData);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace EasyGameFramework.Core.Localization
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes)
         {
-            return m_DataProvider.ParseData(dictionaryBytes);
+            return _dataProvider.ParseData(dictionaryBytes);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace EasyGameFramework.Core.Localization
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes, object userData)
         {
-            return m_DataProvider.ParseData(dictionaryBytes, userData);
+            return _dataProvider.ParseData(dictionaryBytes, userData);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace EasyGameFramework.Core.Localization
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes, int startIndex, int length)
         {
-            return m_DataProvider.ParseData(dictionaryBytes, startIndex, length);
+            return _dataProvider.ParseData(dictionaryBytes, startIndex, length);
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace EasyGameFramework.Core.Localization
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes, int startIndex, int length, object userData)
         {
-            return m_DataProvider.ParseData(dictionaryBytes, startIndex, length, userData);
+            return _dataProvider.ParseData(dictionaryBytes, startIndex, length, userData);
         }
 
         /// <summary>
@@ -963,7 +963,7 @@ namespace EasyGameFramework.Core.Localization
                 throw new GameFrameworkException("Key is invalid.");
             }
 
-            return m_Dictionary.ContainsKey(key);
+            return _dictionary.ContainsKey(key);
         }
 
         /// <summary>
@@ -979,7 +979,7 @@ namespace EasyGameFramework.Core.Localization
             }
 
             string value = null;
-            if (m_Dictionary.TryGetValue(key, out value))
+            if (_dictionary.TryGetValue(key, out value))
             {
                 return value;
             }
@@ -1000,12 +1000,12 @@ namespace EasyGameFramework.Core.Localization
                 throw new GameFrameworkException("Key is invalid.");
             }
 
-            if (m_Dictionary.ContainsKey(key))
+            if (_dictionary.ContainsKey(key))
             {
                 return false;
             }
 
-            m_Dictionary.Add(key, value ?? string.Empty);
+            _dictionary.Add(key, value ?? string.Empty);
             return true;
         }
 
@@ -1021,7 +1021,7 @@ namespace EasyGameFramework.Core.Localization
                 throw new GameFrameworkException("Key is invalid.");
             }
 
-            return m_Dictionary.Remove(key);
+            return _dictionary.Remove(key);
         }
 
         /// <summary>
@@ -1029,7 +1029,7 @@ namespace EasyGameFramework.Core.Localization
         /// </summary>
         public void RemoveAllRawStrings()
         {
-            m_Dictionary.Clear();
+            _dictionary.Clear();
         }
     }
 }

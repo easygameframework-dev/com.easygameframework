@@ -15,7 +15,7 @@ namespace EasyGameFramework
     /// </summary>
     public sealed class WebRequestSuccessEventArgs : GameEventArgs
     {
-        private byte[] m_WebResponseBytes = null;
+        private byte[] _webResponseBytes = null;
 
         /// <summary>
         /// 初始化 Web 请求成功事件的新实例。
@@ -24,7 +24,7 @@ namespace EasyGameFramework
         {
             SerialId = 0;
             WebRequestUri = null;
-            m_WebResponseBytes = null;
+            _webResponseBytes = null;
             UserData = null;
         }
 
@@ -61,7 +61,7 @@ namespace EasyGameFramework
         /// <returns>Web 响应的数据流。</returns>
         public byte[] GetWebResponseBytes()
         {
-            return m_WebResponseBytes;
+            return _webResponseBytes;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace EasyGameFramework
             WebRequestSuccessEventArgs webRequestSuccessEventArgs = ReferencePool.Acquire<WebRequestSuccessEventArgs>();
             webRequestSuccessEventArgs.SerialId = e.SerialId;
             webRequestSuccessEventArgs.WebRequestUri = e.WebRequestUri;
-            webRequestSuccessEventArgs.m_WebResponseBytes = e.GetWebResponseBytes();
+            webRequestSuccessEventArgs._webResponseBytes = e.GetWebResponseBytes();
             webRequestSuccessEventArgs.UserData = wwwFormInfo.UserData;
             ReferencePool.Release(wwwFormInfo);
             return webRequestSuccessEventArgs;
@@ -88,7 +88,7 @@ namespace EasyGameFramework
         {
             SerialId = 0;
             WebRequestUri = null;
-            m_WebResponseBytes = null;
+            _webResponseBytes = null;
             UserData = null;
         }
     }

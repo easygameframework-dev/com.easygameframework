@@ -15,13 +15,13 @@ namespace EasyGameFramework.Core
     [StructLayout(LayoutKind.Auto)]
     public struct TaskInfo
     {
-        private readonly bool m_IsValid;
-        private readonly int m_SerialId;
-        private readonly string m_Tag;
-        private readonly int m_Priority;
-        private readonly object m_UserData;
-        private readonly TaskStatus m_Status;
-        private readonly string m_Description;
+        private readonly bool _isValid;
+        private readonly int _serialId;
+        private readonly string _tag;
+        private readonly int _priority;
+        private readonly object _userData;
+        private readonly TaskStatus _status;
+        private readonly string _description;
 
         /// <summary>
         /// 初始化任务信息的新实例。
@@ -34,13 +34,13 @@ namespace EasyGameFramework.Core
         /// <param name="description">任务描述。</param>
         public TaskInfo(int serialId, string tag, int priority, object userData, TaskStatus status, string description)
         {
-            m_IsValid = true;
-            m_SerialId = serialId;
-            m_Tag = tag;
-            m_Priority = priority;
-            m_UserData = userData;
-            m_Status = status;
-            m_Description = description;
+            _isValid = true;
+            _serialId = serialId;
+            _tag = tag;
+            _priority = priority;
+            _userData = userData;
+            _status = status;
+            _description = description;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_IsValid;
+                return _isValid;
             }
         }
 
@@ -61,12 +61,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (!m_IsValid)
+                if (!_isValid)
                 {
                     throw new GameFrameworkException("Data is invalid.");
                 }
 
-                return m_SerialId;
+                return _serialId;
             }
         }
 
@@ -77,12 +77,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (!m_IsValid)
+                if (!_isValid)
                 {
                     throw new GameFrameworkException("Data is invalid.");
                 }
 
-                return m_Tag;
+                return _tag;
             }
         }
 
@@ -93,12 +93,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (!m_IsValid)
+                if (!_isValid)
                 {
                     throw new GameFrameworkException("Data is invalid.");
                 }
 
-                return m_Priority;
+                return _priority;
             }
         }
 
@@ -109,12 +109,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (!m_IsValid)
+                if (!_isValid)
                 {
                     throw new GameFrameworkException("Data is invalid.");
                 }
 
-                return m_UserData;
+                return _userData;
             }
         }
 
@@ -125,12 +125,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (!m_IsValid)
+                if (!_isValid)
                 {
                     throw new GameFrameworkException("Data is invalid.");
                 }
 
-                return m_Status;
+                return _status;
             }
         }
 
@@ -141,12 +141,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (!m_IsValid)
+                if (!_isValid)
                 {
                     throw new GameFrameworkException("Data is invalid.");
                 }
 
-                return m_Description;
+                return _description;
             }
         }
     }

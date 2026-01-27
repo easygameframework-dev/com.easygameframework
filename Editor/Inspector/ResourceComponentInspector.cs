@@ -34,26 +34,26 @@ namespace EasyGameFramework.Editor
             "High (验证文件大小和CRC)"
         };
 
-        private SerializedProperty m_PlayMode = null;
-        private SerializedProperty m_DefaultPackageName = null;
-        // private SerializedProperty m_UpdatableWhilePlaying = null;
-        private SerializedProperty m_FileVerifyLevel = null;
-        private SerializedProperty m_Milliseconds = null;
-        // private SerializedProperty m_ReadWritePathType = null;
-        private SerializedProperty m_MinUnloadUnusedAssetsInterval = null;
-        private SerializedProperty m_MaxUnloadUnusedAssetsInterval = null;
-        private SerializedProperty m_UseSystemUnloadUnusedAssets = null;
-        private SerializedProperty m_AssetAutoReleaseInterval = null;
-        private SerializedProperty m_AssetCapacity = null;
-        private SerializedProperty m_AssetExpireTime = null;
-        private SerializedProperty m_AssetPriority = null;
-        private SerializedProperty m_DownloadingMaxNum = null;
-        private SerializedProperty m_FailedTryAgain = null;
-        private SerializedProperty m_LoadResourceAgentHelper = null;
-        private SerializedProperty m_ResourceHelper = null;
+        private SerializedProperty _playMode = null;
+        private SerializedProperty _defaultPackageName = null;
+        // private SerializedProperty _updatableWhilePlaying = null;
+        private SerializedProperty _fileVerifyLevel = null;
+        private SerializedProperty _milliseconds = null;
+        // private SerializedProperty _readWritePathType = null;
+        private SerializedProperty _minUnloadUnusedAssetsInterval = null;
+        private SerializedProperty _maxUnloadUnusedAssetsInterval = null;
+        private SerializedProperty _useSystemUnloadUnusedAssets = null;
+        private SerializedProperty _assetAutoReleaseInterval = null;
+        private SerializedProperty _assetCapacity = null;
+        private SerializedProperty _assetExpireTime = null;
+        private SerializedProperty _assetPriority = null;
+        private SerializedProperty _downloadingMaxNum = null;
+        private SerializedProperty _failedTryAgain = null;
+        private SerializedProperty _loadResourceAgentHelper = null;
+        private SerializedProperty _resourceHelper = null;
 
-        private int m_ResourceModeIndex = 0;
-        private int m_VerifyIndex = 0;
+        private int _resourceModeIndex = 0;
+        private int _verifyIndex = 0;
 
         public override void OnInspectorGUI()
         {
@@ -72,67 +72,67 @@ namespace EasyGameFramework.Editor
                 }
                 else
                 {
-                    int selectedIndex = EditorGUILayout.Popup("Resource Mode", m_ResourceModeIndex, _resourceModeNames);
-                    if (selectedIndex != m_ResourceModeIndex)
+                    int selectedIndex = EditorGUILayout.Popup("Resource Mode", _resourceModeIndex, _resourceModeNames);
+                    if (selectedIndex != _resourceModeIndex)
                     {
-                        m_ResourceModeIndex = selectedIndex;
-                        m_PlayMode.enumValueIndex = selectedIndex;
+                        _resourceModeIndex = selectedIndex;
+                        _playMode.enumValueIndex = selectedIndex;
                     }
 
-                    int selectedVerifyIndex = EditorGUILayout.Popup("VerifyLevel", m_VerifyIndex, _verifyLevelNames);
-                    if (selectedVerifyIndex != m_VerifyIndex)
+                    int selectedVerifyIndex = EditorGUILayout.Popup("VerifyLevel", _verifyIndex, _verifyLevelNames);
+                    if (selectedVerifyIndex != _verifyIndex)
                     {
-                        m_VerifyIndex = selectedVerifyIndex;
-                        m_FileVerifyLevel.enumValueIndex = selectedVerifyIndex;
+                        _verifyIndex = selectedVerifyIndex;
+                        _fileVerifyLevel.enumValueIndex = selectedVerifyIndex;
                     }
                 }
 
-                EditorGUILayout.PropertyField(m_DefaultPackageName);
+                EditorGUILayout.PropertyField(_defaultPackageName);
 
-                // m_ReadWritePathType.enumValueIndex = (int)(ReadWritePathType)EditorGUILayout.EnumPopup("Read-Write Path Type", t.ReadWritePathType);
+                // _readWritePathType.enumValueIndex = (int)(ReadWritePathType)EditorGUILayout.EnumPopup("Read-Write Path Type", t.ReadWritePathType);
             }
-            // EditorGUILayout.PropertyField(m_UpdatableWhilePlaying);
+            // EditorGUILayout.PropertyField(_updatableWhilePlaying);
 
             EditorGUI.EndDisabledGroup();
 
-            int milliseconds = EditorGUILayout.DelayedIntField("Milliseconds", m_Milliseconds.intValue);
-            if (milliseconds != m_Milliseconds.intValue)
+            int milliseconds = EditorGUILayout.DelayedIntField("Milliseconds", _milliseconds.intValue);
+            if (milliseconds != _milliseconds.intValue)
             {
-                m_Milliseconds.longValue = milliseconds;
+                _milliseconds.longValue = milliseconds;
             }
 
-            EditorGUILayout.PropertyField(m_UseSystemUnloadUnusedAssets);
+            EditorGUILayout.PropertyField(_useSystemUnloadUnusedAssets);
 
             float minUnloadUnusedAssetsInterval =
-                EditorGUILayout.Slider("Min Unload Unused Assets Interval", m_MinUnloadUnusedAssetsInterval.floatValue, 0f, 3600f);
-            if (Math.Abs(minUnloadUnusedAssetsInterval - m_MinUnloadUnusedAssetsInterval.floatValue) > 0.01f)
+                EditorGUILayout.Slider("Min Unload Unused Assets Interval", _minUnloadUnusedAssetsInterval.floatValue, 0f, 3600f);
+            if (Math.Abs(minUnloadUnusedAssetsInterval - _minUnloadUnusedAssetsInterval.floatValue) > 0.01f)
             {
-                m_MinUnloadUnusedAssetsInterval.floatValue = minUnloadUnusedAssetsInterval;
+                _minUnloadUnusedAssetsInterval.floatValue = minUnloadUnusedAssetsInterval;
             }
 
             float maxUnloadUnusedAssetsInterval =
-                EditorGUILayout.Slider("Max Unload Unused Assets Interval", m_MaxUnloadUnusedAssetsInterval.floatValue, 0f, 3600f);
-            if (Math.Abs(maxUnloadUnusedAssetsInterval - m_MaxUnloadUnusedAssetsInterval.floatValue) > 0.01f)
+                EditorGUILayout.Slider("Max Unload Unused Assets Interval", _maxUnloadUnusedAssetsInterval.floatValue, 0f, 3600f);
+            if (Math.Abs(maxUnloadUnusedAssetsInterval - _maxUnloadUnusedAssetsInterval.floatValue) > 0.01f)
             {
-                m_MaxUnloadUnusedAssetsInterval.floatValue = maxUnloadUnusedAssetsInterval;
+                _maxUnloadUnusedAssetsInterval.floatValue = maxUnloadUnusedAssetsInterval;
             }
 
-            float downloadingMaxNum = EditorGUILayout.Slider("Max Downloading Num", m_DownloadingMaxNum.intValue, 1f, 48f);
-            if (Math.Abs(downloadingMaxNum - m_DownloadingMaxNum.intValue) > 0.001f)
+            float downloadingMaxNum = EditorGUILayout.Slider("Max Downloading Num", _downloadingMaxNum.intValue, 1f, 48f);
+            if (Math.Abs(downloadingMaxNum - _downloadingMaxNum.intValue) > 0.001f)
             {
-                m_DownloadingMaxNum.intValue = (int)downloadingMaxNum;
+                _downloadingMaxNum.intValue = (int)downloadingMaxNum;
             }
 
-            float failedTryAgain = EditorGUILayout.Slider("Max FailedTryAgain Count", m_FailedTryAgain.intValue, 1f, 48f);
-            if (Math.Abs(failedTryAgain - m_FailedTryAgain.intValue) > 0.001f)
+            float failedTryAgain = EditorGUILayout.Slider("Max FailedTryAgain Count", _failedTryAgain.intValue, 1f, 48f);
+            if (Math.Abs(failedTryAgain - _failedTryAgain.intValue) > 0.001f)
             {
-                m_FailedTryAgain.intValue = (int)failedTryAgain;
+                _failedTryAgain.intValue = (int)failedTryAgain;
             }
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
             {
-                float assetAutoReleaseInterval = EditorGUILayout.DelayedFloatField("Asset Auto Release Interval", m_AssetAutoReleaseInterval.floatValue);
-                if (Math.Abs(assetAutoReleaseInterval - m_AssetAutoReleaseInterval.floatValue) > 0.01f)
+                float assetAutoReleaseInterval = EditorGUILayout.DelayedFloatField("Asset Auto Release Interval", _assetAutoReleaseInterval.floatValue);
+                if (Math.Abs(assetAutoReleaseInterval - _assetAutoReleaseInterval.floatValue) > 0.01f)
                 {
                     if (EditorApplication.isPlaying)
                     {
@@ -140,12 +140,12 @@ namespace EasyGameFramework.Editor
                     }
                     else
                     {
-                        m_AssetAutoReleaseInterval.floatValue = assetAutoReleaseInterval;
+                        _assetAutoReleaseInterval.floatValue = assetAutoReleaseInterval;
                     }
                 }
 
-                int assetCapacity = EditorGUILayout.DelayedIntField("Asset Capacity", m_AssetCapacity.intValue);
-                if (assetCapacity != m_AssetCapacity.intValue)
+                int assetCapacity = EditorGUILayout.DelayedIntField("Asset Capacity", _assetCapacity.intValue);
+                if (assetCapacity != _assetCapacity.intValue)
                 {
                     if (EditorApplication.isPlaying)
                     {
@@ -153,12 +153,12 @@ namespace EasyGameFramework.Editor
                     }
                     else
                     {
-                        m_AssetCapacity.intValue = assetCapacity;
+                        _assetCapacity.intValue = assetCapacity;
                     }
                 }
 
-                float assetExpireTime = EditorGUILayout.DelayedFloatField("Asset Expire Time", m_AssetExpireTime.floatValue);
-                if (Math.Abs(assetExpireTime - m_AssetExpireTime.floatValue) > 0.01f)
+                float assetExpireTime = EditorGUILayout.DelayedFloatField("Asset Expire Time", _assetExpireTime.floatValue);
+                if (Math.Abs(assetExpireTime - _assetExpireTime.floatValue) > 0.01f)
                 {
                     if (EditorApplication.isPlaying)
                     {
@@ -166,12 +166,12 @@ namespace EasyGameFramework.Editor
                     }
                     else
                     {
-                        m_AssetExpireTime.floatValue = assetExpireTime;
+                        _assetExpireTime.floatValue = assetExpireTime;
                     }
                 }
 
-                int assetPriority = EditorGUILayout.DelayedIntField("Asset Priority", m_AssetPriority.intValue);
-                if (assetPriority != m_AssetPriority.intValue)
+                int assetPriority = EditorGUILayout.DelayedIntField("Asset Priority", _assetPriority.intValue);
+                if (assetPriority != _assetPriority.intValue)
                 {
                     if (EditorApplication.isPlaying)
                     {
@@ -179,13 +179,13 @@ namespace EasyGameFramework.Editor
                     }
                     else
                     {
-                        m_AssetPriority.intValue = assetPriority;
+                        _assetPriority.intValue = assetPriority;
                     }
                 }
             }
 
-            EditorGUILayout.PropertyField(m_ResourceHelper);
-            EditorGUILayout.PropertyField(m_LoadResourceAgentHelper);
+            EditorGUILayout.PropertyField(_resourceHelper);
+            EditorGUILayout.PropertyField(_loadResourceAgentHelper);
 
             EditorGUI.EndDisabledGroup();
 
@@ -212,23 +212,23 @@ namespace EasyGameFramework.Editor
 
         private void OnEnable()
         {
-            m_PlayMode = serializedObject.FindProperty("m_PlayMode");
-            m_DefaultPackageName = serializedObject.FindProperty("m_DefaultPackageName");
-            // m_UpdatableWhilePlaying = serializedObject.FindProperty("m_UpdatableWhilePlaying");
-            m_FileVerifyLevel = serializedObject.FindProperty("m_FileVerifyLevel");
-            m_Milliseconds = serializedObject.FindProperty("m_Milliseconds");
-            // m_ReadWritePathType = serializedObject.FindProperty("m_ReadWritePathType");
-            m_MinUnloadUnusedAssetsInterval = serializedObject.FindProperty("m_MinUnloadUnusedAssetsInterval");
-            m_MaxUnloadUnusedAssetsInterval = serializedObject.FindProperty("m_MaxUnloadUnusedAssetsInterval");
-            m_UseSystemUnloadUnusedAssets = serializedObject.FindProperty("m_UseSystemUnloadUnusedAssets");
-            m_AssetAutoReleaseInterval = serializedObject.FindProperty("m_AssetAutoReleaseInterval");
-            m_AssetCapacity = serializedObject.FindProperty("m_AssetCapacity");
-            m_AssetExpireTime = serializedObject.FindProperty("m_AssetExpireTime");
-            m_AssetPriority = serializedObject.FindProperty("m_AssetPriority");
-            m_DownloadingMaxNum = serializedObject.FindProperty("m_DownloadingMaxNum");
-            m_FailedTryAgain = serializedObject.FindProperty("m_FailedTryAgain");
-            m_LoadResourceAgentHelper = serializedObject.FindProperty("m_LoadResourceAgentHelper");
-            m_ResourceHelper = serializedObject.FindProperty("m_ResourceHelper");
+            _playMode = serializedObject.FindProperty("_playMode");
+            _defaultPackageName = serializedObject.FindProperty("_defaultPackageName");
+            // _updatableWhilePlaying = serializedObject.FindProperty("_updatableWhilePlaying");
+            _fileVerifyLevel = serializedObject.FindProperty("_fileVerifyLevel");
+            _milliseconds = serializedObject.FindProperty("_milliseconds");
+            // _readWritePathType = serializedObject.FindProperty("_readWritePathType");
+            _minUnloadUnusedAssetsInterval = serializedObject.FindProperty("_minUnloadUnusedAssetsInterval");
+            _maxUnloadUnusedAssetsInterval = serializedObject.FindProperty("_maxUnloadUnusedAssetsInterval");
+            _useSystemUnloadUnusedAssets = serializedObject.FindProperty("_useSystemUnloadUnusedAssets");
+            _assetAutoReleaseInterval = serializedObject.FindProperty("_assetAutoReleaseInterval");
+            _assetCapacity = serializedObject.FindProperty("_assetCapacity");
+            _assetExpireTime = serializedObject.FindProperty("_assetExpireTime");
+            _assetPriority = serializedObject.FindProperty("_assetPriority");
+            _downloadingMaxNum = serializedObject.FindProperty("_downloadingMaxNum");
+            _failedTryAgain = serializedObject.FindProperty("_failedTryAgain");
+            _loadResourceAgentHelper = serializedObject.FindProperty("_loadResourceAgentHelper");
+            _resourceHelper = serializedObject.FindProperty("_resourceHelper");
 
             RefreshModes();
             RefreshTypeNames();
@@ -236,8 +236,8 @@ namespace EasyGameFramework.Editor
 
         private void RefreshModes()
         {
-            m_ResourceModeIndex = m_PlayMode.enumValueIndex > 0 ? m_PlayMode.enumValueIndex : 0;
-            m_VerifyIndex = m_FileVerifyLevel.enumValueIndex > 0 ? m_FileVerifyLevel.enumValueIndex : 0;
+            _resourceModeIndex = _playMode.enumValueIndex > 0 ? _playMode.enumValueIndex : 0;
+            _verifyIndex = _fileVerifyLevel.enumValueIndex > 0 ? _fileVerifyLevel.enumValueIndex : 0;
         }
 
         private void RefreshTypeNames()

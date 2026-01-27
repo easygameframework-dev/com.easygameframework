@@ -23,7 +23,7 @@ namespace EasyGameFramework.Core.FileSystem
         /// <summary>
         /// 缓存二进制流。
         /// </summary>
-        protected static readonly byte[] s_CachedBytes = new byte[CachedBytesLength];
+        protected static readonly byte[] s_cachedBytes = new byte[CachedBytesLength];
 
         /// <summary>
         /// 获取或设置文件系统流位置。
@@ -80,13 +80,13 @@ namespace EasyGameFramework.Core.FileSystem
         {
             int bytesRead = 0;
             int bytesLeft = length;
-            while ((bytesRead = Read(s_CachedBytes, 0, bytesLeft < CachedBytesLength ? bytesLeft : CachedBytesLength)) > 0)
+            while ((bytesRead = Read(s_cachedBytes, 0, bytesLeft < CachedBytesLength ? bytesLeft : CachedBytesLength)) > 0)
             {
                 bytesLeft -= bytesRead;
-                stream.Write(s_CachedBytes, 0, bytesRead);
+                stream.Write(s_cachedBytes, 0, bytesRead);
             }
 
-            Array.Clear(s_CachedBytes, 0, CachedBytesLength);
+            Array.Clear(s_cachedBytes, 0, CachedBytesLength);
             return length - bytesLeft;
         }
 
@@ -113,13 +113,13 @@ namespace EasyGameFramework.Core.FileSystem
         {
             int bytesRead = 0;
             int bytesLeft = length;
-            while ((bytesRead = stream.Read(s_CachedBytes, 0, bytesLeft < CachedBytesLength ? bytesLeft : CachedBytesLength)) > 0)
+            while ((bytesRead = stream.Read(s_cachedBytes, 0, bytesLeft < CachedBytesLength ? bytesLeft : CachedBytesLength)) > 0)
             {
                 bytesLeft -= bytesRead;
-                Write(s_CachedBytes, 0, bytesRead);
+                Write(s_cachedBytes, 0, bytesRead);
             }
 
-            Array.Clear(s_CachedBytes, 0, CachedBytesLength);
+            Array.Clear(s_cachedBytes, 0, CachedBytesLength);
         }
 
         /// <summary>

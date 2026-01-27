@@ -14,7 +14,7 @@ namespace EasyGameFramework.Core
         /// </summary>
         public static partial class Text
         {
-            private static ITextHelper s_TextHelper = null;
+            private static ITextHelper s_textHelper = null;
 
             /// <summary>
             /// 设置字符辅助器。
@@ -22,7 +22,7 @@ namespace EasyGameFramework.Core
             /// <param name="textHelper">要设置的字符辅助器。</param>
             public static void SetTextHelper(ITextHelper textHelper)
             {
-                s_TextHelper = textHelper;
+                s_textHelper = textHelper;
             }
 
             /// <summary>
@@ -39,12 +39,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg);
                 }
 
-                return s_TextHelper.Format(format, arg);
+                return s_textHelper.Format(format, arg);
             }
 
             /// <summary>
@@ -63,12 +63,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2);
+                return s_textHelper.Format(format, arg1, arg2);
             }
 
             /// <summary>
@@ -89,12 +89,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3);
+                return s_textHelper.Format(format, arg1, arg2, arg3);
             }
 
             /// <summary>
@@ -117,12 +117,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4);
             }
 
             /// <summary>
@@ -147,12 +147,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5);
             }
 
             /// <summary>
@@ -179,12 +179,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6);
             }
 
             /// <summary>
@@ -213,12 +213,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
             }
 
             /// <summary>
@@ -249,12 +249,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
             }
 
             /// <summary>
@@ -287,12 +287,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
             }
 
             /// <summary>
@@ -327,12 +327,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
             }
 
             /// <summary>
@@ -369,12 +369,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
             }
 
             /// <summary>
@@ -413,12 +413,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
             }
 
             /// <summary>
@@ -459,12 +459,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
             }
 
             /// <summary>
@@ -507,12 +507,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
             }
 
             /// <summary>
@@ -557,12 +557,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
             }
 
             /// <summary>
@@ -609,12 +609,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Format is invalid.");
                 }
 
-                if (s_TextHelper == null)
+                if (s_textHelper == null)
                 {
                     return string.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
                 }
 
-                return s_TextHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
+                return s_textHelper.Format(format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
             }
         }
     }

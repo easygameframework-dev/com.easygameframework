@@ -17,20 +17,20 @@ namespace EasyGameFramework
     {
         private sealed class EnvironmentInformationWindow : ScrollableDebuggerWindowBase
         {
-            private BaseComponent m_BaseComponent = null;
-            private ResourceComponent m_ResourceComponent = null;
+            private BaseComponent _baseComponent = null;
+            private ResourceComponent _resourceComponent = null;
 
             public override void Initialize(params object[] args)
             {
-                m_BaseComponent = GameEntry.GetComponent<BaseComponent>();
-                if (m_BaseComponent == null)
+                _baseComponent = GameEntry.GetComponent<BaseComponent>();
+                if (_baseComponent == null)
                 {
                     Log.Fatal("Base component is invalid.");
                     return;
                 }
 
-                m_ResourceComponent = GameEntry.GetComponent<ResourceComponent>();
-                if (m_ResourceComponent == null)
+                _resourceComponent = GameEntry.GetComponent<ResourceComponent>();
+                if (_resourceComponent == null)
                 {
                     Log.Fatal("Resource component is invalid.");
                     return;
@@ -51,9 +51,9 @@ namespace EasyGameFramework
 #endif
                     DrawItem("Game Framework Version", Version.GameFrameworkVersion);
                     DrawItem("Game Version", Utility.Text.Format("{0} ({1})", Version.GameVersion, Version.InternalGameVersion));
-                    // DrawItem("Resource Version", string.IsNullOrEmpty(m_ResourceComponent.ApplicableGameVersion)
+                    // DrawItem("Resource Version", string.IsNullOrEmpty(_resourceComponent.ApplicableGameVersion)
                     //     ? "Unknown"
-                    //     : Utility.Text.Format("{0} ({1})", m_ResourceComponent.ApplicableGameVersion, m_ResourceComponent.InternalResourceVersion));
+                    //     : Utility.Text.Format("{0} ({1})", _resourceComponent.ApplicableGameVersion, _resourceComponent.InternalResourceVersion));
                     DrawItem("Application Version", Application.version);
                     DrawItem("Unity Version", Application.unityVersion);
                     DrawItem("Platform", Application.platform.ToString());

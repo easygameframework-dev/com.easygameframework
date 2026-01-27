@@ -16,18 +16,18 @@ namespace EasyGameFramework.Core.Config
     /// </summary>
     internal sealed partial class ConfigManager : GameFrameworkModule, IConfigManager
     {
-        private readonly Dictionary<string, ConfigData> m_ConfigDatas;
-        private readonly DataProvider<IConfigManager> m_DataProvider;
-        private IConfigHelper m_ConfigHelper;
+        private readonly Dictionary<string, ConfigData> _configDatas;
+        private readonly DataProvider<IConfigManager> _dataProvider;
+        private IConfigHelper _configHelper;
 
         /// <summary>
         /// 初始化全局配置管理器的新实例。
         /// </summary>
         public ConfigManager()
         {
-            m_ConfigDatas = new Dictionary<string, ConfigData>(StringComparer.Ordinal);
-            m_DataProvider = new DataProvider<IConfigManager>(this);
-            m_ConfigHelper = null;
+            _configDatas = new Dictionary<string, ConfigData>(StringComparer.Ordinal);
+            _dataProvider = new DataProvider<IConfigManager>(this);
+            _configHelper = null;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace EasyGameFramework.Core.Config
         {
             get
             {
-                return m_ConfigDatas.Count;
+                return _configDatas.Count;
             }
         }
 
@@ -59,11 +59,11 @@ namespace EasyGameFramework.Core.Config
         {
             add
             {
-                m_DataProvider.ReadDataSuccess += value;
+                _dataProvider.ReadDataSuccess += value;
             }
             remove
             {
-                m_DataProvider.ReadDataSuccess -= value;
+                _dataProvider.ReadDataSuccess -= value;
             }
         }
 
@@ -74,11 +74,11 @@ namespace EasyGameFramework.Core.Config
         {
             add
             {
-                m_DataProvider.ReadDataFailure += value;
+                _dataProvider.ReadDataFailure += value;
             }
             remove
             {
-                m_DataProvider.ReadDataFailure -= value;
+                _dataProvider.ReadDataFailure -= value;
             }
         }
 
@@ -104,7 +104,7 @@ namespace EasyGameFramework.Core.Config
         /// <param name="resourceManager">资源管理器。</param>
         public void SetResourceManager(IResourceManager resourceManager)
         {
-            m_DataProvider.SetResourceManager(resourceManager);
+            _dataProvider.SetResourceManager(resourceManager);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace EasyGameFramework.Core.Config
         /// <param name="dataProviderHelper">全局配置数据提供者辅助器。</param>
         public void SetDataProviderHelper(IDataProviderHelper<IConfigManager> dataProviderHelper)
         {
-            m_DataProvider.SetDataProviderHelper(dataProviderHelper);
+            _dataProvider.SetDataProviderHelper(dataProviderHelper);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace EasyGameFramework.Core.Config
                 throw new GameFrameworkException("Config helper is invalid.");
             }
 
-            m_ConfigHelper = configHelper;
+            _configHelper = configHelper;
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace EasyGameFramework.Core.Config
         /// <param name="configAssetAddress">全局配置资源地址。</param>
         public void ReadData(AssetAddress configAssetAddress)
         {
-            m_DataProvider.ReadData(configAssetAddress);
+            _dataProvider.ReadData(configAssetAddress);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace EasyGameFramework.Core.Config
         /// <param name="priority">加载全局配置资源的优先级。</param>
         public void ReadData(AssetAddress configAssetAddress, int priority)
         {
-            m_DataProvider.ReadData(configAssetAddress, priority);
+            _dataProvider.ReadData(configAssetAddress, priority);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace EasyGameFramework.Core.Config
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(AssetAddress configAssetAddress, object userData)
         {
-            m_DataProvider.ReadData(configAssetAddress, userData);
+            _dataProvider.ReadData(configAssetAddress, userData);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace EasyGameFramework.Core.Config
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(AssetAddress configAssetAddress, int priority, object userData)
         {
-            m_DataProvider.ReadData(configAssetAddress, priority, userData);
+            _dataProvider.ReadData(configAssetAddress, priority, userData);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace EasyGameFramework.Core.Config
         /// <returns>是否解析全局配置成功。</returns>
         public bool ParseData(string configString)
         {
-            return m_DataProvider.ParseData(configString);
+            return _dataProvider.ParseData(configString);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace EasyGameFramework.Core.Config
         /// <returns>是否解析全局配置成功。</returns>
         public bool ParseData(string configString, object userData)
         {
-            return m_DataProvider.ParseData(configString, userData);
+            return _dataProvider.ParseData(configString, userData);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace EasyGameFramework.Core.Config
         /// <returns>是否解析全局配置成功。</returns>
         public bool ParseData(byte[] configBytes)
         {
-            return m_DataProvider.ParseData(configBytes);
+            return _dataProvider.ParseData(configBytes);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace EasyGameFramework.Core.Config
         /// <returns>是否解析全局配置成功。</returns>
         public bool ParseData(byte[] configBytes, object userData)
         {
-            return m_DataProvider.ParseData(configBytes, userData);
+            return _dataProvider.ParseData(configBytes, userData);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace EasyGameFramework.Core.Config
         /// <returns>是否解析全局配置成功。</returns>
         public bool ParseData(byte[] configBytes, int startIndex, int length)
         {
-            return m_DataProvider.ParseData(configBytes, startIndex, length);
+            return _dataProvider.ParseData(configBytes, startIndex, length);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace EasyGameFramework.Core.Config
         /// <returns>是否解析全局配置成功。</returns>
         public bool ParseData(byte[] configBytes, int startIndex, int length, object userData)
         {
-            return m_DataProvider.ParseData(configBytes, startIndex, length, userData);
+            return _dataProvider.ParseData(configBytes, startIndex, length, userData);
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace EasyGameFramework.Core.Config
                 return false;
             }
 
-            m_ConfigDatas.Add(configName, new ConfigData(boolValue, intValue, floatValue, stringValue));
+            _configDatas.Add(configName, new ConfigData(boolValue, intValue, floatValue, stringValue));
             return true;
         }
 
@@ -427,7 +427,7 @@ namespace EasyGameFramework.Core.Config
                 return false;
             }
 
-            return m_ConfigDatas.Remove(configName);
+            return _configDatas.Remove(configName);
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ namespace EasyGameFramework.Core.Config
         /// </summary>
         public void RemoveAllConfigs()
         {
-            m_ConfigDatas.Clear();
+            _configDatas.Clear();
         }
 
         private ConfigData? GetConfigData(string configName)
@@ -446,7 +446,7 @@ namespace EasyGameFramework.Core.Config
             }
 
             ConfigData configData = default(ConfigData);
-            if (m_ConfigDatas.TryGetValue(configName, out configData))
+            if (_configDatas.TryGetValue(configName, out configData))
             {
                 return configData;
             }

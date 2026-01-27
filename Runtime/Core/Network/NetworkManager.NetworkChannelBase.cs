@@ -21,21 +21,21 @@ namespace EasyGameFramework.Core.Network
         {
             private const float DefaultHeartBeatInterval = 30f;
 
-            private readonly string m_Name;
-            protected readonly Queue<Packet> m_SendPacketPool;
-            protected readonly EventPool<Packet> m_ReceivePacketPool;
-            protected readonly INetworkChannelHelper m_NetworkChannelHelper;
-            protected AddressFamily m_AddressFamily;
-            protected bool m_ResetHeartBeatElapseSecondsWhenReceivePacket;
-            protected float m_HeartBeatInterval;
-            protected Socket m_Socket;
-            protected readonly SendState m_SendState;
-            protected readonly ReceiveState m_ReceiveState;
-            protected readonly HeartBeatState m_HeartBeatState;
-            protected int m_SentPacketCount;
-            protected int m_ReceivedPacketCount;
-            protected bool m_Active;
-            private bool m_Disposed;
+            private readonly string _name;
+            protected readonly Queue<Packet> _sendPacketPool;
+            protected readonly EventPool<Packet> _receivePacketPool;
+            protected readonly INetworkChannelHelper _networkChannelHelper;
+            protected AddressFamily _addressFamily;
+            protected bool _resetHeartBeatElapseSecondsWhenReceivePacket;
+            protected float _heartBeatInterval;
+            protected Socket _socket;
+            protected readonly SendState _sendState;
+            protected readonly ReceiveState _receiveState;
+            protected readonly HeartBeatState _heartBeatState;
+            protected int _sentPacketCount;
+            protected int _receivedPacketCount;
+            protected bool _active;
+            private bool _disposed;
 
             public GameFrameworkAction<NetworkChannelBase, object> NetworkChannelConnected;
             public GameFrameworkAction<NetworkChannelBase> NetworkChannelClosed;
@@ -50,21 +50,21 @@ namespace EasyGameFramework.Core.Network
             /// <param name="networkChannelHelper">网络频道辅助器。</param>
             public NetworkChannelBase(string name, INetworkChannelHelper networkChannelHelper)
             {
-                m_Name = name ?? string.Empty;
-                m_SendPacketPool = new Queue<Packet>();
-                m_ReceivePacketPool = new EventPool<Packet>(EventPoolMode.Default);
-                m_NetworkChannelHelper = networkChannelHelper;
-                m_AddressFamily = AddressFamily.Unknown;
-                m_ResetHeartBeatElapseSecondsWhenReceivePacket = false;
-                m_HeartBeatInterval = DefaultHeartBeatInterval;
-                m_Socket = null;
-                m_SendState = new SendState();
-                m_ReceiveState = new ReceiveState();
-                m_HeartBeatState = new HeartBeatState();
-                m_SentPacketCount = 0;
-                m_ReceivedPacketCount = 0;
-                m_Active = false;
-                m_Disposed = false;
+                _name = name ?? string.Empty;
+                _sendPacketPool = new Queue<Packet>();
+                _receivePacketPool = new EventPool<Packet>(EventPoolMode.Default);
+                _networkChannelHelper = networkChannelHelper;
+                _addressFamily = AddressFamily.Unknown;
+                _resetHeartBeatElapseSecondsWhenReceivePacket = false;
+                _heartBeatInterval = DefaultHeartBeatInterval;
+                _socket = null;
+                _sendState = new SendState();
+                _receiveState = new ReceiveState();
+                _heartBeatState = new HeartBeatState();
+                _sentPacketCount = 0;
+                _receivedPacketCount = 0;
+                _active = false;
+                _disposed = false;
 
                 NetworkChannelConnected = null;
                 NetworkChannelClosed = null;
@@ -82,7 +82,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_Name;
+                    return _name;
                 }
             }
 
@@ -93,7 +93,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_Socket;
+                    return _socket;
                 }
             }
 
@@ -104,9 +104,9 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    if (m_Socket != null)
+                    if (_socket != null)
                     {
-                        return m_Socket.Connected;
+                        return _socket.Connected;
                     }
 
                     return false;
@@ -128,7 +128,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_AddressFamily;
+                    return _addressFamily;
                 }
             }
 
@@ -139,7 +139,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_SendPacketPool.Count;
+                    return _sendPacketPool.Count;
                 }
             }
 
@@ -150,7 +150,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_SentPacketCount;
+                    return _sentPacketCount;
                 }
             }
 
@@ -161,7 +161,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_ReceivePacketPool.EventCount;
+                    return _receivePacketPool.EventCount;
                 }
             }
 
@@ -172,7 +172,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_ReceivedPacketCount;
+                    return _receivedPacketCount;
                 }
             }
 
@@ -183,11 +183,11 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_ResetHeartBeatElapseSecondsWhenReceivePacket;
+                    return _resetHeartBeatElapseSecondsWhenReceivePacket;
                 }
                 set
                 {
-                    m_ResetHeartBeatElapseSecondsWhenReceivePacket = value;
+                    _resetHeartBeatElapseSecondsWhenReceivePacket = value;
                 }
             }
 
@@ -198,7 +198,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_HeartBeatState.MissHeartBeatCount;
+                    return _heartBeatState.MissHeartBeatCount;
                 }
             }
 
@@ -209,11 +209,11 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_HeartBeatInterval;
+                    return _heartBeatInterval;
                 }
                 set
                 {
-                    m_HeartBeatInterval = value;
+                    _heartBeatInterval = value;
                 }
             }
 
@@ -224,7 +224,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_HeartBeatState.HeartBeatElapseSeconds;
+                    return _heartBeatState.HeartBeatElapseSeconds;
                 }
             }
 
@@ -235,42 +235,42 @@ namespace EasyGameFramework.Core.Network
             /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
             public virtual void Update(float elapseSeconds, float realElapseSeconds)
             {
-                if (m_Socket == null || !m_Active)
+                if (_socket == null || !_active)
                 {
                     return;
                 }
 
                 ProcessSend();
                 ProcessReceive();
-                if (m_Socket == null || !m_Active)
+                if (_socket == null || !_active)
                 {
                     return;
                 }
 
-                m_ReceivePacketPool.Update(elapseSeconds, realElapseSeconds);
+                _receivePacketPool.Update(elapseSeconds, realElapseSeconds);
 
-                if (m_HeartBeatInterval > 0f)
+                if (_heartBeatInterval > 0f)
                 {
                     bool sendHeartBeat = false;
                     int missHeartBeatCount = 0;
-                    lock (m_HeartBeatState)
+                    lock (_heartBeatState)
                     {
-                        if (m_Socket == null || !m_Active)
+                        if (_socket == null || !_active)
                         {
                             return;
                         }
 
-                        m_HeartBeatState.HeartBeatElapseSeconds += realElapseSeconds;
-                        if (m_HeartBeatState.HeartBeatElapseSeconds >= m_HeartBeatInterval)
+                        _heartBeatState.HeartBeatElapseSeconds += realElapseSeconds;
+                        if (_heartBeatState.HeartBeatElapseSeconds >= _heartBeatInterval)
                         {
                             sendHeartBeat = true;
-                            missHeartBeatCount = m_HeartBeatState.MissHeartBeatCount;
-                            m_HeartBeatState.HeartBeatElapseSeconds = 0f;
-                            m_HeartBeatState.MissHeartBeatCount++;
+                            missHeartBeatCount = _heartBeatState.MissHeartBeatCount;
+                            _heartBeatState.HeartBeatElapseSeconds = 0f;
+                            _heartBeatState.MissHeartBeatCount++;
                         }
                     }
 
-                    if (sendHeartBeat && m_NetworkChannelHelper.SendHeartBeat())
+                    if (sendHeartBeat && _networkChannelHelper.SendHeartBeat())
                     {
                         if (missHeartBeatCount > 0 && NetworkChannelMissHeartBeat != null)
                         {
@@ -286,8 +286,8 @@ namespace EasyGameFramework.Core.Network
             public virtual void Shutdown()
             {
                 Close();
-                m_ReceivePacketPool.Shutdown();
-                m_NetworkChannelHelper.Shutdown();
+                _receivePacketPool.Shutdown();
+                _networkChannelHelper.Shutdown();
             }
 
             /// <summary>
@@ -301,7 +301,7 @@ namespace EasyGameFramework.Core.Network
                     throw new GameFrameworkException("Packet handler is invalid.");
                 }
 
-                m_ReceivePacketPool.Subscribe(handler.Id, handler.Handle);
+                _receivePacketPool.Subscribe(handler.Id, handler.Handle);
             }
 
             /// <summary>
@@ -310,7 +310,7 @@ namespace EasyGameFramework.Core.Network
             /// <param name="handler">要设置的默认事件处理函数。</param>
             public void SetDefaultHandler(EventHandler<Packet> handler)
             {
-                m_ReceivePacketPool.SetDefaultHandler(handler);
+                _receivePacketPool.SetDefaultHandler(handler);
             }
 
             /// <summary>
@@ -331,20 +331,20 @@ namespace EasyGameFramework.Core.Network
             /// <param name="userData">用户自定义数据。</param>
             public virtual void Connect(IPAddress ipAddress, int port, object userData)
             {
-                if (m_Socket != null)
+                if (_socket != null)
                 {
                     Close();
-                    m_Socket = null;
+                    _socket = null;
                 }
 
                 switch (ipAddress.AddressFamily)
                 {
                     case System.Net.Sockets.AddressFamily.InterNetwork:
-                        m_AddressFamily = AddressFamily.IPv4;
+                        _addressFamily = AddressFamily.IPv4;
                         break;
 
                     case System.Net.Sockets.AddressFamily.InterNetworkV6:
-                        m_AddressFamily = AddressFamily.IPv6;
+                        _addressFamily = AddressFamily.IPv6;
                         break;
 
                     default:
@@ -358,8 +358,8 @@ namespace EasyGameFramework.Core.Network
                         throw new GameFrameworkException(errorMessage);
                 }
 
-                m_SendState.Reset();
-                m_ReceiveState.PrepareForPacketHeader(m_NetworkChannelHelper.PacketHeaderLength);
+                _sendState.Reset();
+                _receiveState.PrepareForPacketHeader(_networkChannelHelper.PacketHeaderLength);
             }
 
             /// <summary>
@@ -369,24 +369,24 @@ namespace EasyGameFramework.Core.Network
             {
                 lock (this)
                 {
-                    if (m_Socket == null)
+                    if (_socket == null)
                     {
                         return;
                     }
 
-                    m_Active = false;
+                    _active = false;
 
                     try
                     {
-                        m_Socket.Shutdown(SocketShutdown.Both);
+                        _socket.Shutdown(SocketShutdown.Both);
                     }
                     catch
                     {
                     }
                     finally
                     {
-                        m_Socket.Close();
-                        m_Socket = null;
+                        _socket.Close();
+                        _socket = null;
 
                         if (NetworkChannelClosed != null)
                         {
@@ -394,19 +394,19 @@ namespace EasyGameFramework.Core.Network
                         }
                     }
 
-                    m_SentPacketCount = 0;
-                    m_ReceivedPacketCount = 0;
+                    _sentPacketCount = 0;
+                    _receivedPacketCount = 0;
 
-                    lock (m_SendPacketPool)
+                    lock (_sendPacketPool)
                     {
-                        m_SendPacketPool.Clear();
+                        _sendPacketPool.Clear();
                     }
 
-                    m_ReceivePacketPool.Clear();
+                    _receivePacketPool.Clear();
 
-                    lock (m_HeartBeatState)
+                    lock (_heartBeatState)
                     {
-                        m_HeartBeatState.Reset(true);
+                        _heartBeatState.Reset(true);
                     }
                 }
             }
@@ -418,7 +418,7 @@ namespace EasyGameFramework.Core.Network
             /// <param name="packet">要发送的消息包。</param>
             public void Send<T>(T packet) where T : Packet
             {
-                if (m_Socket == null)
+                if (_socket == null)
                 {
                     string errorMessage = "You must connect first.";
                     if (NetworkChannelError != null)
@@ -430,7 +430,7 @@ namespace EasyGameFramework.Core.Network
                     throw new GameFrameworkException(errorMessage);
                 }
 
-                if (!m_Active)
+                if (!_active)
                 {
                     string errorMessage = "Socket is not active.";
                     if (NetworkChannelError != null)
@@ -454,9 +454,9 @@ namespace EasyGameFramework.Core.Network
                     throw new GameFrameworkException(errorMessage);
                 }
 
-                lock (m_SendPacketPool)
+                lock (_sendPacketPool)
                 {
-                    m_SendPacketPool.Enqueue(packet);
+                    _sendPacketPool.Enqueue(packet);
                 }
             }
 
@@ -475,7 +475,7 @@ namespace EasyGameFramework.Core.Network
             /// <param name="disposing">释放资源标记。</param>
             private void Dispose(bool disposing)
             {
-                if (m_Disposed)
+                if (_disposed)
                 {
                     return;
                 }
@@ -483,36 +483,36 @@ namespace EasyGameFramework.Core.Network
                 if (disposing)
                 {
                     Close();
-                    m_SendState.Dispose();
-                    m_ReceiveState.Dispose();
+                    _sendState.Dispose();
+                    _receiveState.Dispose();
                 }
 
-                m_Disposed = true;
+                _disposed = true;
             }
 
             protected virtual bool ProcessSend()
             {
-                if (m_SendState.Stream.Length > 0 || m_SendPacketPool.Count <= 0)
+                if (_sendState.Stream.Length > 0 || _sendPacketPool.Count <= 0)
                 {
                     return false;
                 }
 
-                while (m_SendPacketPool.Count > 0)
+                while (_sendPacketPool.Count > 0)
                 {
                     Packet packet = null;
-                    lock (m_SendPacketPool)
+                    lock (_sendPacketPool)
                     {
-                        packet = m_SendPacketPool.Dequeue();
+                        packet = _sendPacketPool.Dequeue();
                     }
 
                     bool serializeResult = false;
                     try
                     {
-                        serializeResult = m_NetworkChannelHelper.Serialize(packet, m_SendState.Stream);
+                        serializeResult = _networkChannelHelper.Serialize(packet, _sendState.Stream);
                     }
                     catch (Exception exception)
                     {
-                        m_Active = false;
+                        _active = false;
                         if (NetworkChannelError != null)
                         {
                             SocketException socketException = exception as SocketException;
@@ -536,7 +536,7 @@ namespace EasyGameFramework.Core.Network
                     }
                 }
 
-                m_SendState.Stream.Position = 0L;
+                _sendState.Stream.Position = 0L;
                 return true;
             }
 
@@ -549,7 +549,7 @@ namespace EasyGameFramework.Core.Network
                 try
                 {
                     object customErrorData = null;
-                    IPacketHeader packetHeader = m_NetworkChannelHelper.DeserializePacketHeader(m_ReceiveState.Stream, out customErrorData);
+                    IPacketHeader packetHeader = _networkChannelHelper.DeserializePacketHeader(_receiveState.Stream, out customErrorData);
 
                     if (customErrorData != null && NetworkChannelCustomError != null)
                     {
@@ -568,17 +568,17 @@ namespace EasyGameFramework.Core.Network
                         throw new GameFrameworkException(errorMessage);
                     }
 
-                    m_ReceiveState.PrepareForPacket(packetHeader);
+                    _receiveState.PrepareForPacket(packetHeader);
                     if (packetHeader.PacketLength <= 0)
                     {
                         bool processSuccess = ProcessPacket();
-                        m_ReceivedPacketCount++;
+                        _receivedPacketCount++;
                         return processSuccess;
                     }
                 }
                 catch (Exception exception)
                 {
-                    m_Active = false;
+                    _active = false;
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;
@@ -594,15 +594,15 @@ namespace EasyGameFramework.Core.Network
 
             protected virtual bool ProcessPacket()
             {
-                lock (m_HeartBeatState)
+                lock (_heartBeatState)
                 {
-                    m_HeartBeatState.Reset(m_ResetHeartBeatElapseSecondsWhenReceivePacket);
+                    _heartBeatState.Reset(_resetHeartBeatElapseSecondsWhenReceivePacket);
                 }
 
                 try
                 {
                     object customErrorData = null;
-                    Packet packet = m_NetworkChannelHelper.DeserializePacket(m_ReceiveState.PacketHeader, m_ReceiveState.Stream, out customErrorData);
+                    Packet packet = _networkChannelHelper.DeserializePacket(_receiveState.PacketHeader, _receiveState.Stream, out customErrorData);
 
                     if (customErrorData != null && NetworkChannelCustomError != null)
                     {
@@ -611,14 +611,14 @@ namespace EasyGameFramework.Core.Network
 
                     if (packet != null)
                     {
-                        m_ReceivePacketPool.Fire(this, packet);
+                        _receivePacketPool.Fire(this, packet);
                     }
 
-                    m_ReceiveState.PrepareForPacketHeader(m_NetworkChannelHelper.PacketHeaderLength);
+                    _receiveState.PrepareForPacketHeader(_networkChannelHelper.PacketHeaderLength);
                 }
                 catch (Exception exception)
                 {
-                    m_Active = false;
+                    _active = false;
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;

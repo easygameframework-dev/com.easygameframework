@@ -12,8 +12,8 @@ namespace EasyGameFramework.Core.Resource
     /// </summary>
     public sealed class LoadSceneCallbacks
     {
-        private readonly LoadSceneSuccessCallback m_LoadSceneSuccessCallback;
-        private readonly LoadSceneFailureCallback m_LoadSceneFailureCallback;
+        private readonly LoadSceneSuccessCallback _loadSceneSuccessCallback;
+        private readonly LoadSceneFailureCallback _loadSceneFailureCallback;
 
         /// <summary>
         /// 初始化加载场景回调函数集的新实例。
@@ -27,8 +27,8 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Load scene success callback is invalid.");
             }
 
-            m_LoadSceneSuccessCallback = loadSceneSuccessCallback;
-            m_LoadSceneFailureCallback = loadSceneFailureCallback;
+            _loadSceneSuccessCallback = loadSceneSuccessCallback;
+            _loadSceneFailureCallback = loadSceneFailureCallback;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace EasyGameFramework.Core.Resource
         {
             get
             {
-                return m_LoadSceneSuccessCallback;
+                return _loadSceneSuccessCallback;
             }
         }
 
@@ -49,7 +49,7 @@ namespace EasyGameFramework.Core.Resource
         {
             get
             {
-                return m_LoadSceneFailureCallback;
+                return _loadSceneFailureCallback;
             }
         }
     }

@@ -16,7 +16,7 @@ namespace EasyGameFramework
     /// </summary>
     public static class UnityExtension
     {
-        private static readonly List<Transform> s_CachedTransforms = new List<Transform>();
+        private static readonly List<Transform> s_cachedTransforms = new List<Transform>();
 
         /// <summary>
         /// 获取或增加组件。
@@ -70,13 +70,13 @@ namespace EasyGameFramework
         /// <param name="layer">目标层次的编号。</param>
         public static void SetLayerRecursively(this GameObject gameObject, int layer)
         {
-            gameObject.GetComponentsInChildren(true, s_CachedTransforms);
-            for (int i = 0; i < s_CachedTransforms.Count; i++)
+            gameObject.GetComponentsInChildren(true, s_cachedTransforms);
+            for (int i = 0; i < s_cachedTransforms.Count; i++)
             {
-                s_CachedTransforms[i].gameObject.layer = layer;
+                s_cachedTransforms[i].gameObject.layer = layer;
             }
 
-            s_CachedTransforms.Clear();
+            s_cachedTransforms.Clear();
         }
 
         /// <summary>

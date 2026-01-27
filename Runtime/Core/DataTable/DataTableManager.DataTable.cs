@@ -19,11 +19,11 @@ namespace EasyGameFramework.Core.DataTable
         /// <typeparam name="T">数据表行的类型。</typeparam>
         private sealed class DataTable<T> : DataTableBase, IDataTable<T>
         {
-            private readonly Dictionary<int, T> m_DataSet;
-            private T m_MinIdDataRow;
-            private T m_MaxIdDataRow;
+            private readonly Dictionary<int, T> _dataSet;
+            private T _minIdDataRow;
+            private T _maxIdDataRow;
 
-            private readonly IDataRowHelper<T> m_DataRowHelper;
+            private readonly IDataRowHelper<T> _dataRowHelper;
 
             /// <summary>
             /// 初始化数据表的新实例。
@@ -33,10 +33,10 @@ namespace EasyGameFramework.Core.DataTable
             public DataTable(string name, IDataRowHelper<T> dataRowHelper)
                 : base(name)
             {
-                m_DataSet = new Dictionary<int, T>();
-                m_DataRowHelper = dataRowHelper;
-                m_MinIdDataRow = default;
-                m_MaxIdDataRow = default;
+                _dataSet = new Dictionary<int, T>();
+                _dataRowHelper = dataRowHelper;
+                _minIdDataRow = default;
+                _maxIdDataRow = default;
             }
 
             /// <summary>
@@ -57,7 +57,7 @@ namespace EasyGameFramework.Core.DataTable
             {
                 get
                 {
-                    return m_DataSet.Count;
+                    return _dataSet.Count;
                 }
             }
 
@@ -81,7 +81,7 @@ namespace EasyGameFramework.Core.DataTable
             {
                 get
                 {
-                    return m_MinIdDataRow;
+                    return _minIdDataRow;
                 }
             }
 
@@ -92,7 +92,7 @@ namespace EasyGameFramework.Core.DataTable
             {
                 get
                 {
-                    return m_MaxIdDataRow;
+                    return _maxIdDataRow;
                 }
             }
 
@@ -103,7 +103,7 @@ namespace EasyGameFramework.Core.DataTable
             /// <returns>是否存在数据表行。</returns>
             public override bool HasDataRow(int id)
             {
-                return m_DataSet.ContainsKey(id);
+                return _dataSet.ContainsKey(id);
             }
 
             /// <summary>
@@ -118,7 +118,7 @@ namespace EasyGameFramework.Core.DataTable
                     throw new GameFrameworkException("Condition is invalid.");
                 }
 
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     if (condition(dataRow.Value))
                     {
@@ -137,7 +137,7 @@ namespace EasyGameFramework.Core.DataTable
             public T GetDataRow(int id)
             {
                 T dataRow = default;
-                if (m_DataSet.TryGetValue(id, out dataRow))
+                if (_dataSet.TryGetValue(id, out dataRow))
                 {
                     return dataRow;
                 }
@@ -158,7 +158,7 @@ namespace EasyGameFramework.Core.DataTable
                     throw new GameFrameworkException("Condition is invalid.");
                 }
 
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     if (condition(dataRow.Value))
                     {
@@ -182,7 +182,7 @@ namespace EasyGameFramework.Core.DataTable
                 }
 
                 List<T> results = new List<T>();
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     if (condition(dataRow.Value))
                     {
@@ -211,7 +211,7 @@ namespace EasyGameFramework.Core.DataTable
                 }
 
                 results.Clear();
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     if (condition(dataRow.Value))
                     {
@@ -233,7 +233,7 @@ namespace EasyGameFramework.Core.DataTable
                 }
 
                 List<T> results = new List<T>();
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     results.Add(dataRow.Value);
                 }
@@ -260,7 +260,7 @@ namespace EasyGameFramework.Core.DataTable
                 }
 
                 results.Clear();
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     results.Add(dataRow.Value);
                 }
@@ -287,7 +287,7 @@ namespace EasyGameFramework.Core.DataTable
                 }
 
                 List<T> results = new List<T>();
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     if (condition(dataRow.Value))
                     {
@@ -323,7 +323,7 @@ namespace EasyGameFramework.Core.DataTable
                 }
 
                 results.Clear();
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     if (condition(dataRow.Value))
                     {
@@ -341,8 +341,8 @@ namespace EasyGameFramework.Core.DataTable
             public T[] GetAllDataRows()
             {
                 int index = 0;
-                T[] results = new T[m_DataSet.Count];
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                T[] results = new T[_dataSet.Count];
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     results[index++] = dataRow.Value;
                 }
@@ -362,7 +362,7 @@ namespace EasyGameFramework.Core.DataTable
                 }
 
                 results.Clear();
-                foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                foreach (KeyValuePair<int, T> dataRow in _dataSet)
                 {
                     results.Add(dataRow.Value);
                 }
@@ -378,7 +378,7 @@ namespace EasyGameFramework.Core.DataTable
             {
                 try
                 {
-                    if (!m_DataRowHelper.ParseDataRow(out T dataRow, dataRowString, userData))
+                    if (!_dataRowHelper.ParseDataRow(out T dataRow, dataRowString, userData))
                     {
                         return false;
                     }
@@ -409,7 +409,7 @@ namespace EasyGameFramework.Core.DataTable
             {
                 try
                 {
-                    if (!m_DataRowHelper.ParseDataRow(out T dataRow, dataRowBytes, startIndex, length, userData))
+                    if (!_dataRowHelper.ParseDataRow(out T dataRow, dataRowBytes, startIndex, length, userData))
                     {
                         return false;
                     }
@@ -440,25 +440,25 @@ namespace EasyGameFramework.Core.DataTable
                     return false;
                 }
 
-                if (!m_DataSet.Remove(id))
+                if (!_dataSet.Remove(id))
                 {
                     return false;
                 }
 
-                if (m_MinIdDataRow != null && m_DataRowHelper.GetId(m_MinIdDataRow) == id || m_MaxIdDataRow != null && m_DataRowHelper.GetId(m_MaxIdDataRow) == id)
+                if (_minIdDataRow != null && _dataRowHelper.GetId(_minIdDataRow) == id || _maxIdDataRow != null && _dataRowHelper.GetId(_maxIdDataRow) == id)
                 {
-                    m_MinIdDataRow = default;
-                    m_MaxIdDataRow = default;
-                    foreach (KeyValuePair<int, T> dataRow in m_DataSet)
+                    _minIdDataRow = default;
+                    _maxIdDataRow = default;
+                    foreach (KeyValuePair<int, T> dataRow in _dataSet)
                     {
-                        if (m_MinIdDataRow == null || m_DataRowHelper.GetId(m_MinIdDataRow) > dataRow.Key)
+                        if (_minIdDataRow == null || _dataRowHelper.GetId(_minIdDataRow) > dataRow.Key)
                         {
-                            m_MinIdDataRow = dataRow.Value;
+                            _minIdDataRow = dataRow.Value;
                         }
 
-                        if (m_MaxIdDataRow == null || m_DataRowHelper.GetId(m_MaxIdDataRow) < dataRow.Key)
+                        if (_maxIdDataRow == null || _dataRowHelper.GetId(_maxIdDataRow) < dataRow.Key)
                         {
-                            m_MaxIdDataRow = dataRow.Value;
+                            _maxIdDataRow = dataRow.Value;
                         }
                     }
                 }
@@ -471,9 +471,9 @@ namespace EasyGameFramework.Core.DataTable
             /// </summary>
             public override void RemoveAllDataRows()
             {
-                m_DataSet.Clear();
-                m_MinIdDataRow = default;
-                m_MaxIdDataRow = default;
+                _dataSet.Clear();
+                _minIdDataRow = default;
+                _maxIdDataRow = default;
             }
 
             /// <summary>
@@ -482,7 +482,7 @@ namespace EasyGameFramework.Core.DataTable
             /// <returns>循环访问集合的枚举数。</returns>
             public IEnumerator<T> GetEnumerator()
             {
-                return m_DataSet.Values.GetEnumerator();
+                return _dataSet.Values.GetEnumerator();
             }
 
             /// <summary>
@@ -491,7 +491,7 @@ namespace EasyGameFramework.Core.DataTable
             /// <returns>循环访问集合的枚举数。</returns>
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_DataSet.Values.GetEnumerator();
+                return _dataSet.Values.GetEnumerator();
             }
 
             /// <summary>
@@ -499,27 +499,27 @@ namespace EasyGameFramework.Core.DataTable
             /// </summary>
             internal override void Shutdown()
             {
-                m_DataSet.Clear();
+                _dataSet.Clear();
             }
 
             private void InternalAddDataRow(T dataRow)
             {
-                int dataRowId = m_DataRowHelper.GetId(dataRow);
-                if (m_DataSet.ContainsKey(dataRowId))
+                int dataRowId = _dataRowHelper.GetId(dataRow);
+                if (_dataSet.ContainsKey(dataRowId))
                 {
                     throw new GameFrameworkException(Utility.Text.Format("Already exist '{0}' in data table '{1}'.", dataRowId, new TypeNamePair(typeof(T), Name)));
                 }
 
-                m_DataSet.Add(dataRowId, dataRow);
+                _dataSet.Add(dataRowId, dataRow);
 
-                if (m_MinIdDataRow == null || m_DataRowHelper.GetId(m_MinIdDataRow) > dataRowId)
+                if (_minIdDataRow == null || _dataRowHelper.GetId(_minIdDataRow) > dataRowId)
                 {
-                    m_MinIdDataRow = dataRow;
+                    _minIdDataRow = dataRow;
                 }
 
-                if (m_MaxIdDataRow == null || m_DataRowHelper.GetId(m_MaxIdDataRow) < dataRowId)
+                if (_maxIdDataRow == null || _dataRowHelper.GetId(_maxIdDataRow) < dataRowId)
                 {
-                    m_MaxIdDataRow = dataRow;
+                    _maxIdDataRow = dataRow;
                 }
             }
         }

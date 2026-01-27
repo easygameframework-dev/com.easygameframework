@@ -13,20 +13,20 @@ namespace EasyGameFramework.Core.Network
     {
         private sealed class ConnectState
         {
-            private readonly Socket m_Socket;
-            private readonly object m_UserData;
+            private readonly Socket _socket;
+            private readonly object _userData;
 
             public ConnectState(Socket socket, object userData)
             {
-                m_Socket = socket;
-                m_UserData = userData;
+                _socket = socket;
+                _userData = userData;
             }
 
             public Socket Socket
             {
                 get
                 {
-                    return m_Socket;
+                    return _socket;
                 }
             }
 
@@ -34,7 +34,7 @@ namespace EasyGameFramework.Core.Network
             {
                 get
                 {
-                    return m_UserData;
+                    return _userData;
                 }
             }
         }

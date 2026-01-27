@@ -18,29 +18,29 @@ namespace EasyGameFramework.Core.FileSystem
         [StructLayout(LayoutKind.Sequential)]
         private struct StringData
         {
-            private static readonly byte[] s_CachedBytes = new byte[byte.MaxValue + 1];
+            private static readonly byte[] s_cachedBytes = new byte[byte.MaxValue + 1];
 
-            private readonly byte m_Length;
+            private readonly byte _length;
 
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = byte.MaxValue)]
-            private readonly byte[] m_Bytes;
+            private readonly byte[] _bytes;
 
             public StringData(byte length, byte[] bytes)
             {
-                m_Length = length;
-                m_Bytes = bytes;
+                _length = length;
+                _bytes = bytes;
             }
 
             public string GetString(byte[] encryptBytes)
             {
-                if (m_Length <= 0)
+                if (_length <= 0)
                 {
                     return null;
                 }
 
-                Array.Copy(m_Bytes, 0, s_CachedBytes, 0, m_Length);
-                Utility.Encryption.GetSelfXorBytes(s_CachedBytes, 0, m_Length, encryptBytes);
-                return Utility.Converter.GetString(s_CachedBytes, 0, m_Length);
+                Array.Copy(_bytes, 0, s_cachedBytes, 0, _length);
+                Utility.Encryption.GetSelfXorBytes(s_cachedBytes, 0, _length, encryptBytes);
+                return Utility.Converter.GetString(s_cachedBytes, 0, _length);
             }
 
             public StringData SetString(string value, byte[] encryptBytes)
@@ -50,20 +50,20 @@ namespace EasyGameFramework.Core.FileSystem
                     return Clear();
                 }
 
-                int length = Utility.Converter.GetBytes(value, s_CachedBytes);
+                int length = Utility.Converter.GetBytes(value, s_cachedBytes);
                 if (length > byte.MaxValue)
                 {
                     throw new GameFrameworkException(Utility.Text.Format("String '{0}' is too long.", value));
                 }
 
-                Utility.Encryption.GetSelfXorBytes(s_CachedBytes, encryptBytes);
-                Array.Copy(s_CachedBytes, 0, m_Bytes, 0, length);
-                return new StringData((byte)length, m_Bytes);
+                Utility.Encryption.GetSelfXorBytes(s_cachedBytes, encryptBytes);
+                Array.Copy(s_cachedBytes, 0, _bytes, 0, length);
+                return new StringData((byte)length, _bytes);
             }
 
             public StringData Clear()
             {
-                return new StringData(0, m_Bytes);
+                return new StringData(0, _bytes);
             }
         }
     }

@@ -16,15 +16,15 @@ namespace EasyGameFramework.Core.Debugger
         /// </summary>
         private sealed class DebuggerWindowGroup : IDebuggerWindowGroup
         {
-            private readonly List<KeyValuePair<string, IDebuggerWindow>> m_DebuggerWindows;
-            private int m_SelectedIndex;
-            private string[] m_DebuggerWindowNames;
+            private readonly List<KeyValuePair<string, IDebuggerWindow>> _debuggerWindows;
+            private int _selectedIndex;
+            private string[] _debuggerWindowNames;
 
             public DebuggerWindowGroup()
             {
-                m_DebuggerWindows = new List<KeyValuePair<string, IDebuggerWindow>>();
-                m_SelectedIndex = 0;
-                m_DebuggerWindowNames = null;
+                _debuggerWindows = new List<KeyValuePair<string, IDebuggerWindow>>();
+                _selectedIndex = 0;
+                _debuggerWindowNames = null;
             }
 
             /// <summary>
@@ -34,7 +34,7 @@ namespace EasyGameFramework.Core.Debugger
             {
                 get
                 {
-                    return m_DebuggerWindows.Count;
+                    return _debuggerWindows.Count;
                 }
             }
 
@@ -45,11 +45,11 @@ namespace EasyGameFramework.Core.Debugger
             {
                 get
                 {
-                    return m_SelectedIndex;
+                    return _selectedIndex;
                 }
                 set
                 {
-                    m_SelectedIndex = value;
+                    _selectedIndex = value;
                 }
             }
 
@@ -60,12 +60,12 @@ namespace EasyGameFramework.Core.Debugger
             {
                 get
                 {
-                    if (m_SelectedIndex >= m_DebuggerWindows.Count)
+                    if (_selectedIndex >= _debuggerWindows.Count)
                     {
                         return null;
                     }
 
-                    return m_DebuggerWindows[m_SelectedIndex].Value;
+                    return _debuggerWindows[_selectedIndex].Value;
                 }
             }
 
@@ -82,12 +82,12 @@ namespace EasyGameFramework.Core.Debugger
             /// </summary>
             public void Shutdown()
             {
-                foreach (KeyValuePair<string, IDebuggerWindow> debuggerWindow in m_DebuggerWindows)
+                foreach (KeyValuePair<string, IDebuggerWindow> debuggerWindow in _debuggerWindows)
                 {
                     debuggerWindow.Value.Shutdown();
                 }
 
-                m_DebuggerWindows.Clear();
+                _debuggerWindows.Clear();
             }
 
             /// <summary>
@@ -126,10 +126,10 @@ namespace EasyGameFramework.Core.Debugger
             private void RefreshDebuggerWindowNames()
             {
                 int index = 0;
-                m_DebuggerWindowNames = new string[m_DebuggerWindows.Count];
-                foreach (KeyValuePair<string, IDebuggerWindow> debuggerWindow in m_DebuggerWindows)
+                _debuggerWindowNames = new string[_debuggerWindows.Count];
+                foreach (KeyValuePair<string, IDebuggerWindow> debuggerWindow in _debuggerWindows)
                 {
-                    m_DebuggerWindowNames[index++] = debuggerWindow.Key;
+                    _debuggerWindowNames[index++] = debuggerWindow.Key;
                 }
             }
 
@@ -138,7 +138,7 @@ namespace EasyGameFramework.Core.Debugger
             /// </summary>
             public string[] GetDebuggerWindowNames()
             {
-                return m_DebuggerWindowNames;
+                return _debuggerWindowNames;
             }
 
             /// <summary>
@@ -219,7 +219,7 @@ namespace EasyGameFramework.Core.Debugger
                         throw new GameFrameworkException("Debugger window has been registered.");
                     }
 
-                    m_DebuggerWindows.Add(new KeyValuePair<string, IDebuggerWindow>(path, debuggerWindow));
+                    _debuggerWindows.Add(new KeyValuePair<string, IDebuggerWindow>(path, debuggerWindow));
                     RefreshDebuggerWindowNames();
                 }
                 else
@@ -235,7 +235,7 @@ namespace EasyGameFramework.Core.Debugger
                         }
 
                         debuggerWindowGroup = new DebuggerWindowGroup();
-                        m_DebuggerWindows.Add(new KeyValuePair<string, IDebuggerWindow>(debuggerWindowGroupName, debuggerWindowGroup));
+                        _debuggerWindows.Add(new KeyValuePair<string, IDebuggerWindow>(debuggerWindowGroupName, debuggerWindowGroup));
                         RefreshDebuggerWindowNames();
                     }
 
@@ -259,7 +259,7 @@ namespace EasyGameFramework.Core.Debugger
                 if (pos < 0 || pos >= path.Length - 1)
                 {
                     IDebuggerWindow debuggerWindow = InternalGetDebuggerWindow(path);
-                    bool result = m_DebuggerWindows.Remove(new KeyValuePair<string, IDebuggerWindow>(path, debuggerWindow));
+                    bool result = _debuggerWindows.Remove(new KeyValuePair<string, IDebuggerWindow>(path, debuggerWindow));
                     debuggerWindow.Shutdown();
                     RefreshDebuggerWindowNames();
                     return result;
@@ -278,7 +278,7 @@ namespace EasyGameFramework.Core.Debugger
 
             private IDebuggerWindow InternalGetDebuggerWindow(string name)
             {
-                foreach (KeyValuePair<string, IDebuggerWindow> debuggerWindow in m_DebuggerWindows)
+                foreach (KeyValuePair<string, IDebuggerWindow> debuggerWindow in _debuggerWindows)
                 {
                     if (debuggerWindow.Key == name)
                     {
@@ -291,11 +291,11 @@ namespace EasyGameFramework.Core.Debugger
 
             private bool InternalSelectDebuggerWindow(string name)
             {
-                for (int i = 0; i < m_DebuggerWindows.Count; i++)
+                for (int i = 0; i < _debuggerWindows.Count; i++)
                 {
-                    if (m_DebuggerWindows[i].Key == name)
+                    if (_debuggerWindows[i].Key == name)
                     {
-                        m_SelectedIndex = i;
+                        _selectedIndex = i;
                         return true;
                     }
                 }

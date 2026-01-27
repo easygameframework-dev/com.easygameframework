@@ -14,22 +14,22 @@ namespace EasyGameFramework.Core.ObjectPool
     /// </summary>
     public abstract class ObjectBase : IReference
     {
-        private string m_Name;
-        private object m_Target;
-        private bool m_Locked;
-        private int m_Priority;
-        private DateTime m_LastUseTime;
+        private string _name;
+        private object _target;
+        private bool _locked;
+        private int _priority;
+        private DateTime _lastUseTime;
 
         /// <summary>
         /// 初始化对象基类的新实例。
         /// </summary>
         public ObjectBase()
         {
-            m_Name = null;
-            m_Target = null;
-            m_Locked = false;
-            m_Priority = 0;
-            m_LastUseTime = default(DateTime);
+            _name = null;
+            _target = null;
+            _locked = false;
+            _priority = 0;
+            _lastUseTime = default(DateTime);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_Name;
+                return _name;
             }
         }
 
@@ -50,7 +50,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_Target;
+                return _target;
             }
         }
 
@@ -61,11 +61,11 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_Locked;
+                return _locked;
             }
             set
             {
-                m_Locked = value;
+                _locked = value;
             }
         }
 
@@ -76,11 +76,11 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_Priority;
+                return _priority;
             }
             set
             {
-                m_Priority = value;
+                _priority = value;
             }
         }
 
@@ -102,11 +102,11 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_LastUseTime;
+                return _lastUseTime;
             }
             internal set
             {
-                m_LastUseTime = value;
+                _lastUseTime = value;
             }
         }
 
@@ -165,11 +165,11 @@ namespace EasyGameFramework.Core.ObjectPool
                 throw new GameFrameworkException(Utility.Text.Format("Target '{0}' is invalid.", name));
             }
 
-            m_Name = name ?? string.Empty;
-            m_Target = target;
-            m_Locked = locked;
-            m_Priority = priority;
-            m_LastUseTime = DateTime.UtcNow;
+            _name = name ?? string.Empty;
+            _target = target;
+            _locked = locked;
+            _priority = priority;
+            _lastUseTime = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -177,11 +177,11 @@ namespace EasyGameFramework.Core.ObjectPool
         /// </summary>
         public virtual void Clear()
         {
-            m_Name = null;
-            m_Target = null;
-            m_Locked = false;
-            m_Priority = 0;
-            m_LastUseTime = default(DateTime);
+            _name = null;
+            _target = null;
+            _locked = false;
+            _priority = 0;
+            _lastUseTime = default(DateTime);
         }
 
         /// <summary>

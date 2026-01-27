@@ -19,24 +19,24 @@ namespace EasyGameFramework.Core.Resource
     /// </summary>
     internal sealed partial class ResourceManager : GameFrameworkModule, IResourceManager
     {
-        private string m_ReadOnlyPath;
-        private string m_ReadWritePath;
-        private IResourceHelper m_ResourceHelper;
+        private string _readOnlyPath;
+        private string _readWritePath;
+        private IResourceHelper _resourceHelper;
 
-        private readonly ResourceLoader m_ResourceLoader;
-        private readonly Dictionary<AssetAddress, AssetInfo> m_AssetInfosCache;
-        private readonly Dictionary<(string packageName, string[] tags), AssetInfo[]> m_AssetInfosCacheByTags;
+        private readonly ResourceLoader _resourceLoader;
+        private readonly Dictionary<AssetAddress, AssetInfo> _assetInfosCache;
+        private readonly Dictionary<(string packageName, string[] tags), AssetInfo[]> _assetInfosCacheByTags;
 
         /// <summary>
         /// 初始化资源管理器的新实例。
         /// </summary>
         public ResourceManager()
         {
-            m_ReadOnlyPath = null;
-            m_ReadWritePath = null;
-            m_ResourceLoader = new ResourceLoader(this);
-            m_AssetInfosCache = new Dictionary<AssetAddress, AssetInfo>();
-            m_AssetInfosCacheByTags = new Dictionary<(string packageName, string[] tags), AssetInfo[]>();
+            _readOnlyPath = null;
+            _readWritePath = null;
+            _resourceLoader = new ResourceLoader(this);
+            _assetInfosCache = new Dictionary<AssetAddress, AssetInfo>();
+            _assetInfosCacheByTags = new Dictionary<(string packageName, string[] tags), AssetInfo[]>();
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace EasyGameFramework.Core.Resource
         /// </summary>
         public string ReadOnlyPath
         {
-            get { return m_ReadOnlyPath; }
+            get { return _readOnlyPath; }
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace EasyGameFramework.Core.Resource
         /// </summary>
         public string ReadWritePath
         {
-            get { return m_ReadWritePath; }
+            get { return _readWritePath; }
         }
 
         public long Milliseconds { get; set; }
@@ -82,7 +82,7 @@ namespace EasyGameFramework.Core.Resource
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            m_ResourceLoader.Update(elapseSeconds, realElapseSeconds);
+            _resourceLoader.Update(elapseSeconds, realElapseSeconds);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace EasyGameFramework.Core.Resource
         /// </summary>
         internal override void Shutdown()
         {
-            m_ResourceLoader.Shutdown();
+            _resourceLoader.Shutdown();
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Read-only path is invalid.");
             }
 
-            m_ReadOnlyPath = readOnlyPath;
+            _readOnlyPath = readOnlyPath;
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Read-write path is invalid.");
             }
 
-            m_ReadWritePath = readWritePath;
+            _readWritePath = readWritePath;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace EasyGameFramework.Core.Resource
             {
                 throw new GameFrameworkException("Object pool manager is invalid.");
             }
-            m_ResourceLoader.SetObjectPoolManager(objectPoolManager);
+            _resourceLoader.SetObjectPoolManager(objectPoolManager);
         }
 
         /// <summary>
@@ -140,22 +140,22 @@ namespace EasyGameFramework.Core.Resource
         /// <param name="loadResourceAgentHelper">要添加的加载资源代理辅助器。</param>
         public void AddLoadResourceAgentHelper(ILoadResourceAgentHelper loadResourceAgentHelper)
         {
-            if (string.IsNullOrEmpty(m_ReadOnlyPath))
+            if (string.IsNullOrEmpty(_readOnlyPath))
             {
                 throw new GameFrameworkException("Read-only path is invalid.");
             }
 
-            if (string.IsNullOrEmpty(m_ReadWritePath))
+            if (string.IsNullOrEmpty(_readWritePath))
             {
                 throw new GameFrameworkException("Read-write path is invalid.");
             }
 
-            m_ResourceLoader.AddLoadResourceAgentHelper(loadResourceAgentHelper, m_ReadOnlyPath, m_ReadWritePath);
+            _resourceLoader.AddLoadResourceAgentHelper(loadResourceAgentHelper, _readOnlyPath, _readWritePath);
         }
 
         public void SetResourceHelper(IResourceHelper resourceHelper)
         {
-            m_ResourceHelper = resourceHelper;
+            _resourceHelper = resourceHelper;
         }
 
         /// <summary>
@@ -176,12 +176,12 @@ namespace EasyGameFramework.Core.Resource
                 return HasAssetResult.NotExist;
             }
 
-            if (!m_ResourceHelper.CheckAssetAddressValid(assetAddress))
+            if (!_resourceHelper.CheckAssetAddressValid(assetAddress))
             {
                 return HasAssetResult.NotExist;
             }
 
-            if (m_ResourceHelper.IsNeedDownloadFromRemote(assetInfo))
+            if (_resourceHelper.IsNeedDownloadFromRemote(assetInfo))
             {
                 return HasAssetResult.AssetOnline;
             }
@@ -196,13 +196,13 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Asset address is invalid.");
             }
 
-            if (m_AssetInfosCache.TryGetValue(assetAddress, out AssetInfo assetInfo))
+            if (_assetInfosCache.TryGetValue(assetAddress, out AssetInfo assetInfo))
             {
                 return assetInfo;
             }
 
-            assetInfo = m_ResourceHelper.GetAssetInfo(assetAddress);
-            m_AssetInfosCache[assetAddress] = assetInfo;
+            assetInfo = _resourceHelper.GetAssetInfo(assetAddress);
+            _assetInfosCache[assetAddress] = assetInfo;
             return assetInfo;
         }
 
@@ -219,13 +219,13 @@ namespace EasyGameFramework.Core.Resource
             }
 
             var key = (packageName, tags);
-            if (m_AssetInfosCacheByTags.TryGetValue(key, out AssetInfo[] assetInfos))
+            if (_assetInfosCacheByTags.TryGetValue(key, out AssetInfo[] assetInfos))
             {
                 return assetInfos;
             }
 
-            assetInfos = m_ResourceHelper.GetAssetInfos(packageName, tags);
-            m_AssetInfosCacheByTags[key] = assetInfos;
+            assetInfos = _resourceHelper.GetAssetInfos(packageName, tags);
+            _assetInfosCacheByTags[key] = assetInfos;
             return assetInfos;
         }
 
@@ -246,7 +246,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Load asset callbacks is invalid.");
             }
 
-            m_ResourceLoader.LoadAsset(
+            _resourceLoader.LoadAsset(
                 assetAddress,
                 assetType,
                 customPriority ?? Constant.DefaultPriority,
@@ -265,7 +265,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Asset is invalid.");
             }
 
-            m_ResourceLoader.UnloadAsset(asset);
+            _resourceLoader.UnloadAsset(asset);
         }
 
         public void LoadScene(
@@ -284,7 +284,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Load scene callbacks is invalid.");
             }
 
-            m_ResourceLoader.LoadScene(
+            _resourceLoader.LoadScene(
                 sceneAssetAddress,
                 customPriority ?? Constant.DefaultPriority,
                 loadSceneCallbacks,
@@ -312,7 +312,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Unload scene callbacks is invalid.");
             }
 
-            m_ResourceLoader.UnloadScene(
+            _resourceLoader.UnloadScene(
                 sceneAssetAddress,
                 unloadSceneCallbacks,
                 userData);
@@ -323,7 +323,7 @@ namespace EasyGameFramework.Core.Resource
             ClearAllCacheFilesCallbacks clearAllCacheFilesCallbacks,
             object userData = null)
         {
-            if (m_ResourceHelper == null)
+            if (_resourceHelper == null)
             {
                 throw new GameFrameworkException("You must set resource helper first.");
             }
@@ -333,7 +333,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Clear all cache files callbacks is invalid.");
             }
 
-            string[] packageNames = m_ResourceHelper.GetAllPackageNames();
+            string[] packageNames = _resourceHelper.GetAllPackageNames();
 
             if (packageNames.Length == 0)
             {
@@ -394,7 +394,7 @@ namespace EasyGameFramework.Core.Resource
             ClearPackageCacheFilesCallbacks clearPackageCacheFilesCallbacks,
             object userData = null)
         {
-            if (m_ResourceHelper == null)
+            if (_resourceHelper == null)
             {
                 throw new GameFrameworkException("You must set resource helper first.");
             }
@@ -409,7 +409,7 @@ namespace EasyGameFramework.Core.Resource
                 throw new GameFrameworkException("Clear package cache files callbacks is invalid.");
             }
 
-            m_ResourceHelper.ClearPackageCacheFiles(
+            _resourceHelper.ClearPackageCacheFiles(
                 packageName,
                 fileClearMode,
                 clearPackageCacheFilesCallbacks,

@@ -19,7 +19,7 @@ namespace EasyGameFramework
     [AddComponentMenu("Game Framework/Event")]
     public sealed class EventComponent : GameFrameworkComponent
     {
-        private IEventManager m_EventManager = null;
+        private IEventManager _eventManager = null;
 
         /// <summary>
         /// 获取事件处理函数的数量。
@@ -28,7 +28,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_EventManager.EventHandlerCount;
+                return _eventManager.EventHandlerCount;
             }
         }
 
@@ -39,7 +39,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_EventManager.EventCount;
+                return _eventManager.EventCount;
             }
         }
 
@@ -50,8 +50,8 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_EventManager = GameFrameworkEntry.GetModule<IEventManager>();
-            if (m_EventManager == null)
+            _eventManager = GameFrameworkEntry.GetModule<IEventManager>();
+            if (_eventManager == null)
             {
                 Log.Fatal("Event manager is invalid.");
                 return;
@@ -69,7 +69,7 @@ namespace EasyGameFramework
         /// <returns>事件处理函数的数量。</returns>
         public int Count(int id)
         {
-            return m_EventManager.Count(id);
+            return _eventManager.Count(id);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace EasyGameFramework
         /// <returns>是否存在事件处理函数。</returns>
         public bool Check(int id, EventHandler<GameEventArgs> handler)
         {
-            return m_EventManager.Check(id, handler);
+            return _eventManager.Check(id, handler);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace EasyGameFramework
         /// <param name="handler">要订阅的事件处理回调函数。</param>
         public ISubscription Subscribe(int id, EventHandler<GameEventArgs> handler)
         {
-            return m_EventManager.Subscribe(id, handler);
+            return _eventManager.Subscribe(id, handler);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace EasyGameFramework
         /// <param name="handler">要取消订阅的事件处理回调函数。</param>
         public void Unsubscribe(int id, EventHandler<GameEventArgs> handler)
         {
-            m_EventManager.Unsubscribe(id, handler);
+            _eventManager.Unsubscribe(id, handler);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace EasyGameFramework
         /// <param name="handler">要设置的默认事件处理函数。</param>
         public void SetDefaultHandler(EventHandler<GameEventArgs> handler)
         {
-            m_EventManager.SetDefaultHandler(handler);
+            _eventManager.SetDefaultHandler(handler);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace EasyGameFramework
         /// <param name="e">事件内容。</param>
         public void Fire(object sender, GameEventArgs e)
         {
-            m_EventManager.Fire(sender, e);
+            _eventManager.Fire(sender, e);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace EasyGameFramework
         /// <param name="e">事件内容。</param>
         public void FireNow(object sender, GameEventArgs e)
         {
-            m_EventManager.FireNow(sender, e);
+            _eventManager.FireNow(sender, e);
         }
     }
 }

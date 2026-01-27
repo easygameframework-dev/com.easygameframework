@@ -13,20 +13,20 @@ namespace EasyGameFramework.Editor
     [CustomEditor(typeof(UIComponent))]
     internal sealed class UIComponentInspector : GameFrameworkInspector
     {
-        private SerializedProperty m_EnableOpenUIFormSuccessEvent = null;
-        private SerializedProperty m_EnableOpenUIFormFailureEvent = null;
-        // private SerializedProperty m_EnableOpenUIFormUpdateEvent = null;
-        // private SerializedProperty m_EnableOpenUIFormDependencyAssetEvent = null;
-        private SerializedProperty m_EnableCloseUIFormCompleteEvent = null;
-        private SerializedProperty m_InstanceAutoReleaseInterval = null;
-        private SerializedProperty m_InstanceCapacity = null;
-        private SerializedProperty m_InstanceExpireTime = null;
-        private SerializedProperty m_InstancePriority = null;
-        private SerializedProperty m_InstanceRoot = null;
-        private SerializedProperty m_UIGroups = null;
+        private SerializedProperty _enableOpenUIFormSuccessEvent = null;
+        private SerializedProperty _enableOpenUIFormFailureEvent = null;
+        // private SerializedProperty _enableOpenUIFormUpdateEvent = null;
+        // private SerializedProperty _enableOpenUIFormDependencyAssetEvent = null;
+        private SerializedProperty _enableCloseUIFormCompleteEvent = null;
+        private SerializedProperty _instanceAutoReleaseInterval = null;
+        private SerializedProperty _instanceCapacity = null;
+        private SerializedProperty _instanceExpireTime = null;
+        private SerializedProperty _instancePriority = null;
+        private SerializedProperty _instanceRoot = null;
+        private SerializedProperty _uIGroups = null;
 
-        private HelperInfo<UIFormHelperBase> m_UIFormHelperInfo = new HelperInfo<UIFormHelperBase>("UIForm");
-        private HelperInfo<UIGroupHelperBase> m_UIGroupHelperInfo = new HelperInfo<UIGroupHelperBase>("UIGroup");
+        private HelperInfo<UIFormHelperBase> _uIFormHelperInfo = new HelperInfo<UIFormHelperBase>("UIForm");
+        private HelperInfo<UIGroupHelperBase> _uIGroupHelperInfo = new HelperInfo<UIGroupHelperBase>("UIGroup");
 
         public override void OnInspectorGUI()
         {
@@ -38,16 +38,16 @@ namespace EasyGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                EditorGUILayout.PropertyField(m_EnableOpenUIFormSuccessEvent);
-                EditorGUILayout.PropertyField(m_EnableOpenUIFormFailureEvent);
-                // EditorGUILayout.PropertyField(m_EnableOpenUIFormUpdateEvent);
-                // EditorGUILayout.PropertyField(m_EnableOpenUIFormDependencyAssetEvent);
-                EditorGUILayout.PropertyField(m_EnableCloseUIFormCompleteEvent);
+                EditorGUILayout.PropertyField(_enableOpenUIFormSuccessEvent);
+                EditorGUILayout.PropertyField(_enableOpenUIFormFailureEvent);
+                // EditorGUILayout.PropertyField(_enableOpenUIFormUpdateEvent);
+                // EditorGUILayout.PropertyField(_enableOpenUIFormDependencyAssetEvent);
+                EditorGUILayout.PropertyField(_enableCloseUIFormCompleteEvent);
             }
             EditorGUI.EndDisabledGroup();
 
-            float instanceAutoReleaseInterval = EditorGUILayout.DelayedFloatField("Instance Auto Release Interval", m_InstanceAutoReleaseInterval.floatValue);
-            if (instanceAutoReleaseInterval != m_InstanceAutoReleaseInterval.floatValue)
+            float instanceAutoReleaseInterval = EditorGUILayout.DelayedFloatField("Instance Auto Release Interval", _instanceAutoReleaseInterval.floatValue);
+            if (instanceAutoReleaseInterval != _instanceAutoReleaseInterval.floatValue)
             {
                 if (EditorApplication.isPlaying)
                 {
@@ -55,12 +55,12 @@ namespace EasyGameFramework.Editor
                 }
                 else
                 {
-                    m_InstanceAutoReleaseInterval.floatValue = instanceAutoReleaseInterval;
+                    _instanceAutoReleaseInterval.floatValue = instanceAutoReleaseInterval;
                 }
             }
 
-            int instanceCapacity = EditorGUILayout.DelayedIntField("Instance Capacity", m_InstanceCapacity.intValue);
-            if (instanceCapacity != m_InstanceCapacity.intValue)
+            int instanceCapacity = EditorGUILayout.DelayedIntField("Instance Capacity", _instanceCapacity.intValue);
+            if (instanceCapacity != _instanceCapacity.intValue)
             {
                 if (EditorApplication.isPlaying)
                 {
@@ -68,12 +68,12 @@ namespace EasyGameFramework.Editor
                 }
                 else
                 {
-                    m_InstanceCapacity.intValue = instanceCapacity;
+                    _instanceCapacity.intValue = instanceCapacity;
                 }
             }
 
-            float instanceExpireTime = EditorGUILayout.DelayedFloatField("Instance Expire Time", m_InstanceExpireTime.floatValue);
-            if (instanceExpireTime != m_InstanceExpireTime.floatValue)
+            float instanceExpireTime = EditorGUILayout.DelayedFloatField("Instance Expire Time", _instanceExpireTime.floatValue);
+            if (instanceExpireTime != _instanceExpireTime.floatValue)
             {
                 if (EditorApplication.isPlaying)
                 {
@@ -81,12 +81,12 @@ namespace EasyGameFramework.Editor
                 }
                 else
                 {
-                    m_InstanceExpireTime.floatValue = instanceExpireTime;
+                    _instanceExpireTime.floatValue = instanceExpireTime;
                 }
             }
 
-            int instancePriority = EditorGUILayout.DelayedIntField("Instance Priority", m_InstancePriority.intValue);
-            if (instancePriority != m_InstancePriority.intValue)
+            int instancePriority = EditorGUILayout.DelayedIntField("Instance Priority", _instancePriority.intValue);
+            if (instancePriority != _instancePriority.intValue)
             {
                 if (EditorApplication.isPlaying)
                 {
@@ -94,16 +94,16 @@ namespace EasyGameFramework.Editor
                 }
                 else
                 {
-                    m_InstancePriority.intValue = instancePriority;
+                    _instancePriority.intValue = instancePriority;
                 }
             }
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                EditorGUILayout.PropertyField(m_InstanceRoot);
-                m_UIFormHelperInfo.Draw();
-                m_UIGroupHelperInfo.Draw();
-                EditorGUILayout.PropertyField(m_UIGroups, true);
+                EditorGUILayout.PropertyField(_instanceRoot);
+                _uIFormHelperInfo.Draw();
+                _uIGroupHelperInfo.Draw();
+                EditorGUILayout.PropertyField(_uIGroups, true);
             }
             EditorGUI.EndDisabledGroup();
 
@@ -126,28 +126,28 @@ namespace EasyGameFramework.Editor
 
         private void OnEnable()
         {
-            m_EnableOpenUIFormSuccessEvent = serializedObject.FindProperty("m_EnableOpenUIFormSuccessEvent");
-            m_EnableOpenUIFormFailureEvent = serializedObject.FindProperty("m_EnableOpenUIFormFailureEvent");
-            // m_EnableOpenUIFormUpdateEvent = serializedObject.FindProperty("m_EnableOpenUIFormUpdateEvent");
-            // m_EnableOpenUIFormDependencyAssetEvent = serializedObject.FindProperty("m_EnableOpenUIFormDependencyAssetEvent");
-            m_EnableCloseUIFormCompleteEvent = serializedObject.FindProperty("m_EnableCloseUIFormCompleteEvent");
-            m_InstanceAutoReleaseInterval = serializedObject.FindProperty("m_InstanceAutoReleaseInterval");
-            m_InstanceCapacity = serializedObject.FindProperty("m_InstanceCapacity");
-            m_InstanceExpireTime = serializedObject.FindProperty("m_InstanceExpireTime");
-            m_InstancePriority = serializedObject.FindProperty("m_InstancePriority");
-            m_InstanceRoot = serializedObject.FindProperty("m_InstanceRoot");
-            m_UIGroups = serializedObject.FindProperty("m_UIGroups");
+            _enableOpenUIFormSuccessEvent = serializedObject.FindProperty("_enableOpenUIFormSuccessEvent");
+            _enableOpenUIFormFailureEvent = serializedObject.FindProperty("_enableOpenUIFormFailureEvent");
+            // _enableOpenUIFormUpdateEvent = serializedObject.FindProperty("_enableOpenUIFormUpdateEvent");
+            // _enableOpenUIFormDependencyAssetEvent = serializedObject.FindProperty("_enableOpenUIFormDependencyAssetEvent");
+            _enableCloseUIFormCompleteEvent = serializedObject.FindProperty("_enableCloseUIFormCompleteEvent");
+            _instanceAutoReleaseInterval = serializedObject.FindProperty("_instanceAutoReleaseInterval");
+            _instanceCapacity = serializedObject.FindProperty("_instanceCapacity");
+            _instanceExpireTime = serializedObject.FindProperty("_instanceExpireTime");
+            _instancePriority = serializedObject.FindProperty("_instancePriority");
+            _instanceRoot = serializedObject.FindProperty("_instanceRoot");
+            _uIGroups = serializedObject.FindProperty("_uIGroups");
 
-            m_UIFormHelperInfo.Init(serializedObject);
-            m_UIGroupHelperInfo.Init(serializedObject);
+            _uIFormHelperInfo.Init(serializedObject);
+            _uIGroupHelperInfo.Init(serializedObject);
 
             RefreshTypeNames();
         }
 
         private void RefreshTypeNames()
         {
-            m_UIFormHelperInfo.Refresh();
-            m_UIGroupHelperInfo.Refresh();
+            _uIFormHelperInfo.Refresh();
+            _uIGroupHelperInfo.Refresh();
             serializedObject.ApplyModifiedProperties();
         }
     }

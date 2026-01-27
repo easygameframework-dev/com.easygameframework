@@ -23,39 +23,39 @@ namespace EasyGameFramework.Core.FileSystem
             private static readonly byte[] Header = new byte[HeaderLength] { (byte)'G', (byte)'F', (byte)'F' };
 
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = HeaderLength)]
-            private readonly byte[] m_Header;
+            private readonly byte[] _header;
 
-            private readonly byte m_Version;
+            private readonly byte _version;
 
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = EncryptBytesLength)]
-            private readonly byte[] m_EncryptBytes;
+            private readonly byte[] _encryptBytes;
 
-            private readonly int m_MaxFileCount;
-            private readonly int m_MaxBlockCount;
-            private readonly int m_BlockCount;
+            private readonly int _maxFileCount;
+            private readonly int _maxBlockCount;
+            private readonly int _blockCount;
 
             public HeaderData(int maxFileCount, int maxBlockCount)
                 : this(FileSystemVersion, new byte[EncryptBytesLength], maxFileCount, maxBlockCount, 0)
             {
-                Utility.Random.GetRandomBytes(m_EncryptBytes);
+                Utility.Random.GetRandomBytes(_encryptBytes);
             }
 
             public HeaderData(byte version, byte[] encryptBytes, int maxFileCount, int maxBlockCount, int blockCount)
             {
-                m_Header = Header;
-                m_Version = version;
-                m_EncryptBytes = encryptBytes;
-                m_MaxFileCount = maxFileCount;
-                m_MaxBlockCount = maxBlockCount;
-                m_BlockCount = blockCount;
+                _header = Header;
+                _version = version;
+                _encryptBytes = encryptBytes;
+                _maxFileCount = maxFileCount;
+                _maxBlockCount = maxBlockCount;
+                _blockCount = blockCount;
             }
 
             public bool IsValid
             {
                 get
                 {
-                    return m_Header.Length == HeaderLength && m_Header[0] == Header[0] && m_Header[1] == Header[1] && m_Header[2] == Header[2] && m_Version == FileSystemVersion && m_EncryptBytes.Length == EncryptBytesLength
-                        && m_MaxFileCount > 0 && m_MaxBlockCount > 0 && m_MaxFileCount <= m_MaxBlockCount && m_BlockCount > 0 && m_BlockCount <= m_MaxBlockCount;
+                    return _header.Length == HeaderLength && _header[0] == Header[0] && _header[1] == Header[1] && _header[2] == Header[2] && _version == FileSystemVersion && _encryptBytes.Length == EncryptBytesLength
+                        && _maxFileCount > 0 && _maxBlockCount > 0 && _maxFileCount <= _maxBlockCount && _blockCount > 0 && _blockCount <= _maxBlockCount;
                 }
             }
 
@@ -63,7 +63,7 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 get
                 {
-                    return m_Version;
+                    return _version;
                 }
             }
 
@@ -71,7 +71,7 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 get
                 {
-                    return m_MaxFileCount;
+                    return _maxFileCount;
                 }
             }
 
@@ -79,7 +79,7 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 get
                 {
-                    return m_MaxBlockCount;
+                    return _maxBlockCount;
                 }
             }
 
@@ -87,18 +87,18 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 get
                 {
-                    return m_BlockCount;
+                    return _blockCount;
                 }
             }
 
             public byte[] GetEncryptBytes()
             {
-                return m_EncryptBytes;
+                return _encryptBytes;
             }
 
             public HeaderData SetBlockCount(int blockCount)
             {
-                return new HeaderData(m_Version, m_EncryptBytes, m_MaxFileCount, m_MaxBlockCount, blockCount);
+                return new HeaderData(_version, _encryptBytes, _maxFileCount, _maxBlockCount, blockCount);
             }
         }
     }

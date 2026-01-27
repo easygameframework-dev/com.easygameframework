@@ -18,9 +18,9 @@ namespace EasyGameFramework.Core.Network
         /// </summary>
         private sealed class TcpNetworkChannel : NetworkChannelBase
         {
-            private readonly AsyncCallback m_ConnectCallback;
-            private readonly AsyncCallback m_SendCallback;
-            private readonly AsyncCallback m_ReceiveCallback;
+            private readonly AsyncCallback _connectCallback;
+            private readonly AsyncCallback _sendCallback;
+            private readonly AsyncCallback _receiveCallback;
 
             /// <summary>
             /// 初始化网络频道的新实例。
@@ -30,9 +30,9 @@ namespace EasyGameFramework.Core.Network
             public TcpNetworkChannel(string name, INetworkChannelHelper networkChannelHelper)
                 : base(name, networkChannelHelper)
             {
-                m_ConnectCallback = ConnectCallback;
-                m_SendCallback = SendCallback;
-                m_ReceiveCallback = ReceiveCallback;
+                _connectCallback = ConnectCallback;
+                _sendCallback = SendCallback;
+                _receiveCallback = ReceiveCallback;
             }
 
             /// <summary>
@@ -55,8 +55,8 @@ namespace EasyGameFramework.Core.Network
             public override void Connect(IPAddress ipAddress, int port, object userData)
             {
                 base.Connect(ipAddress, port, userData);
-                m_Socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                if (m_Socket == null)
+                _socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                if (_socket == null)
                 {
                     string errorMessage = "Initialize network channel failure.";
                     if (NetworkChannelError != null)
@@ -68,7 +68,7 @@ namespace EasyGameFramework.Core.Network
                     throw new GameFrameworkException(errorMessage);
                 }
 
-                m_NetworkChannelHelper.PrepareForConnecting();
+                _networkChannelHelper.PrepareForConnecting();
                 ConnectAsync(ipAddress, port, userData);
             }
 
@@ -87,7 +87,7 @@ namespace EasyGameFramework.Core.Network
             {
                 try
                 {
-                    m_Socket.BeginConnect(ipAddress, port, m_ConnectCallback, new ConnectState(m_Socket, userData));
+                    _socket.BeginConnect(ipAddress, port, _connectCallback, new ConnectState(_socket, userData));
                 }
                 catch (Exception exception)
                 {
@@ -115,7 +115,7 @@ namespace EasyGameFramework.Core.Network
                 }
                 catch (Exception exception)
                 {
-                    m_Active = false;
+                    _active = false;
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;
@@ -126,19 +126,19 @@ namespace EasyGameFramework.Core.Network
                     throw;
                 }
 
-                m_SentPacketCount = 0;
-                m_ReceivedPacketCount = 0;
+                _sentPacketCount = 0;
+                _receivedPacketCount = 0;
 
-                lock (m_SendPacketPool)
+                lock (_sendPacketPool)
                 {
-                    m_SendPacketPool.Clear();
+                    _sendPacketPool.Clear();
                 }
 
-                m_ReceivePacketPool.Clear();
+                _receivePacketPool.Clear();
 
-                lock (m_HeartBeatState)
+                lock (_heartBeatState)
                 {
-                    m_HeartBeatState.Reset(true);
+                    _heartBeatState.Reset(true);
                 }
 
                 if (NetworkChannelConnected != null)
@@ -146,7 +146,7 @@ namespace EasyGameFramework.Core.Network
                     NetworkChannelConnected(this, socketUserData.UserData);
                 }
 
-                m_Active = true;
+                _active = true;
                 ReceiveAsync();
             }
 
@@ -154,11 +154,11 @@ namespace EasyGameFramework.Core.Network
             {
                 try
                 {
-                    m_Socket.BeginSend(m_SendState.Stream.GetBuffer(), (int)m_SendState.Stream.Position, (int)(m_SendState.Stream.Length - m_SendState.Stream.Position), SocketFlags.None, m_SendCallback, m_Socket);
+                    _socket.BeginSend(_sendState.Stream.GetBuffer(), (int)_sendState.Stream.Position, (int)(_sendState.Stream.Length - _sendState.Stream.Position), SocketFlags.None, _sendCallback, _socket);
                 }
                 catch (Exception exception)
                 {
-                    m_Active = false;
+                    _active = false;
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;
@@ -185,7 +185,7 @@ namespace EasyGameFramework.Core.Network
                 }
                 catch (Exception exception)
                 {
-                    m_Active = false;
+                    _active = false;
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;
@@ -196,26 +196,26 @@ namespace EasyGameFramework.Core.Network
                     throw;
                 }
 
-                m_SendState.Stream.Position += bytesSent;
-                if (m_SendState.Stream.Position < m_SendState.Stream.Length)
+                _sendState.Stream.Position += bytesSent;
+                if (_sendState.Stream.Position < _sendState.Stream.Length)
                 {
                     SendAsync();
                     return;
                 }
 
-                m_SentPacketCount++;
-                m_SendState.Reset();
+                _sentPacketCount++;
+                _sendState.Reset();
             }
 
             private void ReceiveAsync()
             {
                 try
                 {
-                    m_Socket.BeginReceive(m_ReceiveState.Stream.GetBuffer(), (int)m_ReceiveState.Stream.Position, (int)(m_ReceiveState.Stream.Length - m_ReceiveState.Stream.Position), SocketFlags.None, m_ReceiveCallback, m_Socket);
+                    _socket.BeginReceive(_receiveState.Stream.GetBuffer(), (int)_receiveState.Stream.Position, (int)(_receiveState.Stream.Length - _receiveState.Stream.Position), SocketFlags.None, _receiveCallback, _socket);
                 }
                 catch (Exception exception)
                 {
-                    m_Active = false;
+                    _active = false;
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;
@@ -242,7 +242,7 @@ namespace EasyGameFramework.Core.Network
                 }
                 catch (Exception exception)
                 {
-                    m_Active = false;
+                    _active = false;
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;
@@ -259,20 +259,20 @@ namespace EasyGameFramework.Core.Network
                     return;
                 }
 
-                m_ReceiveState.Stream.Position += bytesReceived;
-                if (m_ReceiveState.Stream.Position < m_ReceiveState.Stream.Length)
+                _receiveState.Stream.Position += bytesReceived;
+                if (_receiveState.Stream.Position < _receiveState.Stream.Length)
                 {
                     ReceiveAsync();
                     return;
                 }
 
-                m_ReceiveState.Stream.Position = 0L;
+                _receiveState.Stream.Position = 0L;
 
                 bool processSuccess = false;
-                if (m_ReceiveState.PacketHeader != null)
+                if (_receiveState.PacketHeader != null)
                 {
                     processSuccess = ProcessPacket();
-                    m_ReceivedPacketCount++;
+                    _receivedPacketCount++;
                 }
                 else
                 {

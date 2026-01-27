@@ -9,25 +9,25 @@ namespace EasyGameFramework.Core.Resource
     {
         private class ResourceLoader
         {
-            private readonly ResourceManager m_ResourceManager;
-            private readonly TaskPool<LoadResourceTaskBase> m_TaskPool;
-            private readonly Dictionary<string, AssetObject> m_AssetPathToAssetMap;
+            private readonly ResourceManager _resourceManager;
+            private readonly TaskPool<LoadResourceTaskBase> _taskPool;
+            private readonly Dictionary<string, AssetObject> _assetPathToAssetMap;
 
             public ResourceLoader(ResourceManager resourceManager)
             {
-                m_ResourceManager = resourceManager;
-                m_TaskPool = new TaskPool<LoadResourceTaskBase>();
-                m_AssetPathToAssetMap = new Dictionary<string, AssetObject>();
+                _resourceManager = resourceManager;
+                _taskPool = new TaskPool<LoadResourceTaskBase>();
+                _assetPathToAssetMap = new Dictionary<string, AssetObject>();
             }
 
             public void Update(float elapseSeconds, float realElapseSeconds)
             {
-                m_TaskPool.Update(elapseSeconds, realElapseSeconds);
+                _taskPool.Update(elapseSeconds, realElapseSeconds);
             }
 
             public void Shutdown()
             {
-                m_TaskPool.Shutdown();
+                _taskPool.Shutdown();
             }
 
             public void SetObjectPoolManager(IObjectPoolManager objectPoolManager)
@@ -37,7 +37,7 @@ namespace EasyGameFramework.Core.Resource
             public void RegisterAsset(AssetAddress assetAddress, AssetObject assetObject)
             {
                 var key = assetAddress.ToString();
-                if (!m_AssetPathToAssetMap.TryAdd(key, assetObject))
+                if (!_assetPathToAssetMap.TryAdd(key, assetObject))
                 {
                     throw new GameFrameworkException($"Asset '{key}' has been registered.");
                 }
@@ -46,7 +46,7 @@ namespace EasyGameFramework.Core.Resource
             public AssetObject GetAssetObject(AssetAddress assetAddress)
             {
                 var key = assetAddress.ToString();
-                if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
+                if (_assetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
                     return assetObject;
                 }
@@ -60,7 +60,7 @@ namespace EasyGameFramework.Core.Resource
                     throw new GameFrameworkException("Asset is invalid.");
                 }
 
-                foreach (var assetObject in m_AssetPathToAssetMap.Values)
+                foreach (var assetObject in _assetPathToAssetMap.Values)
                 {
                     if (assetObject.Asset == asset)
                     {
@@ -82,7 +82,7 @@ namespace EasyGameFramework.Core.Resource
                 string readOnlyPath, string readWritePath)
             {
                 LoadResourceAgent agent = new LoadResourceAgent(loadResourceAgentHelper, this, readOnlyPath, readWritePath);
-                m_TaskPool.AddAgent(agent);
+                _taskPool.AddAgent(agent);
             }
 
             /// <summary>
@@ -98,7 +98,7 @@ namespace EasyGameFramework.Core.Resource
                 object userData)
             {
                 var key = assetAddress.ToString();
-                if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
+                if (_assetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
                     if (assetObject.IsScene)
                     {
@@ -112,12 +112,12 @@ namespace EasyGameFramework.Core.Resource
                 LoadAssetTask loadAssetTask = LoadAssetTask.Create(assetAddress, assetType, priority,
                     loadAssetCallbacks, userData);
 
-                m_TaskPool.AddTask(loadAssetTask);
+                _taskPool.AddTask(loadAssetTask);
             }
 
             public void UnloadAsset(object asset)
             {
-                var pair = m_AssetPathToAssetMap.FirstOrDefault(pair => pair.Value.Asset == asset);
+                var pair = _assetPathToAssetMap.FirstOrDefault(pair => pair.Value.Asset == asset);
                 if (pair.Value == null)
                 {
                     return;
@@ -128,8 +128,8 @@ namespace EasyGameFramework.Core.Resource
                     throw new GameFrameworkException($"Asset '{pair.Key}' is a scene asset, use UnloadScene instead.");
                 }
 
-                m_ResourceManager.m_ResourceHelper.UnloadAsset(pair.Value);
-                m_AssetPathToAssetMap.Remove(pair.Key);
+                _resourceManager._resourceHelper.UnloadAsset(pair.Value);
+                _assetPathToAssetMap.Remove(pair.Key);
                 ReferencePool.Release(pair.Value);
             }
 
@@ -137,15 +137,15 @@ namespace EasyGameFramework.Core.Resource
             {
                 var key = assetAddress.ToString();
 
-                if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
+                if (_assetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
                     if (assetObject.IsScene)
                     {
                         throw new GameFrameworkException($"Asset '{key}' is a scene asset, use UnloadScene instead.");
                     }
 
-                    m_ResourceManager.m_ResourceHelper.UnloadAsset(assetObject);
-                    m_AssetPathToAssetMap.Remove(key);
+                    _resourceManager._resourceHelper.UnloadAsset(assetObject);
+                    _assetPathToAssetMap.Remove(key);
                     ReferencePool.Release(assetObject);
                 }
             }
@@ -163,7 +163,7 @@ namespace EasyGameFramework.Core.Resource
             {
                 LoadSceneTask loadSceneTask = LoadSceneTask.Create(sceneAssetAddress, priority,
                     loadSceneCallbacks, userData);
-                m_TaskPool.AddTask(loadSceneTask);
+                _taskPool.AddTask(loadSceneTask);
             }
 
             /// <summary>
@@ -174,22 +174,22 @@ namespace EasyGameFramework.Core.Resource
             /// <param name="userData">用户自定义数据。</param>
             public void UnloadScene(AssetAddress sceneAssetAddress, UnloadSceneCallbacks unloadSceneCallbacks, object userData)
             {
-                if (m_ResourceManager.m_ResourceHelper == null)
+                if (_resourceManager._resourceHelper == null)
                 {
                     throw new GameFrameworkException("You must set resource helper first.");
                 }
 
                 var key = sceneAssetAddress.ToString();
-                if (m_AssetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
+                if (_assetPathToAssetMap.TryGetValue(key, out AssetObject assetObject))
                 {
                     if (!assetObject.IsScene)
                     {
                         throw new GameFrameworkException($"Asset '{key}' is not a scene asset, use UnloadAsset instead.");
                     }
-                    m_ResourceManager.m_ResourceHelper.UnloadScene(sceneAssetAddress, assetObject, unloadSceneCallbacks,
+                    _resourceManager._resourceHelper.UnloadScene(sceneAssetAddress, assetObject, unloadSceneCallbacks,
                         userData);
 
-                    m_AssetPathToAssetMap.Remove(key);
+                    _assetPathToAssetMap.Remove(key);
                     ReferencePool.Release(assetObject);
                 }
                 else

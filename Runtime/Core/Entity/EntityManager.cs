@@ -17,40 +17,40 @@ namespace EasyGameFramework.Core.Entity
     /// </summary>
     internal sealed partial class EntityManager : GameFrameworkModule, IEntityManager
     {
-        private readonly Dictionary<int, EntityInfo> m_EntityInfos;
-        private readonly Dictionary<string, EntityGroup> m_EntityGroups;
-        private readonly Dictionary<int, int> m_EntitiesBeingLoaded;
-        private readonly HashSet<int> m_EntitiesToReleaseOnLoad;
-        private readonly Queue<EntityInfo> m_RecycleQueue;
-        private readonly LoadAssetCallbacks m_LoadAssetCallbacks;
-        private IObjectPoolManager m_ObjectPoolManager;
-        private IResourceManager m_ResourceManager;
-        private IEntityHelper m_EntityHelper;
-        private int m_Serial;
-        private bool m_IsShutdown;
-        private EventHandler<ShowEntitySuccessEventArgs> m_ShowEntitySuccessEventHandler;
-        private EventHandler<ShowEntityFailureEventArgs> m_ShowEntityFailureEventHandler;
-        private EventHandler<HideEntityCompleteEventArgs> m_HideEntityCompleteEventHandler;
+        private readonly Dictionary<int, EntityInfo> _entityInfos;
+        private readonly Dictionary<string, EntityGroup> _entityGroups;
+        private readonly Dictionary<int, int> _entitiesBeingLoaded;
+        private readonly HashSet<int> _entitiesToReleaseOnLoad;
+        private readonly Queue<EntityInfo> _recycleQueue;
+        private readonly LoadAssetCallbacks _loadAssetCallbacks;
+        private IObjectPoolManager _objectPoolManager;
+        private IResourceManager _resourceManager;
+        private IEntityHelper _entityHelper;
+        private int _serial;
+        private bool _isShutdown;
+        private EventHandler<ShowEntitySuccessEventArgs> _showEntitySuccessEventHandler;
+        private EventHandler<ShowEntityFailureEventArgs> _showEntityFailureEventHandler;
+        private EventHandler<HideEntityCompleteEventArgs> _hideEntityCompleteEventHandler;
 
         /// <summary>
         /// 初始化实体管理器的新实例。
         /// </summary>
         public EntityManager()
         {
-            m_EntityInfos = new Dictionary<int, EntityInfo>();
-            m_EntityGroups = new Dictionary<string, EntityGroup>(StringComparer.Ordinal);
-            m_EntitiesBeingLoaded = new Dictionary<int, int>();
-            m_EntitiesToReleaseOnLoad = new HashSet<int>();
-            m_RecycleQueue = new Queue<EntityInfo>();
-            m_LoadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetFailureCallback);
-            m_ObjectPoolManager = null;
-            m_ResourceManager = null;
-            m_EntityHelper = null;
-            m_Serial = 0;
-            m_IsShutdown = false;
-            m_ShowEntitySuccessEventHandler = null;
-            m_ShowEntityFailureEventHandler = null;
-            m_HideEntityCompleteEventHandler = null;
+            _entityInfos = new Dictionary<int, EntityInfo>();
+            _entityGroups = new Dictionary<string, EntityGroup>(StringComparer.Ordinal);
+            _entitiesBeingLoaded = new Dictionary<int, int>();
+            _entitiesToReleaseOnLoad = new HashSet<int>();
+            _recycleQueue = new Queue<EntityInfo>();
+            _loadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetFailureCallback);
+            _objectPoolManager = null;
+            _resourceManager = null;
+            _entityHelper = null;
+            _serial = 0;
+            _isShutdown = false;
+            _showEntitySuccessEventHandler = null;
+            _showEntityFailureEventHandler = null;
+            _hideEntityCompleteEventHandler = null;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace EasyGameFramework.Core.Entity
         {
             get
             {
-                return m_EntityInfos.Count;
+                return _entityInfos.Count;
             }
         }
 
@@ -71,7 +71,7 @@ namespace EasyGameFramework.Core.Entity
         {
             get
             {
-                return m_EntityGroups.Count;
+                return _entityGroups.Count;
             }
         }
 
@@ -82,11 +82,11 @@ namespace EasyGameFramework.Core.Entity
         {
             add
             {
-                m_ShowEntitySuccessEventHandler += value;
+                _showEntitySuccessEventHandler += value;
             }
             remove
             {
-                m_ShowEntitySuccessEventHandler -= value;
+                _showEntitySuccessEventHandler -= value;
             }
         }
 
@@ -97,11 +97,11 @@ namespace EasyGameFramework.Core.Entity
         {
             add
             {
-                m_ShowEntityFailureEventHandler += value;
+                _showEntityFailureEventHandler += value;
             }
             remove
             {
-                m_ShowEntityFailureEventHandler -= value;
+                _showEntityFailureEventHandler -= value;
             }
         }
 
@@ -112,11 +112,11 @@ namespace EasyGameFramework.Core.Entity
         {
             add
             {
-                m_HideEntityCompleteEventHandler += value;
+                _hideEntityCompleteEventHandler += value;
             }
             remove
             {
-                m_HideEntityCompleteEventHandler -= value;
+                _hideEntityCompleteEventHandler -= value;
             }
         }
 
@@ -127,9 +127,9 @@ namespace EasyGameFramework.Core.Entity
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            while (m_RecycleQueue.Count > 0)
+            while (_recycleQueue.Count > 0)
             {
-                EntityInfo entityInfo = m_RecycleQueue.Dequeue();
+                EntityInfo entityInfo = _recycleQueue.Dequeue();
                 IEntity entity = entityInfo.Entity;
                 EntityGroup entityGroup = (EntityGroup)entity.EntityGroup;
                 if (entityGroup == null)
@@ -144,7 +144,7 @@ namespace EasyGameFramework.Core.Entity
                 ReferencePool.Release(entityInfo);
             }
 
-            foreach (KeyValuePair<string, EntityGroup> entityGroup in m_EntityGroups)
+            foreach (KeyValuePair<string, EntityGroup> entityGroup in _entityGroups)
             {
                 entityGroup.Value.Update(elapseSeconds, realElapseSeconds);
             }
@@ -155,12 +155,12 @@ namespace EasyGameFramework.Core.Entity
         /// </summary>
         internal override void Shutdown()
         {
-            m_IsShutdown = true;
+            _isShutdown = true;
             HideAllLoadedEntities();
-            m_EntityGroups.Clear();
-            m_EntitiesBeingLoaded.Clear();
-            m_EntitiesToReleaseOnLoad.Clear();
-            m_RecycleQueue.Clear();
+            _entityGroups.Clear();
+            _entitiesBeingLoaded.Clear();
+            _entitiesToReleaseOnLoad.Clear();
+            _recycleQueue.Clear();
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Object pool manager is invalid.");
             }
 
-            m_ObjectPoolManager = objectPoolManager;
+            _objectPoolManager = objectPoolManager;
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Resource manager is invalid.");
             }
 
-            m_ResourceManager = resourceManager;
+            _resourceManager = resourceManager;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Entity helper is invalid.");
             }
 
-            m_EntityHelper = entityHelper;
+            _entityHelper = entityHelper;
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Entity group name is invalid.");
             }
 
-            return m_EntityGroups.ContainsKey(entityGroupName);
+            return _entityGroups.ContainsKey(entityGroupName);
         }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace EasyGameFramework.Core.Entity
             }
 
             EntityGroup entityGroup = null;
-            if (m_EntityGroups.TryGetValue(entityGroupName, out entityGroup))
+            if (_entityGroups.TryGetValue(entityGroupName, out entityGroup))
             {
                 return entityGroup;
             }
@@ -248,8 +248,8 @@ namespace EasyGameFramework.Core.Entity
         public IEntityGroup[] GetAllEntityGroups()
         {
             int index = 0;
-            IEntityGroup[] results = new IEntityGroup[m_EntityGroups.Count];
-            foreach (KeyValuePair<string, EntityGroup> entityGroup in m_EntityGroups)
+            IEntityGroup[] results = new IEntityGroup[_entityGroups.Count];
+            foreach (KeyValuePair<string, EntityGroup> entityGroup in _entityGroups)
             {
                 results[index++] = entityGroup.Value;
             }
@@ -269,7 +269,7 @@ namespace EasyGameFramework.Core.Entity
             }
 
             results.Clear();
-            foreach (KeyValuePair<string, EntityGroup> entityGroup in m_EntityGroups)
+            foreach (KeyValuePair<string, EntityGroup> entityGroup in _entityGroups)
             {
                 results.Add(entityGroup.Value);
             }
@@ -297,7 +297,7 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Entity group helper is invalid.");
             }
 
-            if (m_ObjectPoolManager == null)
+            if (_objectPoolManager == null)
             {
                 throw new GameFrameworkException("You must set object pool manager first.");
             }
@@ -307,7 +307,7 @@ namespace EasyGameFramework.Core.Entity
                 return false;
             }
 
-            m_EntityGroups.Add(entityGroupName, new EntityGroup(entityGroupName, instanceAutoReleaseInterval, instanceCapacity, instanceExpireTime, instancePriority, entityGroupHelper, m_ObjectPoolManager));
+            _entityGroups.Add(entityGroupName, new EntityGroup(entityGroupName, instanceAutoReleaseInterval, instanceCapacity, instanceExpireTime, instancePriority, entityGroupHelper, _objectPoolManager));
 
             return true;
         }
@@ -319,7 +319,7 @@ namespace EasyGameFramework.Core.Entity
         /// <returns>是否存在实体。</returns>
         public bool HasEntity(int entityId)
         {
-            return m_EntityInfos.ContainsKey(entityId);
+            return _entityInfos.ContainsKey(entityId);
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Entity asset address is invalid.");
             }
 
-            foreach (KeyValuePair<int, EntityInfo> entityInfo in m_EntityInfos)
+            foreach (KeyValuePair<int, EntityInfo> entityInfo in _entityInfos)
             {
                 if (entityInfo.Value.Entity.EntityAssetAddress == entityAssetAddress)
                 {
@@ -373,7 +373,7 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Entity asset address is invalid.");
             }
 
-            foreach (KeyValuePair<int, EntityInfo> entityInfo in m_EntityInfos)
+            foreach (KeyValuePair<int, EntityInfo> entityInfo in _entityInfos)
             {
                 if (entityInfo.Value.Entity.EntityAssetAddress == entityAssetAddress)
                 {
@@ -397,7 +397,7 @@ namespace EasyGameFramework.Core.Entity
             }
 
             List<IEntity> results = new List<IEntity>();
-            foreach (KeyValuePair<int, EntityInfo> entityInfo in m_EntityInfos)
+            foreach (KeyValuePair<int, EntityInfo> entityInfo in _entityInfos)
             {
                 if (entityInfo.Value.Entity.EntityAssetAddress == entityAssetAddress)
                 {
@@ -426,7 +426,7 @@ namespace EasyGameFramework.Core.Entity
             }
 
             results.Clear();
-            foreach (KeyValuePair<int, EntityInfo> entityInfo in m_EntityInfos)
+            foreach (KeyValuePair<int, EntityInfo> entityInfo in _entityInfos)
             {
                 if (entityInfo.Value.Entity.EntityAssetAddress == entityAssetAddress)
                 {
@@ -442,8 +442,8 @@ namespace EasyGameFramework.Core.Entity
         public IEntity[] GetAllLoadedEntities()
         {
             int index = 0;
-            IEntity[] results = new IEntity[m_EntityInfos.Count];
-            foreach (KeyValuePair<int, EntityInfo> entityInfo in m_EntityInfos)
+            IEntity[] results = new IEntity[_entityInfos.Count];
+            foreach (KeyValuePair<int, EntityInfo> entityInfo in _entityInfos)
             {
                 results[index++] = entityInfo.Value.Entity;
             }
@@ -463,7 +463,7 @@ namespace EasyGameFramework.Core.Entity
             }
 
             results.Clear();
-            foreach (KeyValuePair<int, EntityInfo> entityInfo in m_EntityInfos)
+            foreach (KeyValuePair<int, EntityInfo> entityInfo in _entityInfos)
             {
                 results.Add(entityInfo.Value.Entity);
             }
@@ -476,8 +476,8 @@ namespace EasyGameFramework.Core.Entity
         public int[] GetAllLoadingEntityIds()
         {
             int index = 0;
-            int[] results = new int[m_EntitiesBeingLoaded.Count];
-            foreach (KeyValuePair<int, int> entityBeingLoaded in m_EntitiesBeingLoaded)
+            int[] results = new int[_entitiesBeingLoaded.Count];
+            foreach (KeyValuePair<int, int> entityBeingLoaded in _entitiesBeingLoaded)
             {
                 results[index++] = entityBeingLoaded.Key;
             }
@@ -497,7 +497,7 @@ namespace EasyGameFramework.Core.Entity
             }
 
             results.Clear();
-            foreach (KeyValuePair<int, int> entityBeingLoaded in m_EntitiesBeingLoaded)
+            foreach (KeyValuePair<int, int> entityBeingLoaded in _entitiesBeingLoaded)
             {
                 results.Add(entityBeingLoaded.Key);
             }
@@ -510,7 +510,7 @@ namespace EasyGameFramework.Core.Entity
         /// <returns>是否正在加载实体。</returns>
         public bool IsLoadingEntity(int entityId)
         {
-            return m_EntitiesBeingLoaded.ContainsKey(entityId);
+            return _entitiesBeingLoaded.ContainsKey(entityId);
         }
 
         /// <summary>
@@ -538,12 +538,12 @@ namespace EasyGameFramework.Core.Entity
         /// <param name="userData">用户自定义数据。</param>
         public void ShowEntity(int entityId, AssetAddress entityAssetAddress, string entityGroupName, int? customPriority, object userData)
         {
-            if (m_ResourceManager == null)
+            if (_resourceManager == null)
             {
                 throw new GameFrameworkException("You must set resource manager first.");
             }
 
-            if (m_EntityHelper == null)
+            if (_entityHelper == null)
             {
                 throw new GameFrameworkException("You must set entity helper first.");
             }
@@ -577,10 +577,10 @@ namespace EasyGameFramework.Core.Entity
             EntityInstanceObject entityInstanceObject = entityGroup.SpawnEntityInstanceObject(entityAssetAddress.Location);
             if (entityInstanceObject == null)
             {
-                int serialId = ++m_Serial;
-                m_EntitiesBeingLoaded.Add(entityId, serialId);
+                int serialId = ++_serial;
+                _entitiesBeingLoaded.Add(entityId, serialId);
 
-                m_ResourceManager.LoadAsset(entityAssetAddress, m_LoadAssetCallbacks, null, customPriority, ShowEntityInfo.Create(serialId, entityId, entityGroup, userData));
+                _resourceManager.LoadAsset(entityAssetAddress, _loadAssetCallbacks, null, customPriority, ShowEntityInfo.Create(serialId, entityId, entityGroup, userData));
                 return;
             }
 
@@ -605,8 +605,8 @@ namespace EasyGameFramework.Core.Entity
         {
             if (IsLoadingEntity(entityId))
             {
-                m_EntitiesToReleaseOnLoad.Add(m_EntitiesBeingLoaded[entityId]);
-                m_EntitiesBeingLoaded.Remove(entityId);
+                _entitiesToReleaseOnLoad.Add(_entitiesBeingLoaded[entityId]);
+                _entitiesBeingLoaded.Remove(entityId);
                 return;
             }
 
@@ -657,9 +657,9 @@ namespace EasyGameFramework.Core.Entity
         /// <param name="userData">用户自定义数据。</param>
         public void HideAllLoadedEntities(object userData)
         {
-            while (m_EntityInfos.Count > 0)
+            while (_entityInfos.Count > 0)
             {
-                foreach (KeyValuePair<int, EntityInfo> entityInfo in m_EntityInfos)
+                foreach (KeyValuePair<int, EntityInfo> entityInfo in _entityInfos)
                 {
                     InternalHideEntity(entityInfo.Value, userData);
                     break;
@@ -672,12 +672,12 @@ namespace EasyGameFramework.Core.Entity
         /// </summary>
         public void HideAllLoadingEntities()
         {
-            foreach (KeyValuePair<int, int> entityBeingLoaded in m_EntitiesBeingLoaded)
+            foreach (KeyValuePair<int, int> entityBeingLoaded in _entitiesBeingLoaded)
             {
-                m_EntitiesToReleaseOnLoad.Add(entityBeingLoaded.Value);
+                _entitiesToReleaseOnLoad.Add(entityBeingLoaded.Value);
             }
 
-            m_EntitiesBeingLoaded.Clear();
+            _entitiesBeingLoaded.Clear();
         }
 
         /// <summary>
@@ -1083,7 +1083,7 @@ namespace EasyGameFramework.Core.Entity
         private EntityInfo GetEntityInfo(int entityId)
         {
             EntityInfo entityInfo = null;
-            if (m_EntityInfos.TryGetValue(entityId, out entityInfo))
+            if (_entityInfos.TryGetValue(entityId, out entityInfo))
             {
                 return entityInfo;
             }
@@ -1095,14 +1095,14 @@ namespace EasyGameFramework.Core.Entity
         {
             try
             {
-                IEntity entity = m_EntityHelper.CreateEntity(entityInstance, entityGroup, userData);
+                IEntity entity = _entityHelper.CreateEntity(entityInstance, entityGroup, userData);
                 if (entity == null)
                 {
                     throw new GameFrameworkException("Can not create entity in entity helper.");
                 }
 
                 EntityInfo entityInfo = EntityInfo.Create(entity);
-                m_EntityInfos.Add(entityId, entityInfo);
+                _entityInfos.Add(entityId, entityInfo);
                 entityInfo.Status = EntityStatus.WillInit;
                 entity.OnInit(entityId, entityAssetAddress, entityGroup, isNewInstance, userData);
                 entityInfo.Status = EntityStatus.Inited;
@@ -1111,19 +1111,19 @@ namespace EasyGameFramework.Core.Entity
                 entity.OnShow(userData);
                 entityInfo.Status = EntityStatus.Showed;
 
-                if (m_ShowEntitySuccessEventHandler != null)
+                if (_showEntitySuccessEventHandler != null)
                 {
                     ShowEntitySuccessEventArgs showEntitySuccessEventArgs = ShowEntitySuccessEventArgs.Create(entity, duration, userData);
-                    m_ShowEntitySuccessEventHandler(this, showEntitySuccessEventArgs);
+                    _showEntitySuccessEventHandler(this, showEntitySuccessEventArgs);
                     ReferencePool.Release(showEntitySuccessEventArgs);
                 }
             }
             catch (Exception exception)
             {
-                if (m_ShowEntityFailureEventHandler != null)
+                if (_showEntityFailureEventHandler != null)
                 {
                     ShowEntityFailureEventArgs showEntityFailureEventArgs = ShowEntityFailureEventArgs.Create(entityId, entityAssetAddress, entityGroup.Name, exception.ToString(), userData);
-                    m_ShowEntityFailureEventHandler(this, showEntityFailureEventArgs);
+                    _showEntityFailureEventHandler(this, showEntityFailureEventArgs);
                     ReferencePool.Release(showEntityFailureEventArgs);
                     return;
                 }
@@ -1148,7 +1148,7 @@ namespace EasyGameFramework.Core.Entity
             IEntity entity = entityInfo.Entity;
             DetachEntity(entity.Id, userData);
             entityInfo.Status = EntityStatus.WillHide;
-            entity.OnHide(m_IsShutdown, userData);
+            entity.OnHide(_isShutdown, userData);
             entityInfo.Status = EntityStatus.Hidden;
 
             EntityGroup entityGroup = (EntityGroup)entity.EntityGroup;
@@ -1158,19 +1158,19 @@ namespace EasyGameFramework.Core.Entity
             }
 
             entityGroup.RemoveEntity(entity);
-            if (!m_EntityInfos.Remove(entity.Id))
+            if (!_entityInfos.Remove(entity.Id))
             {
                 throw new GameFrameworkException("Entity info is unmanaged.");
             }
 
-            if (m_HideEntityCompleteEventHandler != null)
+            if (_hideEntityCompleteEventHandler != null)
             {
                 HideEntityCompleteEventArgs hideEntityCompleteEventArgs = HideEntityCompleteEventArgs.Create(entity.Id, entity.EntityAssetAddress, entityGroup, userData);
-                m_HideEntityCompleteEventHandler(this, hideEntityCompleteEventArgs);
+                _hideEntityCompleteEventHandler(this, hideEntityCompleteEventArgs);
                 ReferencePool.Release(hideEntityCompleteEventArgs);
             }
 
-            m_RecycleQueue.Enqueue(entityInfo);
+            _recycleQueue.Enqueue(entityInfo);
         }
 
         private void LoadAssetSuccessCallback(AssetAddress entityAssetAddress, object entityAsset, float duration, object userData)
@@ -1181,16 +1181,16 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Show entity info is invalid.");
             }
 
-            if (m_EntitiesToReleaseOnLoad.Contains(showEntityInfo.SerialId))
+            if (_entitiesToReleaseOnLoad.Contains(showEntityInfo.SerialId))
             {
-                m_EntitiesToReleaseOnLoad.Remove(showEntityInfo.SerialId);
+                _entitiesToReleaseOnLoad.Remove(showEntityInfo.SerialId);
                 ReferencePool.Release(showEntityInfo);
-                m_EntityHelper.ReleaseEntity(entityAsset, null);
+                _entityHelper.ReleaseEntity(entityAsset, null);
                 return;
             }
 
-            m_EntitiesBeingLoaded.Remove(showEntityInfo.EntityId);
-            EntityInstanceObject entityInstanceObject = EntityInstanceObject.Create(entityAssetAddress.Location, entityAsset, m_EntityHelper.InstantiateEntity(entityAsset), m_EntityHelper);
+            _entitiesBeingLoaded.Remove(showEntityInfo.EntityId);
+            EntityInstanceObject entityInstanceObject = EntityInstanceObject.Create(entityAssetAddress.Location, entityAsset, _entityHelper.InstantiateEntity(entityAsset), _entityHelper);
             showEntityInfo.EntityGroup.RegisterEntityInstanceObject(entityInstanceObject, true);
 
             InternalShowEntity(showEntityInfo.EntityId, entityAssetAddress, showEntityInfo.EntityGroup, entityInstanceObject.Target, true, duration, showEntityInfo.UserData);
@@ -1205,18 +1205,18 @@ namespace EasyGameFramework.Core.Entity
                 throw new GameFrameworkException("Show entity info is invalid.");
             }
 
-            if (m_EntitiesToReleaseOnLoad.Contains(showEntityInfo.SerialId))
+            if (_entitiesToReleaseOnLoad.Contains(showEntityInfo.SerialId))
             {
-                m_EntitiesToReleaseOnLoad.Remove(showEntityInfo.SerialId);
+                _entitiesToReleaseOnLoad.Remove(showEntityInfo.SerialId);
                 return;
             }
 
-            m_EntitiesBeingLoaded.Remove(showEntityInfo.EntityId);
+            _entitiesBeingLoaded.Remove(showEntityInfo.EntityId);
             string appendErrorMessage = Utility.Text.Format("Load entity failure, asset name '{0}', status '{1}', error message '{2}'.", entityAssetAddress, status, errorMessage);
-            if (m_ShowEntityFailureEventHandler != null)
+            if (_showEntityFailureEventHandler != null)
             {
                 ShowEntityFailureEventArgs showEntityFailureEventArgs = ShowEntityFailureEventArgs.Create(showEntityInfo.EntityId, entityAssetAddress, showEntityInfo.EntityGroup.Name, appendErrorMessage, showEntityInfo.UserData);
-                m_ShowEntityFailureEventHandler(this, showEntityFailureEventArgs);
+                _showEntityFailureEventHandler(this, showEntityFailureEventArgs);
                 ReferencePool.Release(showEntityFailureEventArgs);
                 return;
             }

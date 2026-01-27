@@ -15,17 +15,17 @@ namespace EasyGameFramework.Editor
     [CustomEditor(typeof(DataTableComponent))]
     internal sealed class DataTableComponentInspector : GameFrameworkInspector
     {
-        // private SerializedProperty m_EnableLoadDataTableUpdateEvent = null;
-        // private SerializedProperty m_EnableLoadDataTableDependencyAssetEvent = null;
-        private SerializedProperty m_CachedBytesSize = null;
+        // private SerializedProperty _enableLoadDataTableUpdateEvent = null;
+        // private SerializedProperty _enableLoadDataTableDependencyAssetEvent = null;
+        private SerializedProperty _cachedBytesSize = null;
 
-        private HelperInfo<DataTableHelperBase> m_DataTableHelperInfo = new HelperInfo<DataTableHelperBase>("DataTable");
+        private HelperInfo<DataTableHelperBase> _dataTableHelperInfo = new HelperInfo<DataTableHelperBase>("DataTable");
 
-        private HelperInfo<DataRowHelperResolverBase> m_DataRowHelperResolverInfo =
+        private HelperInfo<DataRowHelperResolverBase> _dataRowHelperResolverInfo =
             new HelperInfo<DataRowHelperResolverBase>("DataRowHelper")
             {
                 HelperTypeNameFormat = "m_{0}ResolverTypeName",
-                CustomHelperFormat = "m_Custom{0}Resolver",
+                CustomHelperFormat = "_custom{0}Resolver",
                 DisplayNameFormat = "{0} Resolver"
             };
 
@@ -39,11 +39,11 @@ namespace EasyGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                // EditorGUILayout.PropertyField(m_EnableLoadDataTableUpdateEvent);
-                // EditorGUILayout.PropertyField(m_EnableLoadDataTableDependencyAssetEvent);
-                m_DataTableHelperInfo.Draw();
-                m_DataRowHelperResolverInfo.Draw();
-                EditorGUILayout.PropertyField(m_CachedBytesSize);
+                // EditorGUILayout.PropertyField(_enableLoadDataTableUpdateEvent);
+                // EditorGUILayout.PropertyField(_enableLoadDataTableDependencyAssetEvent);
+                _dataTableHelperInfo.Draw();
+                _dataRowHelperResolverInfo.Draw();
+                EditorGUILayout.PropertyField(_cachedBytesSize);
             }
             EditorGUI.EndDisabledGroup();
 
@@ -73,12 +73,12 @@ namespace EasyGameFramework.Editor
 
         private void OnEnable()
         {
-            // m_EnableLoadDataTableUpdateEvent = serializedObject.FindProperty("m_EnableLoadDataTableUpdateEvent");
-            // m_EnableLoadDataTableDependencyAssetEvent = serializedObject.FindProperty("m_EnableLoadDataTableDependencyAssetEvent");
-            m_CachedBytesSize = serializedObject.FindProperty("m_CachedBytesSize");
+            // _enableLoadDataTableUpdateEvent = serializedObject.FindProperty("_enableLoadDataTableUpdateEvent");
+            // _enableLoadDataTableDependencyAssetEvent = serializedObject.FindProperty("_enableLoadDataTableDependencyAssetEvent");
+            _cachedBytesSize = serializedObject.FindProperty("_cachedBytesSize");
 
-            m_DataTableHelperInfo.Init(serializedObject);
-            m_DataRowHelperResolverInfo.Init(serializedObject);
+            _dataTableHelperInfo.Init(serializedObject);
+            _dataRowHelperResolverInfo.Init(serializedObject);
 
             RefreshTypeNames();
         }
@@ -90,8 +90,8 @@ namespace EasyGameFramework.Editor
 
         private void RefreshTypeNames()
         {
-            m_DataTableHelperInfo.Refresh();
-            m_DataRowHelperResolverInfo.Refresh();
+            _dataTableHelperInfo.Refresh();
+            _dataRowHelperResolverInfo.Refresh();
             serializedObject.ApplyModifiedProperties();
         }
     }

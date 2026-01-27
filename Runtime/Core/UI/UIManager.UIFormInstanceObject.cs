@@ -16,13 +16,13 @@ namespace EasyGameFramework.Core.UI
         /// </summary>
         private sealed class UIFormInstanceObject : ObjectBase
         {
-            private object m_UIFormAsset;
-            private IUIFormHelper m_UIFormHelper;
+            private object _uIFormAsset;
+            private IUIFormHelper _uIFormHelper;
 
             public UIFormInstanceObject()
             {
-                m_UIFormAsset = null;
-                m_UIFormHelper = null;
+                _uIFormAsset = null;
+                _uIFormHelper = null;
             }
 
             public static UIFormInstanceObject Create(string name, object uiFormAsset, object uiFormInstance, IUIFormHelper uiFormHelper)
@@ -39,21 +39,21 @@ namespace EasyGameFramework.Core.UI
 
                 UIFormInstanceObject uiFormInstanceObject = ReferencePool.Acquire<UIFormInstanceObject>();
                 uiFormInstanceObject.Initialize(name, uiFormInstance);
-                uiFormInstanceObject.m_UIFormAsset = uiFormAsset;
-                uiFormInstanceObject.m_UIFormHelper = uiFormHelper;
+                uiFormInstanceObject._uIFormAsset = uiFormAsset;
+                uiFormInstanceObject._uIFormHelper = uiFormHelper;
                 return uiFormInstanceObject;
             }
 
             public override void Clear()
             {
                 base.Clear();
-                m_UIFormAsset = null;
-                m_UIFormHelper = null;
+                _uIFormAsset = null;
+                _uIFormHelper = null;
             }
 
             protected internal override void Release(bool isShutdown)
             {
-                m_UIFormHelper.ReleaseUIForm(m_UIFormAsset, Target);
+                _uIFormHelper.ReleaseUIForm(_uIFormAsset, Target);
             }
         }
     }

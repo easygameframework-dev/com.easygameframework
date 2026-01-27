@@ -18,10 +18,10 @@ namespace EasyGameFramework
     /// </summary>
     public sealed class Entity : MonoBehaviour, IEntity
     {
-        private int m_Id;
-        private AssetAddress m_EntityAssetAddress;
-        private IEntityGroup m_EntityGroup;
-        private EntityLogic m_EntityLogic;
+        private int _id;
+        private AssetAddress _entityAssetAddress;
+        private IEntityGroup _entityGroup;
+        private EntityLogic _entityLogic;
 
         /// <summary>
         /// 获取实体编号。
@@ -30,7 +30,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_Id;
+                return _id;
             }
         }
 
@@ -41,7 +41,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_EntityAssetAddress;
+                return _entityAssetAddress;
             }
         }
 
@@ -63,7 +63,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_EntityGroup;
+                return _entityGroup;
             }
         }
 
@@ -74,7 +74,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_EntityLogic;
+                return _entityLogic;
             }
         }
 
@@ -88,13 +88,13 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void OnInit(int entityId, AssetAddress entityAssetAddress, IEntityGroup entityGroup, bool isNewInstance, object userData)
         {
-            m_Id = entityId;
-            m_EntityAssetAddress = entityAssetAddress;
+            _id = entityId;
+            _entityAssetAddress = entityAssetAddress;
             if (isNewInstance)
             {
-                m_EntityGroup = entityGroup;
+                _entityGroup = entityGroup;
             }
-            else if (m_EntityGroup != entityGroup)
+            else if (_entityGroup != entityGroup)
             {
                 Log.Error("Entity group is inconsistent for non-new-instance entity.");
                 return;
@@ -108,20 +108,20 @@ namespace EasyGameFramework
                 return;
             }
 
-            if (m_EntityLogic != null)
+            if (_entityLogic != null)
             {
-                if (m_EntityLogic.GetType() == entityLogicType)
+                if (_entityLogic.GetType() == entityLogicType)
                 {
-                    m_EntityLogic.enabled = true;
+                    _entityLogic.enabled = true;
                     return;
                 }
 
-                Destroy(m_EntityLogic);
-                m_EntityLogic = null;
+                Destroy(_entityLogic);
+                _entityLogic = null;
             }
 
-            m_EntityLogic = gameObject.GetOrAddComponent(entityLogicType) as EntityLogic;
-            if (m_EntityLogic == null)
+            _entityLogic = gameObject.GetOrAddComponent(entityLogicType) as EntityLogic;
+            if (_entityLogic == null)
             {
                 Log.Error("Entity '{0}' can not add entity logic.", entityAssetAddress);
                 return;
@@ -129,11 +129,11 @@ namespace EasyGameFramework
 
             try
             {
-                m_EntityLogic.OnInit(showEntityInfo.UserData);
+                _entityLogic.OnInit(showEntityInfo.UserData);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnInit with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnInit with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
         }
 
@@ -144,15 +144,15 @@ namespace EasyGameFramework
         {
             try
             {
-                m_EntityLogic.OnRecycle();
-                m_EntityLogic.enabled = false;
+                _entityLogic.OnRecycle();
+                _entityLogic.enabled = false;
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnRecycle with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnRecycle with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
 
-            m_Id = 0;
+            _id = 0;
         }
 
         /// <summary>
@@ -164,11 +164,11 @@ namespace EasyGameFramework
             ShowEntityInfo showEntityInfo = (ShowEntityInfo)userData;
             try
             {
-                m_EntityLogic.OnShow(showEntityInfo.UserData);
+                _entityLogic.OnShow(showEntityInfo.UserData);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnShow with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnShow with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
         }
 
@@ -181,11 +181,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_EntityLogic.OnHide(isShutdown, userData);
+                _entityLogic.OnHide(isShutdown, userData);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnHide with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnHide with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
         }
 
@@ -199,11 +199,11 @@ namespace EasyGameFramework
             AttachEntityInfo attachEntityInfo = (AttachEntityInfo)userData;
             try
             {
-                m_EntityLogic.OnAttached(((Entity)childEntity).Logic, attachEntityInfo.ParentTransform, attachEntityInfo.UserData);
+                _entityLogic.OnAttached(((Entity)childEntity).Logic, attachEntityInfo.ParentTransform, attachEntityInfo.UserData);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnAttached with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnAttached with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
         }
 
@@ -216,11 +216,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_EntityLogic.OnDetached(((Entity)childEntity).Logic, userData);
+                _entityLogic.OnDetached(((Entity)childEntity).Logic, userData);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnDetached with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnDetached with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
         }
 
@@ -234,11 +234,11 @@ namespace EasyGameFramework
             AttachEntityInfo attachEntityInfo = (AttachEntityInfo)userData;
             try
             {
-                m_EntityLogic.OnAttachTo(((Entity)parentEntity).Logic, attachEntityInfo.ParentTransform, attachEntityInfo.UserData);
+                _entityLogic.OnAttachTo(((Entity)parentEntity).Logic, attachEntityInfo.ParentTransform, attachEntityInfo.UserData);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnAttachTo with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnAttachTo with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
 
             ReferencePool.Release(attachEntityInfo);
@@ -253,11 +253,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_EntityLogic.OnDetachFrom(((Entity)parentEntity).Logic, userData);
+                _entityLogic.OnDetachFrom(((Entity)parentEntity).Logic, userData);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnDetachFrom with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnDetachFrom with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
         }
 
@@ -270,11 +270,11 @@ namespace EasyGameFramework
         {
             try
             {
-                m_EntityLogic.OnUpdate(elapseSeconds, realElapseSeconds);
+                _entityLogic.OnUpdate(elapseSeconds, realElapseSeconds);
             }
             catch (Exception exception)
             {
-                Log.Error("Entity '[{0}]{1}' OnUpdate with exception '{2}'.", m_Id, m_EntityAssetAddress, exception);
+                Log.Error("Entity '[{0}]{1}' OnUpdate with exception '{2}'.", _id, _entityAssetAddress, exception);
             }
         }
     }

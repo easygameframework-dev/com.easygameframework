@@ -16,12 +16,12 @@ namespace EasyGameFramework.Core.ObjectPool
     [StructLayout(LayoutKind.Auto)]
     public struct ObjectInfo
     {
-        private readonly string m_Name;
-        private readonly bool m_Locked;
-        private readonly bool m_CustomCanReleaseFlag;
-        private readonly int m_Priority;
-        private readonly DateTime m_LastUseTime;
-        private readonly int m_SpawnCount;
+        private readonly string _name;
+        private readonly bool _locked;
+        private readonly bool _customCanReleaseFlag;
+        private readonly int _priority;
+        private readonly DateTime _lastUseTime;
+        private readonly int _spawnCount;
 
         /// <summary>
         /// 初始化对象信息的新实例。
@@ -34,12 +34,12 @@ namespace EasyGameFramework.Core.ObjectPool
         /// <param name="spawnCount">对象的获取计数。</param>
         public ObjectInfo(string name, bool locked, bool customCanReleaseFlag, int priority, DateTime lastUseTime, int spawnCount)
         {
-            m_Name = name;
-            m_Locked = locked;
-            m_CustomCanReleaseFlag = customCanReleaseFlag;
-            m_Priority = priority;
-            m_LastUseTime = lastUseTime;
-            m_SpawnCount = spawnCount;
+            _name = name;
+            _locked = locked;
+            _customCanReleaseFlag = customCanReleaseFlag;
+            _priority = priority;
+            _lastUseTime = lastUseTime;
+            _spawnCount = spawnCount;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_Name;
+                return _name;
             }
         }
 
@@ -60,7 +60,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_Locked;
+                return _locked;
             }
         }
 
@@ -71,7 +71,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_CustomCanReleaseFlag;
+                return _customCanReleaseFlag;
             }
         }
 
@@ -82,7 +82,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_Priority;
+                return _priority;
             }
         }
 
@@ -93,7 +93,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_LastUseTime;
+                return _lastUseTime;
             }
         }
 
@@ -104,7 +104,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_SpawnCount > 0;
+                return _spawnCount > 0;
             }
         }
 
@@ -115,7 +115,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_SpawnCount;
+                return _spawnCount;
             }
         }
     }

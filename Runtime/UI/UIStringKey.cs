@@ -15,7 +15,7 @@ namespace EasyGameFramework
     public sealed class UIStringKey : MonoBehaviour
     {
         [SerializeField]
-        private string m_Key = null;
+        private string _key = null;
 
         /// <summary>
         /// 获取或设置主键。
@@ -24,11 +24,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_Key ?? string.Empty;
+                return _key ?? string.Empty;
             }
             set
             {
-                m_Key = value;
+                _key = value;
             }
         }
     }

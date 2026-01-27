@@ -16,12 +16,12 @@ namespace EasyGameFramework.Core
     /// <typeparam name="T">事件类型。</typeparam>
     internal sealed partial class EventPool<T> where T : BaseEventArgs
     {
-        private readonly GameFrameworkMultiDictionary<int, EventHandler<T>> m_EventHandlers;
-        private readonly Queue<Event> m_Events;
-        private readonly Dictionary<object, LinkedListNode<EventHandler<T>>> m_CachedNodes;
-        private readonly Dictionary<object, LinkedListNode<EventHandler<T>>> m_TempNodes;
-        private readonly EventPoolMode m_EventPoolMode;
-        private EventHandler<T> m_DefaultHandler;
+        private readonly GameFrameworkMultiDictionary<int, EventHandler<T>> _eventHandlers;
+        private readonly Queue<Event> _events;
+        private readonly Dictionary<object, LinkedListNode<EventHandler<T>>> _cachedNodes;
+        private readonly Dictionary<object, LinkedListNode<EventHandler<T>>> _tempNodes;
+        private readonly EventPoolMode _eventPoolMode;
+        private EventHandler<T> _defaultHandler;
 
         /// <summary>
         /// 初始化事件池的新实例。
@@ -29,12 +29,12 @@ namespace EasyGameFramework.Core
         /// <param name="mode">事件池模式。</param>
         public EventPool(EventPoolMode mode)
         {
-            m_EventHandlers = new GameFrameworkMultiDictionary<int, EventHandler<T>>();
-            m_Events = new Queue<Event>();
-            m_CachedNodes = new Dictionary<object, LinkedListNode<EventHandler<T>>>();
-            m_TempNodes = new Dictionary<object, LinkedListNode<EventHandler<T>>>();
-            m_EventPoolMode = mode;
-            m_DefaultHandler = null;
+            _eventHandlers = new GameFrameworkMultiDictionary<int, EventHandler<T>>();
+            _events = new Queue<Event>();
+            _cachedNodes = new Dictionary<object, LinkedListNode<EventHandler<T>>>();
+            _tempNodes = new Dictionary<object, LinkedListNode<EventHandler<T>>>();
+            _eventPoolMode = mode;
+            _defaultHandler = null;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_EventHandlers.Count;
+                return _eventHandlers.Count;
             }
         }
 
@@ -55,7 +55,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Events.Count;
+                return _events.Count;
             }
         }
 
@@ -67,10 +67,10 @@ namespace EasyGameFramework.Core
         public void Update(float elapseSeconds, float realElapseSeconds)
         {
             Queue<Event> tempEvents;
-            lock (m_Events)
+            lock (_events)
             {
-                tempEvents = new Queue<Event>(m_Events);
-                m_Events.Clear();
+                tempEvents = new Queue<Event>(_events);
+                _events.Clear();
             }
 
             while (tempEvents.Count > 0)
@@ -87,10 +87,10 @@ namespace EasyGameFramework.Core
         public void Shutdown()
         {
             Clear();
-            m_EventHandlers.Clear();
-            m_CachedNodes.Clear();
-            m_TempNodes.Clear();
-            m_DefaultHandler = null;
+            _eventHandlers.Clear();
+            _cachedNodes.Clear();
+            _tempNodes.Clear();
+            _defaultHandler = null;
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace EasyGameFramework.Core
         /// </summary>
         public void Clear()
         {
-            lock (m_Events)
+            lock (_events)
             {
-                m_Events.Clear();
+                _events.Clear();
             }
         }
 
@@ -112,7 +112,7 @@ namespace EasyGameFramework.Core
         public int Count(int id)
         {
             GameFrameworkLinkedListRange<EventHandler<T>> range = default(GameFrameworkLinkedListRange<EventHandler<T>>);
-            if (m_EventHandlers.TryGetValue(id, out range))
+            if (_eventHandlers.TryGetValue(id, out range))
             {
                 return range.Count;
             }
@@ -133,7 +133,7 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Event handler is invalid.");
             }
 
-            return m_EventHandlers.Contains(id, handler);
+            return _eventHandlers.Contains(id, handler);
         }
 
         /// <summary>
@@ -148,21 +148,21 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Event handler is invalid.");
             }
 
-            if (!m_EventHandlers.Contains(id))
+            if (!_eventHandlers.Contains(id))
             {
-                m_EventHandlers.Add(id, handler);
+                _eventHandlers.Add(id, handler);
             }
-            else if ((m_EventPoolMode & EventPoolMode.AllowMultiHandler) != EventPoolMode.AllowMultiHandler)
+            else if ((_eventPoolMode & EventPoolMode.AllowMultiHandler) != EventPoolMode.AllowMultiHandler)
             {
                 throw new GameFrameworkException(Utility.Text.Format("Event '{0}' not allow multi handler.", id));
             }
-            else if ((m_EventPoolMode & EventPoolMode.AllowDuplicateHandler) != EventPoolMode.AllowDuplicateHandler && Check(id, handler))
+            else if ((_eventPoolMode & EventPoolMode.AllowDuplicateHandler) != EventPoolMode.AllowDuplicateHandler && Check(id, handler))
             {
                 throw new GameFrameworkException(Utility.Text.Format("Event '{0}' not allow duplicate handler.", id));
             }
             else
             {
-                m_EventHandlers.Add(id, handler);
+                _eventHandlers.Add(id, handler);
             }
         }
 
@@ -178,28 +178,28 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Event handler is invalid.");
             }
 
-            if (m_CachedNodes.Count > 0)
+            if (_cachedNodes.Count > 0)
             {
-                foreach (KeyValuePair<object, LinkedListNode<EventHandler<T>>> cachedNode in m_CachedNodes)
+                foreach (KeyValuePair<object, LinkedListNode<EventHandler<T>>> cachedNode in _cachedNodes)
                 {
                     if (cachedNode.Value != null && cachedNode.Value.Value == handler)
                     {
-                        m_TempNodes.Add(cachedNode.Key, cachedNode.Value.Next);
+                        _tempNodes.Add(cachedNode.Key, cachedNode.Value.Next);
                     }
                 }
 
-                if (m_TempNodes.Count > 0)
+                if (_tempNodes.Count > 0)
                 {
-                    foreach (KeyValuePair<object, LinkedListNode<EventHandler<T>>> cachedNode in m_TempNodes)
+                    foreach (KeyValuePair<object, LinkedListNode<EventHandler<T>>> cachedNode in _tempNodes)
                     {
-                        m_CachedNodes[cachedNode.Key] = cachedNode.Value;
+                        _cachedNodes[cachedNode.Key] = cachedNode.Value;
                     }
 
-                    m_TempNodes.Clear();
+                    _tempNodes.Clear();
                 }
             }
 
-            if (!m_EventHandlers.Remove(id, handler))
+            if (!_eventHandlers.Remove(id, handler))
             {
                 throw new GameFrameworkException(Utility.Text.Format("Event '{0}' not exists specified handler.", id));
             }
@@ -211,7 +211,7 @@ namespace EasyGameFramework.Core
         /// <param name="handler">要设置的默认事件处理函数。</param>
         public void SetDefaultHandler(EventHandler<T> handler)
         {
-            m_DefaultHandler = handler;
+            _defaultHandler = handler;
         }
 
         /// <summary>
@@ -227,9 +227,9 @@ namespace EasyGameFramework.Core
             }
 
             Event eventNode = Event.Create(sender, e);
-            lock (m_Events)
+            lock (_events)
             {
-                m_Events.Enqueue(eventNode);
+                _events.Enqueue(eventNode);
             }
         }
 
@@ -257,23 +257,23 @@ namespace EasyGameFramework.Core
         {
             bool noHandlerException = false;
             GameFrameworkLinkedListRange<EventHandler<T>> range = default(GameFrameworkLinkedListRange<EventHandler<T>>);
-            if (m_EventHandlers.TryGetValue(e.Id, out range))
+            if (_eventHandlers.TryGetValue(e.Id, out range))
             {
                 LinkedListNode<EventHandler<T>> current = range.First;
                 while (current != null && current != range.Terminal)
                 {
-                    m_CachedNodes[e] = current.Next != range.Terminal ? current.Next : null;
+                    _cachedNodes[e] = current.Next != range.Terminal ? current.Next : null;
                     current.Value(sender, e);
-                    current = m_CachedNodes[e];
+                    current = _cachedNodes[e];
                 }
 
-                m_CachedNodes.Remove(e);
+                _cachedNodes.Remove(e);
             }
-            else if (m_DefaultHandler != null)
+            else if (_defaultHandler != null)
             {
-                m_DefaultHandler(sender, e);
+                _defaultHandler(sender, e);
             }
-            else if ((m_EventPoolMode & EventPoolMode.AllowNoHandler) == 0)
+            else if ((_eventPoolMode & EventPoolMode.AllowNoHandler) == 0)
             {
                 noHandlerException = true;
             }

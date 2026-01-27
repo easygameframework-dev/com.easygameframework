@@ -16,25 +16,25 @@ namespace EasyGameFramework
         private sealed class EntityGroup
         {
             [SerializeField]
-            private string m_Name = null;
+            private string _name = null;
 
             [SerializeField]
-            private float m_InstanceAutoReleaseInterval = 60f;
+            private float _instanceAutoReleaseInterval = 60f;
 
             [SerializeField]
-            private int m_InstanceCapacity = 16;
+            private int _instanceCapacity = 16;
 
             [SerializeField]
-            private float m_InstanceExpireTime = 60f;
+            private float _instanceExpireTime = 60f;
 
             [SerializeField]
-            private int m_InstancePriority = 0;
+            private int _instancePriority = 0;
 
             public string Name
             {
                 get
                 {
-                    return m_Name;
+                    return _name;
                 }
             }
 
@@ -42,7 +42,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_InstanceAutoReleaseInterval;
+                    return _instanceAutoReleaseInterval;
                 }
             }
 
@@ -50,7 +50,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_InstanceCapacity;
+                    return _instanceCapacity;
                 }
             }
 
@@ -58,7 +58,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_InstanceExpireTime;
+                    return _instanceExpireTime;
                 }
             }
 
@@ -66,7 +66,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_InstancePriority;
+                    return _instancePriority;
                 }
             }
         }

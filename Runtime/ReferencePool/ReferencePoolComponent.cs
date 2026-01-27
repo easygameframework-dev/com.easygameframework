@@ -18,7 +18,7 @@ namespace EasyGameFramework
     public sealed class ReferencePoolComponent : GameFrameworkComponent
     {
         [SerializeField]
-        private ReferenceStrictCheckType m_EnableStrictCheck = ReferenceStrictCheckType.AlwaysEnable;
+        private ReferenceStrictCheckType _enableStrictCheck = ReferenceStrictCheckType.AlwaysEnable;
 
         /// <summary>
         /// 获取或设置是否开启强制检查。
@@ -49,7 +49,7 @@ namespace EasyGameFramework
 
         private void Start()
         {
-            switch (m_EnableStrictCheck)
+            switch (_enableStrictCheck)
             {
                 case ReferenceStrictCheckType.AlwaysEnable:
                     EnableStrictCheck = true;

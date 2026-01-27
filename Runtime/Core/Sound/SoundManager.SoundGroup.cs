@@ -16,12 +16,12 @@ namespace EasyGameFramework.Core.Sound
         /// </summary>
         private sealed class SoundGroup : ISoundGroup
         {
-            private readonly string m_Name;
-            private readonly ISoundGroupHelper m_SoundGroupHelper;
-            private readonly List<SoundAgent> m_SoundAgents;
-            private bool m_AvoidBeingReplacedBySamePriority;
-            private bool m_Mute;
-            private float m_Volume;
+            private readonly string _name;
+            private readonly ISoundGroupHelper _soundGroupHelper;
+            private readonly List<SoundAgent> _soundAgents;
+            private bool _avoidBeingReplacedBySamePriority;
+            private bool _mute;
+            private float _volume;
 
             /// <summary>
             /// 初始化声音组的新实例。
@@ -40,9 +40,9 @@ namespace EasyGameFramework.Core.Sound
                     throw new GameFrameworkException("Sound group helper is invalid.");
                 }
 
-                m_Name = name;
-                m_SoundGroupHelper = soundGroupHelper;
-                m_SoundAgents = new List<SoundAgent>();
+                _name = name;
+                _soundGroupHelper = soundGroupHelper;
+                _soundAgents = new List<SoundAgent>();
             }
 
             /// <summary>
@@ -52,7 +52,7 @@ namespace EasyGameFramework.Core.Sound
             {
                 get
                 {
-                    return m_Name;
+                    return _name;
                 }
             }
 
@@ -63,7 +63,7 @@ namespace EasyGameFramework.Core.Sound
             {
                 get
                 {
-                    return m_SoundAgents.Count;
+                    return _soundAgents.Count;
                 }
             }
 
@@ -74,11 +74,11 @@ namespace EasyGameFramework.Core.Sound
             {
                 get
                 {
-                    return m_AvoidBeingReplacedBySamePriority;
+                    return _avoidBeingReplacedBySamePriority;
                 }
                 set
                 {
-                    m_AvoidBeingReplacedBySamePriority = value;
+                    _avoidBeingReplacedBySamePriority = value;
                 }
             }
 
@@ -89,12 +89,12 @@ namespace EasyGameFramework.Core.Sound
             {
                 get
                 {
-                    return m_Mute;
+                    return _mute;
                 }
                 set
                 {
-                    m_Mute = value;
-                    foreach (SoundAgent soundAgent in m_SoundAgents)
+                    _mute = value;
+                    foreach (SoundAgent soundAgent in _soundAgents)
                     {
                         soundAgent.RefreshMute();
                     }
@@ -108,12 +108,12 @@ namespace EasyGameFramework.Core.Sound
             {
                 get
                 {
-                    return m_Volume;
+                    return _volume;
                 }
                 set
                 {
-                    m_Volume = value;
-                    foreach (SoundAgent soundAgent in m_SoundAgents)
+                    _volume = value;
+                    foreach (SoundAgent soundAgent in _soundAgents)
                     {
                         soundAgent.RefreshVolume();
                     }
@@ -127,7 +127,7 @@ namespace EasyGameFramework.Core.Sound
             {
                 get
                 {
-                    return m_SoundGroupHelper;
+                    return _soundGroupHelper;
                 }
             }
 
@@ -138,7 +138,7 @@ namespace EasyGameFramework.Core.Sound
             /// <param name="soundAgentHelper">要增加的声音代理辅助器。</param>
             public void AddSoundAgentHelper(ISoundHelper soundHelper, ISoundAgentHelper soundAgentHelper)
             {
-                m_SoundAgents.Add(new SoundAgent(this, soundHelper, soundAgentHelper));
+                _soundAgents.Add(new SoundAgent(this, soundHelper, soundAgentHelper));
             }
 
             /// <summary>
@@ -153,7 +153,7 @@ namespace EasyGameFramework.Core.Sound
             {
                 errorCode = null;
                 SoundAgent candidateAgent = null;
-                foreach (SoundAgent soundAgent in m_SoundAgents)
+                foreach (SoundAgent soundAgent in _soundAgents)
                 {
                     if (!soundAgent.IsPlaying)
                     {
@@ -168,7 +168,7 @@ namespace EasyGameFramework.Core.Sound
                             candidateAgent = soundAgent;
                         }
                     }
-                    else if (!m_AvoidBeingReplacedBySamePriority && soundAgent.Priority == playSoundParams.Priority)
+                    else if (!_avoidBeingReplacedBySamePriority && soundAgent.Priority == playSoundParams.Priority)
                     {
                         if (candidateAgent == null || soundAgent.SetSoundAssetTime < candidateAgent.SetSoundAssetTime)
                         {
@@ -212,7 +212,7 @@ namespace EasyGameFramework.Core.Sound
             /// <returns>是否停止播放声音成功。</returns>
             public bool StopSound(int serialId, float fadeOutSeconds)
             {
-                foreach (SoundAgent soundAgent in m_SoundAgents)
+                foreach (SoundAgent soundAgent in _soundAgents)
                 {
                     if (soundAgent.SerialId != serialId)
                     {
@@ -234,7 +234,7 @@ namespace EasyGameFramework.Core.Sound
             /// <returns>是否暂停播放声音成功。</returns>
             public bool PauseSound(int serialId, float fadeOutSeconds)
             {
-                foreach (SoundAgent soundAgent in m_SoundAgents)
+                foreach (SoundAgent soundAgent in _soundAgents)
                 {
                     if (soundAgent.SerialId != serialId)
                     {
@@ -256,7 +256,7 @@ namespace EasyGameFramework.Core.Sound
             /// <returns>是否恢复播放声音成功。</returns>
             public bool ResumeSound(int serialId, float fadeInSeconds)
             {
-                foreach (SoundAgent soundAgent in m_SoundAgents)
+                foreach (SoundAgent soundAgent in _soundAgents)
                 {
                     if (soundAgent.SerialId != serialId)
                     {
@@ -275,7 +275,7 @@ namespace EasyGameFramework.Core.Sound
             /// </summary>
             public void StopAllLoadedSounds()
             {
-                foreach (SoundAgent soundAgent in m_SoundAgents)
+                foreach (SoundAgent soundAgent in _soundAgents)
                 {
                     if (soundAgent.IsPlaying)
                     {
@@ -290,7 +290,7 @@ namespace EasyGameFramework.Core.Sound
             /// <param name="fadeOutSeconds">声音淡出时间，以秒为单位。</param>
             public void StopAllLoadedSounds(float fadeOutSeconds)
             {
-                foreach (SoundAgent soundAgent in m_SoundAgents)
+                foreach (SoundAgent soundAgent in _soundAgents)
                 {
                     if (soundAgent.IsPlaying)
                     {

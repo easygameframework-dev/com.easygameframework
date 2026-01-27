@@ -17,12 +17,12 @@ namespace EasyGameFramework.Core.UI
         /// </summary>
         private sealed partial class UIGroup : IUIGroup
         {
-            private readonly string m_Name;
-            private int m_Depth;
-            private bool m_Pause;
-            private readonly IUIGroupHelper m_UIGroupHelper;
-            private readonly GameFrameworkLinkedList<UIFormInfo> m_UIFormInfos;
-            private LinkedListNode<UIFormInfo> m_CachedNode;
+            private readonly string _name;
+            private int _depth;
+            private bool _pause;
+            private readonly IUIGroupHelper _uIGroupHelper;
+            private readonly GameFrameworkLinkedList<UIFormInfo> _uIFormInfos;
+            private LinkedListNode<UIFormInfo> _cachedNode;
 
             /// <summary>
             /// 初始化界面组的新实例。
@@ -42,11 +42,11 @@ namespace EasyGameFramework.Core.UI
                     throw new GameFrameworkException("UI group helper is invalid.");
                 }
 
-                m_Name = name;
-                m_Pause = false;
-                m_UIGroupHelper = uiGroupHelper;
-                m_UIFormInfos = new GameFrameworkLinkedList<UIFormInfo>();
-                m_CachedNode = null;
+                _name = name;
+                _pause = false;
+                _uIGroupHelper = uiGroupHelper;
+                _uIFormInfos = new GameFrameworkLinkedList<UIFormInfo>();
+                _cachedNode = null;
                 Depth = depth;
             }
 
@@ -57,7 +57,7 @@ namespace EasyGameFramework.Core.UI
             {
                 get
                 {
-                    return m_Name;
+                    return _name;
                 }
             }
 
@@ -68,17 +68,17 @@ namespace EasyGameFramework.Core.UI
             {
                 get
                 {
-                    return m_Depth;
+                    return _depth;
                 }
                 set
                 {
-                    if (m_Depth == value)
+                    if (_depth == value)
                     {
                         return;
                     }
 
-                    m_Depth = value;
-                    m_UIGroupHelper.SetDepth(m_Depth);
+                    _depth = value;
+                    _uIGroupHelper.SetDepth(_depth);
                     Refresh();
                 }
             }
@@ -90,16 +90,16 @@ namespace EasyGameFramework.Core.UI
             {
                 get
                 {
-                    return m_Pause;
+                    return _pause;
                 }
                 set
                 {
-                    if (m_Pause == value)
+                    if (_pause == value)
                     {
                         return;
                     }
 
-                    m_Pause = value;
+                    _pause = value;
                     Refresh();
                 }
             }
@@ -111,7 +111,7 @@ namespace EasyGameFramework.Core.UI
             {
                 get
                 {
-                    return m_UIFormInfos.Count;
+                    return _uIFormInfos.Count;
                 }
             }
 
@@ -122,7 +122,7 @@ namespace EasyGameFramework.Core.UI
             {
                 get
                 {
-                    return m_UIFormInfos.First != null ? m_UIFormInfos.First.Value.UIForm : null;
+                    return _uIFormInfos.First != null ? _uIFormInfos.First.Value.UIForm : null;
                 }
             }
 
@@ -133,7 +133,7 @@ namespace EasyGameFramework.Core.UI
             {
                 get
                 {
-                    return m_UIGroupHelper;
+                    return _uIGroupHelper;
                 }
             }
 
@@ -144,7 +144,7 @@ namespace EasyGameFramework.Core.UI
             /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
             public void Update(float elapseSeconds, float realElapseSeconds)
             {
-                LinkedListNode<UIFormInfo> current = m_UIFormInfos.First;
+                LinkedListNode<UIFormInfo> current = _uIFormInfos.First;
                 while (current != null)
                 {
                     if (current.Value.Paused)
@@ -152,10 +152,10 @@ namespace EasyGameFramework.Core.UI
                         break;
                     }
 
-                    m_CachedNode = current.Next;
+                    _cachedNode = current.Next;
                     current.Value.UIForm.OnUpdate(elapseSeconds, realElapseSeconds);
-                    current = m_CachedNode;
-                    m_CachedNode = null;
+                    current = _cachedNode;
+                    _cachedNode = null;
                 }
             }
 
@@ -166,7 +166,7 @@ namespace EasyGameFramework.Core.UI
             /// <returns>界面组中是否存在界面。</returns>
             public bool HasUIForm(int serialId)
             {
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm.SerialId == serialId)
                     {
@@ -189,7 +189,7 @@ namespace EasyGameFramework.Core.UI
                     throw new GameFrameworkException("UI form asset address is invalid.");
                 }
 
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm.UIFormAssetAddress == uiFormAssetAddress)
                     {
@@ -207,7 +207,7 @@ namespace EasyGameFramework.Core.UI
             /// <returns>要获取的界面。</returns>
             public IUIForm GetUIForm(int serialId)
             {
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm.SerialId == serialId)
                     {
@@ -230,7 +230,7 @@ namespace EasyGameFramework.Core.UI
                     throw new GameFrameworkException("UI form asset address is invalid.");
                 }
 
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm.UIFormAssetAddress == uiFormAssetAddress)
                     {
@@ -254,7 +254,7 @@ namespace EasyGameFramework.Core.UI
                 }
 
                 List<IUIForm> results = new List<IUIForm>();
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm.UIFormAssetAddress == uiFormAssetAddress)
                     {
@@ -283,7 +283,7 @@ namespace EasyGameFramework.Core.UI
                 }
 
                 results.Clear();
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm.UIFormAssetAddress == uiFormAssetAddress)
                     {
@@ -299,7 +299,7 @@ namespace EasyGameFramework.Core.UI
             public IUIForm[] GetAllUIForms()
             {
                 List<IUIForm> results = new List<IUIForm>();
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     results.Add(uiFormInfo.UIForm);
                 }
@@ -319,7 +319,7 @@ namespace EasyGameFramework.Core.UI
                 }
 
                 results.Clear();
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     results.Add(uiFormInfo.UIForm);
                 }
@@ -331,7 +331,7 @@ namespace EasyGameFramework.Core.UI
             /// <param name="uiForm">要增加的界面。</param>
             public void AddUIForm(IUIForm uiForm)
             {
-                m_UIFormInfos.AddFirst(UIFormInfo.Create(uiForm));
+                _uIFormInfos.AddFirst(UIFormInfo.Create(uiForm));
             }
 
             /// <summary>
@@ -358,14 +358,14 @@ namespace EasyGameFramework.Core.UI
                     uiForm.OnPause();
                 }
 
-                if (m_CachedNode != null && m_CachedNode.Value.UIForm == uiForm)
+                if (_cachedNode != null && _cachedNode.Value.UIForm == uiForm)
                 {
-                    m_CachedNode = m_CachedNode.Next;
+                    _cachedNode = _cachedNode.Next;
                 }
 
-                if (!m_UIFormInfos.Remove(uiFormInfo))
+                if (!_uIFormInfos.Remove(uiFormInfo))
                 {
-                    throw new GameFrameworkException(Utility.Text.Format("UI group '{0}' not exists specified UI form '[{1}]{2}'.", m_Name, uiForm.SerialId, uiForm.UIFormAssetAddress));
+                    throw new GameFrameworkException(Utility.Text.Format("UI group '{0}' not exists specified UI form '[{1}]{2}'.", _name, uiForm.SerialId, uiForm.UIFormAssetAddress));
                 }
 
                 ReferencePool.Release(uiFormInfo);
@@ -384,8 +384,8 @@ namespace EasyGameFramework.Core.UI
                     throw new GameFrameworkException("Can not find UI form info.");
                 }
 
-                m_UIFormInfos.Remove(uiFormInfo);
-                m_UIFormInfos.AddFirst(uiFormInfo);
+                _uIFormInfos.Remove(uiFormInfo);
+                _uIFormInfos.AddFirst(uiFormInfo);
             }
 
             /// <summary>
@@ -393,8 +393,8 @@ namespace EasyGameFramework.Core.UI
             /// </summary>
             public void Refresh()
             {
-                LinkedListNode<UIFormInfo> current = m_UIFormInfos.First;
-                bool pause = m_Pause;
+                LinkedListNode<UIFormInfo> current = _uIFormInfos.First;
+                bool pause = _pause;
                 bool cover = false;
                 int depth = UIFormCount;
                 while (current != null && current.Value != null)
@@ -479,7 +479,7 @@ namespace EasyGameFramework.Core.UI
 
             internal void InternalGetUIForms(AssetAddress uiFormAssetAddress, List<IUIForm> results)
             {
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm.UIFormAssetAddress == uiFormAssetAddress)
                     {
@@ -490,7 +490,7 @@ namespace EasyGameFramework.Core.UI
 
             internal void InternalGetAllUIForms(List<IUIForm> results)
             {
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     results.Add(uiFormInfo.UIForm);
                 }
@@ -503,7 +503,7 @@ namespace EasyGameFramework.Core.UI
                     throw new GameFrameworkException("UI form is invalid.");
                 }
 
-                foreach (UIFormInfo uiFormInfo in m_UIFormInfos)
+                foreach (UIFormInfo uiFormInfo in _uIFormInfos)
                 {
                     if (uiFormInfo.UIForm == uiForm)
                     {

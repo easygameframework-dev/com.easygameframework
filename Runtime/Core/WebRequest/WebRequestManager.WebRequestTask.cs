@@ -14,19 +14,19 @@ namespace EasyGameFramework.Core.WebRequest
         /// </summary>
         private sealed class WebRequestTask : TaskBase
         {
-            private static int s_Serial = 0;
+            private static int s_serial = 0;
 
-            private WebRequestTaskStatus m_Status;
-            private string m_WebRequestUri;
-            private byte[] m_PostData;
-            private float m_Timeout;
+            private WebRequestTaskStatus _status;
+            private string _webRequestUri;
+            private byte[] _postData;
+            private float _timeout;
 
             public WebRequestTask()
             {
-                m_Status = WebRequestTaskStatus.Todo;
-                m_WebRequestUri = null;
-                m_PostData = null;
-                m_Timeout = 0f;
+                _status = WebRequestTaskStatus.Todo;
+                _webRequestUri = null;
+                _postData = null;
+                _timeout = 0f;
             }
 
             /// <summary>
@@ -36,11 +36,11 @@ namespace EasyGameFramework.Core.WebRequest
             {
                 get
                 {
-                    return m_Status;
+                    return _status;
                 }
                 set
                 {
-                    m_Status = value;
+                    _status = value;
                 }
             }
 
@@ -51,7 +51,7 @@ namespace EasyGameFramework.Core.WebRequest
             {
                 get
                 {
-                    return m_WebRequestUri;
+                    return _webRequestUri;
                 }
             }
 
@@ -62,7 +62,7 @@ namespace EasyGameFramework.Core.WebRequest
             {
                 get
                 {
-                    return m_Timeout;
+                    return _timeout;
                 }
             }
 
@@ -73,7 +73,7 @@ namespace EasyGameFramework.Core.WebRequest
             {
                 get
                 {
-                    return m_WebRequestUri;
+                    return _webRequestUri;
                 }
             }
 
@@ -90,10 +90,10 @@ namespace EasyGameFramework.Core.WebRequest
             public static WebRequestTask Create(string webRequestUri, byte[] postData, string tag, int priority, float timeout, object userData)
             {
                 WebRequestTask webRequestTask = ReferencePool.Acquire<WebRequestTask>();
-                webRequestTask.Initialize(++s_Serial, tag, priority, userData);
-                webRequestTask.m_WebRequestUri = webRequestUri;
-                webRequestTask.m_PostData = postData;
-                webRequestTask.m_Timeout = timeout;
+                webRequestTask.Initialize(++s_serial, tag, priority, userData);
+                webRequestTask._webRequestUri = webRequestUri;
+                webRequestTask._postData = postData;
+                webRequestTask._timeout = timeout;
                 return webRequestTask;
             }
 
@@ -103,10 +103,10 @@ namespace EasyGameFramework.Core.WebRequest
             public override void Clear()
             {
                 base.Clear();
-                m_Status = WebRequestTaskStatus.Todo;
-                m_WebRequestUri = null;
-                m_PostData = null;
-                m_Timeout = 0f;
+                _status = WebRequestTaskStatus.Todo;
+                _webRequestUri = null;
+                _postData = null;
+                _timeout = 0f;
             }
 
             /// <summary>
@@ -114,7 +114,7 @@ namespace EasyGameFramework.Core.WebRequest
             /// </summary>
             public byte[] GetPostData()
             {
-                return m_PostData;
+                return _postData;
             }
         }
     }

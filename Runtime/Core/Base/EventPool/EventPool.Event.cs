@@ -14,20 +14,20 @@ namespace EasyGameFramework.Core
         /// </summary>
         private sealed class Event : IReference
         {
-            private object m_Sender;
-            private T m_EventArgs;
+            private object _sender;
+            private T _eventArgs;
 
             public Event()
             {
-                m_Sender = null;
-                m_EventArgs = null;
+                _sender = null;
+                _eventArgs = null;
             }
 
             public object Sender
             {
                 get
                 {
-                    return m_Sender;
+                    return _sender;
                 }
             }
 
@@ -35,22 +35,22 @@ namespace EasyGameFramework.Core
             {
                 get
                 {
-                    return m_EventArgs;
+                    return _eventArgs;
                 }
             }
 
             public static Event Create(object sender, T e)
             {
                 Event eventNode = ReferencePool.Acquire<Event>();
-                eventNode.m_Sender = sender;
-                eventNode.m_EventArgs = e;
+                eventNode._sender = sender;
+                eventNode._eventArgs = e;
                 return eventNode;
             }
 
             public void Clear()
             {
-                m_Sender = null;
-                m_EventArgs = null;
+                _sender = null;
+                _eventArgs = null;
             }
         }
     }

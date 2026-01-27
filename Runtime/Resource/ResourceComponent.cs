@@ -26,86 +26,86 @@ namespace EasyGameFramework
     {
         private const int DefaultPriority = 0;
 
-        private IResourceManager m_ResourceManager = null;
-        // private EventComponent m_EventComponent = null;
+        private IResourceManager _resourceManager = null;
+        // private EventComponent _eventComponent = null;
 
         /// <summary>
         /// 资源系统运行模式。
         /// </summary>
-        [SerializeField] private PlayMode m_PlayMode = PlayMode.EditorSimulateMode;
+        [SerializeField] private PlayMode _playMode = PlayMode.EditorSimulateMode;
 
         /// <summary>
         /// 下载文件校验等级。
         /// </summary>
-        [SerializeField] private FileVerifyLevel m_FileVerifyLevel = FileVerifyLevel.Middle;
+        [SerializeField] private FileVerifyLevel _fileVerifyLevel = FileVerifyLevel.Middle;
 
-        [SerializeField] private ReadWritePathType m_ReadWritePathType = ReadWritePathType.Unspecified;
+        [SerializeField] private ReadWritePathType _readWritePathType = ReadWritePathType.Unspecified;
 
         /// <summary>
         /// 资源包名称。
         /// </summary>
-        [SerializeField] private string m_DefaultPackageName = "DefaultPackage";
+        [SerializeField] private string _defaultPackageName = "DefaultPackage";
 
         /// <summary>
         /// 设置异步系统参数，每帧执行消耗的最大时间切片（单位：毫秒）
         /// </summary>
-        [SerializeField] private long m_Milliseconds = 30;
+        [SerializeField] private long _milliseconds = 30;
 
-        [SerializeField] private float m_AssetAutoReleaseInterval = 60f;
+        [SerializeField] private float _assetAutoReleaseInterval = 60f;
 
-        [SerializeField] private int m_AssetCapacity = 64;
+        [SerializeField] private int _assetCapacity = 64;
 
-        [SerializeField] private float m_AssetExpireTime = 60f;
+        [SerializeField] private float _assetExpireTime = 60f;
 
-        [SerializeField] private int m_AssetPriority = 0;
+        [SerializeField] private int _assetPriority = 0;
 
-        [SerializeField] private float m_MinUnloadUnusedAssetsInterval = 60f;
+        [SerializeField] private float _minUnloadUnusedAssetsInterval = 60f;
 
-        [SerializeField] private float m_MaxUnloadUnusedAssetsInterval = 300f;
+        [SerializeField] private float _maxUnloadUnusedAssetsInterval = 300f;
 
-        [SerializeField] private bool m_UseSystemUnloadUnusedAssets = true;
+        [SerializeField] private bool _useSystemUnloadUnusedAssets = true;
 
-        [SerializeField] private int m_DownloadingMaxNum = 10;
+        [SerializeField] private int _downloadingMaxNum = 10;
 
-        [SerializeField] private int m_FailedTryAgain = 3;
+        [SerializeField] private int _failedTryAgain = 3;
 
-        [SerializeField] private LoadResourceAgentHelperBase m_LoadResourceAgentHelper = null;
-        [SerializeField] private ResourceHelperBase m_ResourceHelper = null;
+        [SerializeField] private LoadResourceAgentHelperBase _loadResourceAgentHelper = null;
+        [SerializeField] private ResourceHelperBase _resourceHelper = null;
 
-        private float m_LastUnloadUnusedAssetsOperationElapseSeconds = 0f;
+        private float _lastUnloadUnusedAssetsOperationElapseSeconds = 0f;
 
-        public PlayMode PlayMode => m_PlayMode;
-        public FileVerifyLevel FileVerifyLevel => m_FileVerifyLevel;
+        public PlayMode PlayMode => _playMode;
+        public FileVerifyLevel FileVerifyLevel => _fileVerifyLevel;
 
-        public float LastUnloadUnusedAssetsOperationElapseSeconds => m_LastUnloadUnusedAssetsOperationElapseSeconds;
+        public float LastUnloadUnusedAssetsOperationElapseSeconds => _lastUnloadUnusedAssetsOperationElapseSeconds;
 
-        public long Milliseconds => m_Milliseconds;
+        public long Milliseconds => _milliseconds;
 
-        public string DefaultPackageName => m_DefaultPackageName;
+        public string DefaultPackageName => _defaultPackageName;
 
-        public float MaxUnloadUnusedAssetsInterval => m_MaxUnloadUnusedAssetsInterval;
+        public float MaxUnloadUnusedAssetsInterval => _maxUnloadUnusedAssetsInterval;
 
-        public int DownloadingMaxNum => m_DownloadingMaxNum;
+        public int DownloadingMaxNum => _downloadingMaxNum;
 
-        public int FailedTryAgain => m_FailedTryAgain;
+        public int FailedTryAgain => _failedTryAgain;
 
         /// <summary>
         /// 获取资源只读路径。
         /// </summary>
-        public string ReadOnlyPath => m_ResourceManager.ReadOnlyPath;
+        public string ReadOnlyPath => _resourceManager.ReadOnlyPath;
 
         /// <summary>
         /// 获取资源读写路径。
         /// </summary>
-        public string ReadWritePath => m_ResourceManager.ReadWritePath;
+        public string ReadWritePath => _resourceManager.ReadWritePath;
 
         /// <summary>
         /// 获取或设置资源对象池自动释放可释放对象的间隔秒数。
         /// </summary>
         public float AssetAutoReleaseInterval
         {
-            get { return m_ResourceManager.AssetAutoReleaseInterval; }
-            set { m_ResourceManager.AssetAutoReleaseInterval = m_AssetAutoReleaseInterval = value; }
+            get { return _resourceManager.AssetAutoReleaseInterval; }
+            set { _resourceManager.AssetAutoReleaseInterval = _assetAutoReleaseInterval = value; }
         }
 
         /// <summary>
@@ -120,8 +120,8 @@ namespace EasyGameFramework
         /// </summary>
         public int AssetCapacity
         {
-            get { return m_ResourceManager.AssetCapacity; }
-            set { m_ResourceManager.AssetCapacity = m_AssetCapacity = value; }
+            get { return _resourceManager.AssetCapacity; }
+            set { _resourceManager.AssetCapacity = _assetCapacity = value; }
         }
 
         /// <summary>
@@ -129,8 +129,8 @@ namespace EasyGameFramework
         /// </summary>
         public float AssetExpireTime
         {
-            get { return m_ResourceManager.AssetExpireTime; }
-            set { m_ResourceManager.AssetExpireTime = m_AssetExpireTime = value; }
+            get { return _resourceManager.AssetExpireTime; }
+            set { _resourceManager.AssetExpireTime = _assetExpireTime = value; }
         }
 
         /// <summary>
@@ -138,8 +138,8 @@ namespace EasyGameFramework
         /// </summary>
         public int AssetPriority
         {
-            get { return m_ResourceManager.AssetPriority; }
-            set { m_ResourceManager.AssetPriority = m_AssetPriority = value; }
+            get { return _resourceManager.AssetPriority; }
+            set { _resourceManager.AssetPriority = _assetPriority = value; }
         }
 
         public bool IsInitialized { get; private set; }
@@ -153,49 +153,49 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_ResourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
-            if (m_ResourceManager == null)
+            _resourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
+            if (_resourceManager == null)
             {
                 Log.Fatal("Resource component is invalid.");
                 return;
             }
 
-            if (m_PlayMode == PlayMode.EditorSimulateMode)
+            if (_playMode == PlayMode.EditorSimulateMode)
             {
                 Log.Debug(
                     "During this run, Game Framework will use editor resource files, which you should validate first.");
 #if !UNITY_EDITOR
-                m_PlayMode = PlayMode.OfflinePlayMode;
+                _playMode = PlayMode.OfflinePlayMode;
 #endif
             }
 
-            m_ResourceManager.SetReadOnlyPath(Application.streamingAssetsPath);
-            if (m_ReadWritePathType == ReadWritePathType.TemporaryCache)
+            _resourceManager.SetReadOnlyPath(Application.streamingAssetsPath);
+            if (_readWritePathType == ReadWritePathType.TemporaryCache)
             {
-                m_ResourceManager.SetReadWritePath(Application.temporaryCachePath);
+                _resourceManager.SetReadWritePath(Application.temporaryCachePath);
             }
             else
             {
-                if (m_ReadWritePathType == ReadWritePathType.Unspecified)
+                if (_readWritePathType == ReadWritePathType.Unspecified)
                 {
-                    m_ReadWritePathType = ReadWritePathType.PersistentData;
+                    _readWritePathType = ReadWritePathType.PersistentData;
                 }
 
-                m_ResourceManager.SetReadWritePath(Application.persistentDataPath);
+                _resourceManager.SetReadWritePath(Application.persistentDataPath);
             }
 
-            m_ResourceManager.AddLoadResourceAgentHelper(m_LoadResourceAgentHelper);
-            m_ResourceManager.SetResourceHelper(m_ResourceHelper);
+            _resourceManager.AddLoadResourceAgentHelper(_loadResourceAgentHelper);
+            _resourceManager.SetResourceHelper(_resourceHelper);
 
-            m_ResourceManager.PlayMode = m_PlayMode;
-            m_ResourceManager.FileVerifyLevel = m_FileVerifyLevel;
-            m_ResourceManager.Milliseconds = m_Milliseconds;
-            m_ResourceManager.AssetAutoReleaseInterval = m_AssetAutoReleaseInterval;
-            m_ResourceManager.AssetCapacity = m_AssetCapacity;
-            m_ResourceManager.AssetExpireTime = m_AssetExpireTime;
-            m_ResourceManager.AssetPriority = m_AssetPriority;
+            _resourceManager.PlayMode = _playMode;
+            _resourceManager.FileVerifyLevel = _fileVerifyLevel;
+            _resourceManager.Milliseconds = _milliseconds;
+            _resourceManager.AssetAutoReleaseInterval = _assetAutoReleaseInterval;
+            _resourceManager.AssetCapacity = _assetCapacity;
+            _resourceManager.AssetExpireTime = _assetExpireTime;
+            _resourceManager.AssetPriority = _assetPriority;
             IsInitialized = true;
-            Log.Debug($"ResourceComponent Run Mode：{m_PlayMode}");
+            Log.Debug($"ResourceComponent Run Mode：{_playMode}");
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace EasyGameFramework
         /// <returns>检查资源是否存在的结果。</returns>
         public HasAssetResult HasAsset(AssetAddress assetAddress)
         {
-            return m_ResourceManager.HasAsset(assetAddress);
+            return _resourceManager.HasAsset(assetAddress);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace EasyGameFramework
         /// <returns></returns>
         public AssetInfo GetAssetInfo(AssetAddress assetAddress)
         {
-            return m_ResourceManager.GetAssetInfo(assetAddress);
+            return _resourceManager.GetAssetInfo(assetAddress);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace EasyGameFramework
         /// <returns>资源信息数组。</returns>
         public AssetInfo[] GetAssetInfos(string packageName, params string[] tags)
         {
-            return m_ResourceManager.GetAssetInfos(packageName, tags);
+            return _resourceManager.GetAssetInfos(packageName, tags);
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace EasyGameFramework
             int? priority = null,
             object userData = null)
         {
-            m_ResourceManager.LoadAsset(assetAddress, loadAssetCallbacks, assetType, priority, userData);
+            _resourceManager.LoadAsset(assetAddress, loadAssetCallbacks, assetType, priority, userData);
         }
 
         public void UnloadAsset(object asset)
         {
-            m_ResourceManager.UnloadAsset(asset);
+            _resourceManager.UnloadAsset(asset);
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace EasyGameFramework
             int? priority = null,
             object userData = null)
         {
-            m_ResourceManager.LoadScene(sceneAssetAddress, loadSceneCallbacks, priority, userData);
+            _resourceManager.LoadScene(sceneAssetAddress, loadSceneCallbacks, priority, userData);
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace EasyGameFramework
             UnloadSceneCallbacks unloadSceneCallbacks,
             object userData = null)
         {
-            m_ResourceManager.UnloadScene(sceneAssetAddress, unloadSceneCallbacks, userData);
+            _resourceManager.UnloadScene(sceneAssetAddress, unloadSceneCallbacks, userData);
         }
 
         public void ClearAllCacheFiles(
@@ -287,7 +287,7 @@ namespace EasyGameFramework
             ClearAllCacheFilesCallbacks clearAllCacheFilesCallbacks,
             object userData = null)
         {
-            m_ResourceManager.ClearAllCacheFiles(fileClearMode, clearAllCacheFilesCallbacks, userData);
+            _resourceManager.ClearAllCacheFiles(fileClearMode, clearAllCacheFilesCallbacks, userData);
         }
         
         public void ClearPackageCacheFiles(
@@ -296,7 +296,7 @@ namespace EasyGameFramework
             ClearPackageCacheFilesCallbacks clearPackageCacheFilesCallbacks,
             object userData = null)
         {
-            m_ResourceManager.ClearPackageCacheFiles(packageName, fileClearMode, clearPackageCacheFilesCallbacks, userData);
+            _resourceManager.ClearPackageCacheFiles(packageName, fileClearMode, clearPackageCacheFilesCallbacks, userData);
         }
     }
 }

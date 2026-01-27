@@ -14,7 +14,7 @@ namespace EasyGameFramework.Editor
     [CustomEditor(typeof(SettingComponent))]
     internal sealed class SettingComponentInspector : GameFrameworkInspector
     {
-        private HelperInfo<SettingHelperBase> m_SettingHelperInfo = new HelperInfo<SettingHelperBase>("Setting");
+        private HelperInfo<SettingHelperBase> _settingHelperInfo = new HelperInfo<SettingHelperBase>("Setting");
 
         public override void OnInspectorGUI()
         {
@@ -24,7 +24,7 @@ namespace EasyGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                m_SettingHelperInfo.Draw();
+                _settingHelperInfo.Draw();
             }
             EditorGUI.EndDisabledGroup();
 
@@ -67,14 +67,14 @@ namespace EasyGameFramework.Editor
 
         private void OnEnable()
         {
-            m_SettingHelperInfo.Init(serializedObject);
+            _settingHelperInfo.Init(serializedObject);
 
             RefreshTypeNames();
         }
 
         private void RefreshTypeNames()
         {
-            m_SettingHelperInfo.Refresh();
+            _settingHelperInfo.Refresh();
             serializedObject.ApplyModifiedProperties();
         }
     }

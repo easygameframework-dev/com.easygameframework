@@ -4,16 +4,16 @@ namespace EasyGameFramework.Core.Event
 {
     public class Subscription : ISubscription
     {
-        private readonly Action m_OnUnsubscribe;
+        private readonly Action _onUnsubscribe;
 
         public Subscription(Action onUnsubscribe)
         {
-            m_OnUnsubscribe = onUnsubscribe;
+            _onUnsubscribe = onUnsubscribe;
         }
 
         public void Unsubscribe()
         {
-            m_OnUnsubscribe?.Invoke();
+            _onUnsubscribe?.Invoke();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace EasyGameFramework.Core
     /// </summary>
     public static class GameFrameworkEntry
     {
-        private static readonly GameFrameworkLinkedList<GameFrameworkModule> s_GameFrameworkModules = new GameFrameworkLinkedList<GameFrameworkModule>();
+        private static readonly GameFrameworkLinkedList<GameFrameworkModule> s_gameFrameworkModules = new GameFrameworkLinkedList<GameFrameworkModule>();
 
         /// <summary>
         /// 所有游戏框架模块轮询。
@@ -24,7 +24,7 @@ namespace EasyGameFramework.Core
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         public static void Update(float elapseSeconds, float realElapseSeconds)
         {
-            foreach (GameFrameworkModule module in s_GameFrameworkModules)
+            foreach (GameFrameworkModule module in s_gameFrameworkModules)
             {
                 module.Update(elapseSeconds, realElapseSeconds);
             }
@@ -35,12 +35,12 @@ namespace EasyGameFramework.Core
         /// </summary>
         public static void Shutdown()
         {
-            for (LinkedListNode<GameFrameworkModule> current = s_GameFrameworkModules.Last; current != null; current = current.Previous)
+            for (LinkedListNode<GameFrameworkModule> current = s_gameFrameworkModules.Last; current != null; current = current.Previous)
             {
                 current.Value.Shutdown();
             }
 
-            s_GameFrameworkModules.Clear();
+            s_gameFrameworkModules.Clear();
             ReferencePool.ClearAll();
             Utility.Marshal.FreeCachedHGlobal();
             GameFrameworkLog.SetLogHelper(null);
@@ -83,7 +83,7 @@ namespace EasyGameFramework.Core
         /// <remarks>如果要获取的游戏框架模块不存在，则自动创建该游戏框架模块。</remarks>
         private static GameFrameworkModule GetModule(Type moduleType)
         {
-            foreach (GameFrameworkModule module in s_GameFrameworkModules)
+            foreach (GameFrameworkModule module in s_gameFrameworkModules)
             {
                 if (module.GetType() == moduleType)
                 {
@@ -107,7 +107,7 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException(Utility.Text.Format("Can not create module '{0}'.", moduleType.FullName));
             }
 
-            LinkedListNode<GameFrameworkModule> current = s_GameFrameworkModules.First;
+            LinkedListNode<GameFrameworkModule> current = s_gameFrameworkModules.First;
             while (current != null)
             {
                 if (module.Priority > current.Value.Priority)
@@ -120,11 +120,11 @@ namespace EasyGameFramework.Core
 
             if (current != null)
             {
-                s_GameFrameworkModules.AddBefore(current, module);
+                s_gameFrameworkModules.AddBefore(current, module);
             }
             else
             {
-                s_GameFrameworkModules.AddLast(module);
+                s_gameFrameworkModules.AddLast(module);
             }
 
             return module;

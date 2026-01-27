@@ -18,7 +18,7 @@ namespace EasyGameFramework
     [AddComponentMenu("Game Framework/Data Node")]
     public sealed class DataNodeComponent : GameFrameworkComponent
     {
-        private IDataNodeManager m_DataNodeManager = null;
+        private IDataNodeManager _dataNodeManager = null;
 
         /// <summary>
         /// 获取根数据结点。
@@ -27,7 +27,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_DataNodeManager.Root;
+                return _dataNodeManager.Root;
             }
         }
 
@@ -38,8 +38,8 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_DataNodeManager = GameFrameworkEntry.GetModule<IDataNodeManager>();
-            if (m_DataNodeManager == null)
+            _dataNodeManager = GameFrameworkEntry.GetModule<IDataNodeManager>();
+            if (_dataNodeManager == null)
             {
                 Log.Fatal("Data node manager is invalid.");
                 return;
@@ -58,7 +58,7 @@ namespace EasyGameFramework
         /// <returns>指定类型的数据。</returns>
         public T GetData<T>(string path) where T : Variable
         {
-            return m_DataNodeManager.GetData<T>(path);
+            return _dataNodeManager.GetData<T>(path);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace EasyGameFramework
         /// <returns>数据结点的数据。</returns>
         public Variable GetData(string path)
         {
-            return m_DataNodeManager.GetData(path);
+            return _dataNodeManager.GetData(path);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace EasyGameFramework
         /// <returns>指定类型的数据。</returns>
         public T GetData<T>(string path, IDataNode node) where T : Variable
         {
-            return m_DataNodeManager.GetData<T>(path, node);
+            return _dataNodeManager.GetData<T>(path, node);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace EasyGameFramework
         /// <returns>数据结点的数据。</returns>
         public Variable GetData(string path, IDataNode node)
         {
-            return m_DataNodeManager.GetData(path, node);
+            return _dataNodeManager.GetData(path, node);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace EasyGameFramework
         /// <param name="data">要设置的数据。</param>
         public void SetData<T>(string path, T data) where T : Variable
         {
-            m_DataNodeManager.SetData(path, data);
+            _dataNodeManager.SetData(path, data);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace EasyGameFramework
         /// <param name="data">要设置的数据。</param>
         public void SetData(string path, Variable data)
         {
-            m_DataNodeManager.SetData(path, data);
+            _dataNodeManager.SetData(path, data);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace EasyGameFramework
         /// <param name="node">查找起始结点。</param>
         public void SetData<T>(string path, T data, IDataNode node) where T : Variable
         {
-            m_DataNodeManager.SetData(path, data, node);
+            _dataNodeManager.SetData(path, data, node);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace EasyGameFramework
         /// <param name="node">查找起始结点。</param>
         public void SetData(string path, Variable data, IDataNode node)
         {
-            m_DataNodeManager.SetData(path, data, node);
+            _dataNodeManager.SetData(path, data, node);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace EasyGameFramework
         /// <returns>指定位置的数据结点，如果没有找到，则返回空。</returns>
         public IDataNode GetNode(string path)
         {
-            return m_DataNodeManager.GetNode(path);
+            return _dataNodeManager.GetNode(path);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace EasyGameFramework
         /// <returns>指定位置的数据结点，如果没有找到，则返回空。</returns>
         public IDataNode GetNode(string path, IDataNode node)
         {
-            return m_DataNodeManager.GetNode(path, node);
+            return _dataNodeManager.GetNode(path, node);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace EasyGameFramework
         /// <returns>指定位置的数据结点，如果没有找到，则增加相应的数据结点。</returns>
         public IDataNode GetOrAddNode(string path)
         {
-            return m_DataNodeManager.GetOrAddNode(path);
+            return _dataNodeManager.GetOrAddNode(path);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace EasyGameFramework
         /// <returns>指定位置的数据结点，如果没有找到，则增加相应的数据结点。</returns>
         public IDataNode GetOrAddNode(string path, IDataNode node)
         {
-            return m_DataNodeManager.GetOrAddNode(path, node);
+            return _dataNodeManager.GetOrAddNode(path, node);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace EasyGameFramework
         /// <param name="path">相对于 node 的查找路径。</param>
         public void RemoveNode(string path)
         {
-            m_DataNodeManager.RemoveNode(path);
+            _dataNodeManager.RemoveNode(path);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace EasyGameFramework
         /// <param name="node">查找起始结点。</param>
         public void RemoveNode(string path, IDataNode node)
         {
-            m_DataNodeManager.RemoveNode(path, node);
+            _dataNodeManager.RemoveNode(path, node);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace EasyGameFramework
         /// </summary>
         public void Clear()
         {
-            m_DataNodeManager.Clear();
+            _dataNodeManager.Clear();
         }
     }
 }

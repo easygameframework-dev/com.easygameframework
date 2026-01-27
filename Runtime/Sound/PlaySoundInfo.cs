@@ -12,22 +12,22 @@ namespace EasyGameFramework
 {
     internal sealed class PlaySoundInfo : IReference
     {
-        private Entity m_BindingEntity;
-        private Vector3 m_WorldPosition;
-        private object m_UserData;
+        private Entity _bindingEntity;
+        private Vector3 _worldPosition;
+        private object _userData;
 
         public PlaySoundInfo()
         {
-            m_BindingEntity = null;
-            m_WorldPosition = Vector3.zero;
-            m_UserData = null;
+            _bindingEntity = null;
+            _worldPosition = Vector3.zero;
+            _userData = null;
         }
 
         public Entity BindingEntity
         {
             get
             {
-                return m_BindingEntity;
+                return _bindingEntity;
             }
         }
 
@@ -35,7 +35,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_WorldPosition;
+                return _worldPosition;
             }
         }
 
@@ -43,24 +43,24 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UserData;
+                return _userData;
             }
         }
 
         public static PlaySoundInfo Create(Entity bindingEntity, Vector3 worldPosition, object userData)
         {
             PlaySoundInfo playSoundInfo = ReferencePool.Acquire<PlaySoundInfo>();
-            playSoundInfo.m_BindingEntity = bindingEntity;
-            playSoundInfo.m_WorldPosition = worldPosition;
-            playSoundInfo.m_UserData = userData;
+            playSoundInfo._bindingEntity = bindingEntity;
+            playSoundInfo._worldPosition = worldPosition;
+            playSoundInfo._userData = userData;
             return playSoundInfo;
         }
 
         public void Clear()
         {
-            m_BindingEntity = null;
-            m_WorldPosition = Vector3.zero;
-            m_UserData = null;
+            _bindingEntity = null;
+            _worldPosition = Vector3.zero;
+            _userData = null;
         }
     }
 }

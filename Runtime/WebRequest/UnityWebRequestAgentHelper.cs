@@ -22,11 +22,11 @@ namespace EasyGameFramework
     /// </summary>
     public class UnityWebRequestAgentHelper : WebRequestAgentHelperBase, IDisposable
     {
-        private UnityWebRequest m_UnityWebRequest = null;
-        private bool m_Disposed = false;
+        private UnityWebRequest _unityWebRequest = null;
+        private bool _disposed = false;
 
-        private EventHandler<WebRequestAgentHelperCompleteEventArgs> m_WebRequestAgentHelperCompleteEventHandler = null;
-        private EventHandler<WebRequestAgentHelperErrorEventArgs> m_WebRequestAgentHelperErrorEventHandler = null;
+        private EventHandler<WebRequestAgentHelperCompleteEventArgs> _webRequestAgentHelperCompleteEventHandler = null;
+        private EventHandler<WebRequestAgentHelperErrorEventArgs> _webRequestAgentHelperErrorEventHandler = null;
 
         /// <summary>
         /// Web 请求代理辅助器完成事件。
@@ -35,11 +35,11 @@ namespace EasyGameFramework
         {
             add
             {
-                m_WebRequestAgentHelperCompleteEventHandler += value;
+                _webRequestAgentHelperCompleteEventHandler += value;
             }
             remove
             {
-                m_WebRequestAgentHelperCompleteEventHandler -= value;
+                _webRequestAgentHelperCompleteEventHandler -= value;
             }
         }
 
@@ -50,11 +50,11 @@ namespace EasyGameFramework
         {
             add
             {
-                m_WebRequestAgentHelperErrorEventHandler += value;
+                _webRequestAgentHelperErrorEventHandler += value;
             }
             remove
             {
-                m_WebRequestAgentHelperErrorEventHandler -= value;
+                _webRequestAgentHelperErrorEventHandler -= value;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public override void Request(string webRequestUri, object userData)
         {
-            if (m_WebRequestAgentHelperCompleteEventHandler == null || m_WebRequestAgentHelperErrorEventHandler == null)
+            if (_webRequestAgentHelperCompleteEventHandler == null || _webRequestAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Web request agent helper handler is invalid.");
                 return;
@@ -74,17 +74,17 @@ namespace EasyGameFramework
             WWWFormInfo wwwFormInfo = (WWWFormInfo)userData;
             if (wwwFormInfo.WWWForm == null)
             {
-                m_UnityWebRequest = UnityWebRequest.Get(webRequestUri);
+                _unityWebRequest = UnityWebRequest.Get(webRequestUri);
             }
             else
             {
-                m_UnityWebRequest = UnityWebRequest.Post(webRequestUri, wwwFormInfo.WWWForm);
+                _unityWebRequest = UnityWebRequest.Post(webRequestUri, wwwFormInfo.WWWForm);
             }
 
 #if UNITY_2017_2_OR_NEWER
-            m_UnityWebRequest.SendWebRequest();
+            _unityWebRequest.SendWebRequest();
 #else
-            m_UnityWebRequest.Send();
+            _unityWebRequest.Send();
 #endif
         }
 
@@ -96,17 +96,17 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public override void Request(string webRequestUri, byte[] postData, object userData)
         {
-            if (m_WebRequestAgentHelperCompleteEventHandler == null || m_WebRequestAgentHelperErrorEventHandler == null)
+            if (_webRequestAgentHelperCompleteEventHandler == null || _webRequestAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Web request agent helper handler is invalid.");
                 return;
             }
 
-            m_UnityWebRequest = UnityWebRequest.PostWwwForm(webRequestUri, Utility.Converter.GetString(postData));
+            _unityWebRequest = UnityWebRequest.PostWwwForm(webRequestUri, Utility.Converter.GetString(postData));
 #if UNITY_2017_2_OR_NEWER
-            m_UnityWebRequest.SendWebRequest();
+            _unityWebRequest.SendWebRequest();
 #else
-            m_UnityWebRequest.Send();
+            _unityWebRequest.Send();
 #endif
         }
 
@@ -115,10 +115,10 @@ namespace EasyGameFramework
         /// </summary>
         public override void Reset()
         {
-            if (m_UnityWebRequest != null)
+            if (_unityWebRequest != null)
             {
-                m_UnityWebRequest.Dispose();
-                m_UnityWebRequest = null;
+                _unityWebRequest.Dispose();
+                _unityWebRequest = null;
             }
         }
 
@@ -137,48 +137,48 @@ namespace EasyGameFramework
         /// <param name="disposing">释放资源标记。</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (m_Disposed)
+            if (_disposed)
             {
                 return;
             }
 
             if (disposing)
             {
-                if (m_UnityWebRequest != null)
+                if (_unityWebRequest != null)
                 {
-                    m_UnityWebRequest.Dispose();
-                    m_UnityWebRequest = null;
+                    _unityWebRequest.Dispose();
+                    _unityWebRequest = null;
                 }
             }
 
-            m_Disposed = true;
+            _disposed = true;
         }
 
         private void Update()
         {
-            if (m_UnityWebRequest == null || !m_UnityWebRequest.isDone)
+            if (_unityWebRequest == null || !_unityWebRequest.isDone)
             {
                 return;
             }
 
             bool isError = false;
 #if UNITY_2020_2_OR_NEWER
-            isError = m_UnityWebRequest.result != UnityWebRequest.Result.Success;
+            isError = _unityWebRequest.result != UnityWebRequest.Result.Success;
 #elif UNITY_2017_1_OR_NEWER
-            isError = m_UnityWebRequest.isNetworkError || m_UnityWebRequest.isHttpError;
+            isError = _unityWebRequest.isNetworkError || _unityWebRequest.isHttpError;
 #else
-            isError = m_UnityWebRequest.isError;
+            isError = _unityWebRequest.isError;
 #endif
             if (isError)
             {
-                WebRequestAgentHelperErrorEventArgs webRequestAgentHelperErrorEventArgs = WebRequestAgentHelperErrorEventArgs.Create(m_UnityWebRequest.error);
-                m_WebRequestAgentHelperErrorEventHandler(this, webRequestAgentHelperErrorEventArgs);
+                WebRequestAgentHelperErrorEventArgs webRequestAgentHelperErrorEventArgs = WebRequestAgentHelperErrorEventArgs.Create(_unityWebRequest.error);
+                _webRequestAgentHelperErrorEventHandler(this, webRequestAgentHelperErrorEventArgs);
                 ReferencePool.Release(webRequestAgentHelperErrorEventArgs);
             }
-            else if (m_UnityWebRequest.downloadHandler.isDone)
+            else if (_unityWebRequest.downloadHandler.isDone)
             {
-                WebRequestAgentHelperCompleteEventArgs webRequestAgentHelperCompleteEventArgs = WebRequestAgentHelperCompleteEventArgs.Create(m_UnityWebRequest.downloadHandler.data);
-                m_WebRequestAgentHelperCompleteEventHandler(this, webRequestAgentHelperCompleteEventArgs);
+                WebRequestAgentHelperCompleteEventArgs webRequestAgentHelperCompleteEventArgs = WebRequestAgentHelperCompleteEventArgs.Create(_unityWebRequest.downloadHandler.data);
+                _webRequestAgentHelperCompleteEventHandler(this, webRequestAgentHelperCompleteEventArgs);
                 ReferencePool.Release(webRequestAgentHelperCompleteEventArgs);
             }
         }

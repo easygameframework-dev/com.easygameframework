@@ -18,61 +18,61 @@ namespace EasyGameFramework
         [Serializable]
         private sealed class ConsoleWindow : IDebuggerWindow
         {
-            private readonly Queue<LogNode> m_LogNodes = new Queue<LogNode>();
+            private readonly Queue<LogNode> _logNodes = new Queue<LogNode>();
 
-            private SettingComponent m_SettingComponent = null;
-            private Vector2 m_LogScrollPosition = Vector2.zero;
-            private Vector2 m_StackScrollPosition = Vector2.zero;
-            private int m_InfoCount = 0;
-            private int m_WarningCount = 0;
-            private int m_ErrorCount = 0;
-            private int m_FatalCount = 0;
-            private LogNode m_SelectedNode = null;
-            private bool m_LastLockScroll = true;
-            private bool m_LastInfoFilter = true;
-            private bool m_LastWarningFilter = true;
-            private bool m_LastErrorFilter = true;
-            private bool m_LastFatalFilter = true;
-
-            [SerializeField]
-            private bool m_LockScroll = true;
+            private SettingComponent _settingComponent = null;
+            private Vector2 _logScrollPosition = Vector2.zero;
+            private Vector2 _stackScrollPosition = Vector2.zero;
+            private int _infoCount = 0;
+            private int _warningCount = 0;
+            private int _errorCount = 0;
+            private int _fatalCount = 0;
+            private LogNode _selectedNode = null;
+            private bool _lastLockScroll = true;
+            private bool _lastInfoFilter = true;
+            private bool _lastWarningFilter = true;
+            private bool _lastErrorFilter = true;
+            private bool _lastFatalFilter = true;
 
             [SerializeField]
-            private int m_MaxLine = 100;
+            private bool _lockScroll = true;
 
             [SerializeField]
-            private bool m_InfoFilter = true;
+            private int _maxLine = 100;
 
             [SerializeField]
-            private bool m_WarningFilter = true;
+            private bool _infoFilter = true;
 
             [SerializeField]
-            private bool m_ErrorFilter = true;
+            private bool _warningFilter = true;
 
             [SerializeField]
-            private bool m_FatalFilter = true;
+            private bool _errorFilter = true;
 
             [SerializeField]
-            private Color32 m_InfoColor = Color.white;
+            private bool _fatalFilter = true;
 
             [SerializeField]
-            private Color32 m_WarningColor = Color.yellow;
+            private Color32 _infoColor = Color.white;
 
             [SerializeField]
-            private Color32 m_ErrorColor = Color.red;
+            private Color32 _warningColor = Color.yellow;
 
             [SerializeField]
-            private Color32 m_FatalColor = new Color(0.7f, 0.2f, 0.2f);
+            private Color32 _errorColor = Color.red;
+
+            [SerializeField]
+            private Color32 _fatalColor = new Color(0.7f, 0.2f, 0.2f);
 
             public bool LockScroll
             {
                 get
                 {
-                    return m_LockScroll;
+                    return _lockScroll;
                 }
                 set
                 {
-                    m_LockScroll = value;
+                    _lockScroll = value;
                 }
             }
 
@@ -80,11 +80,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_MaxLine;
+                    return _maxLine;
                 }
                 set
                 {
-                    m_MaxLine = value;
+                    _maxLine = value;
                 }
             }
 
@@ -92,11 +92,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_InfoFilter;
+                    return _infoFilter;
                 }
                 set
                 {
-                    m_InfoFilter = value;
+                    _infoFilter = value;
                 }
             }
 
@@ -104,11 +104,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_WarningFilter;
+                    return _warningFilter;
                 }
                 set
                 {
-                    m_WarningFilter = value;
+                    _warningFilter = value;
                 }
             }
 
@@ -116,11 +116,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_ErrorFilter;
+                    return _errorFilter;
                 }
                 set
                 {
-                    m_ErrorFilter = value;
+                    _errorFilter = value;
                 }
             }
 
@@ -128,11 +128,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_FatalFilter;
+                    return _fatalFilter;
                 }
                 set
                 {
-                    m_FatalFilter = value;
+                    _fatalFilter = value;
                 }
             }
 
@@ -140,7 +140,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_InfoCount;
+                    return _infoCount;
                 }
             }
 
@@ -148,7 +148,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_WarningCount;
+                    return _warningCount;
                 }
             }
 
@@ -156,7 +156,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_ErrorCount;
+                    return _errorCount;
                 }
             }
 
@@ -164,7 +164,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_FatalCount;
+                    return _fatalCount;
                 }
             }
 
@@ -172,11 +172,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_InfoColor;
+                    return _infoColor;
                 }
                 set
                 {
-                    m_InfoColor = value;
+                    _infoColor = value;
                 }
             }
 
@@ -184,11 +184,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_WarningColor;
+                    return _warningColor;
                 }
                 set
                 {
-                    m_WarningColor = value;
+                    _warningColor = value;
                 }
             }
 
@@ -196,11 +196,11 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_ErrorColor;
+                    return _errorColor;
                 }
                 set
                 {
-                    m_ErrorColor = value;
+                    _errorColor = value;
                 }
             }
 
@@ -208,29 +208,29 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_FatalColor;
+                    return _fatalColor;
                 }
                 set
                 {
-                    m_FatalColor = value;
+                    _fatalColor = value;
                 }
             }
 
             public void Initialize(params object[] args)
             {
-                m_SettingComponent = GameEntry.GetComponent<SettingComponent>();
-                if (m_SettingComponent == null)
+                _settingComponent = GameEntry.GetComponent<SettingComponent>();
+                if (_settingComponent == null)
                 {
                     Log.Fatal("Setting component is invalid.");
                     return;
                 }
 
                 Application.logMessageReceived += OnLogMessageReceived;
-                m_LockScroll = m_LastLockScroll = m_SettingComponent.GetBool("Debugger.Console.LockScroll", true);
-                m_InfoFilter = m_LastInfoFilter = m_SettingComponent.GetBool("Debugger.Console.InfoFilter", true);
-                m_WarningFilter = m_LastWarningFilter = m_SettingComponent.GetBool("Debugger.Console.WarningFilter", true);
-                m_ErrorFilter = m_LastErrorFilter = m_SettingComponent.GetBool("Debugger.Console.ErrorFilter", true);
-                m_FatalFilter = m_LastFatalFilter = m_SettingComponent.GetBool("Debugger.Console.FatalFilter", true);
+                _lockScroll = _lastLockScroll = _settingComponent.GetBool("Debugger.Console.LockScroll", true);
+                _infoFilter = _lastInfoFilter = _settingComponent.GetBool("Debugger.Console.InfoFilter", true);
+                _warningFilter = _lastWarningFilter = _settingComponent.GetBool("Debugger.Console.WarningFilter", true);
+                _errorFilter = _lastErrorFilter = _settingComponent.GetBool("Debugger.Console.ErrorFilter", true);
+                _fatalFilter = _lastFatalFilter = _settingComponent.GetBool("Debugger.Console.FatalFilter", true);
             }
 
             public void Shutdown()
@@ -249,34 +249,34 @@ namespace EasyGameFramework
 
             public void OnUpdate(float elapseSeconds, float realElapseSeconds)
             {
-                if (m_LastLockScroll != m_LockScroll)
+                if (_lastLockScroll != _lockScroll)
                 {
-                    m_LastLockScroll = m_LockScroll;
-                    m_SettingComponent.SetBool("Debugger.Console.LockScroll", m_LockScroll);
+                    _lastLockScroll = _lockScroll;
+                    _settingComponent.SetBool("Debugger.Console.LockScroll", _lockScroll);
                 }
 
-                if (m_LastInfoFilter != m_InfoFilter)
+                if (_lastInfoFilter != _infoFilter)
                 {
-                    m_LastInfoFilter = m_InfoFilter;
-                    m_SettingComponent.SetBool("Debugger.Console.InfoFilter", m_InfoFilter);
+                    _lastInfoFilter = _infoFilter;
+                    _settingComponent.SetBool("Debugger.Console.InfoFilter", _infoFilter);
                 }
 
-                if (m_LastWarningFilter != m_WarningFilter)
+                if (_lastWarningFilter != _warningFilter)
                 {
-                    m_LastWarningFilter = m_WarningFilter;
-                    m_SettingComponent.SetBool("Debugger.Console.WarningFilter", m_WarningFilter);
+                    _lastWarningFilter = _warningFilter;
+                    _settingComponent.SetBool("Debugger.Console.WarningFilter", _warningFilter);
                 }
 
-                if (m_LastErrorFilter != m_ErrorFilter)
+                if (_lastErrorFilter != _errorFilter)
                 {
-                    m_LastErrorFilter = m_ErrorFilter;
-                    m_SettingComponent.SetBool("Debugger.Console.ErrorFilter", m_ErrorFilter);
+                    _lastErrorFilter = _errorFilter;
+                    _settingComponent.SetBool("Debugger.Console.ErrorFilter", _errorFilter);
                 }
 
-                if (m_LastFatalFilter != m_FatalFilter)
+                if (_lastFatalFilter != _fatalFilter)
                 {
-                    m_LastFatalFilter = m_FatalFilter;
-                    m_SettingComponent.SetBool("Debugger.Console.FatalFilter", m_FatalFilter);
+                    _lastFatalFilter = _fatalFilter;
+                    _settingComponent.SetBool("Debugger.Console.FatalFilter", _fatalFilter);
                 }
             }
 
@@ -290,70 +290,70 @@ namespace EasyGameFramework
                     {
                         Clear();
                     }
-                    m_LockScroll = GUILayout.Toggle(m_LockScroll, "Lock Scroll", GUILayout.Width(90f));
+                    _lockScroll = GUILayout.Toggle(_lockScroll, "Lock Scroll", GUILayout.Width(90f));
                     GUILayout.FlexibleSpace();
-                    m_InfoFilter = GUILayout.Toggle(m_InfoFilter, Utility.Text.Format("Info ({0})", m_InfoCount), GUILayout.Width(90f));
-                    m_WarningFilter = GUILayout.Toggle(m_WarningFilter, Utility.Text.Format("Warning ({0})", m_WarningCount), GUILayout.Width(90f));
-                    m_ErrorFilter = GUILayout.Toggle(m_ErrorFilter, Utility.Text.Format("Error ({0})", m_ErrorCount), GUILayout.Width(90f));
-                    m_FatalFilter = GUILayout.Toggle(m_FatalFilter, Utility.Text.Format("Fatal ({0})", m_FatalCount), GUILayout.Width(90f));
+                    _infoFilter = GUILayout.Toggle(_infoFilter, Utility.Text.Format("Info ({0})", _infoCount), GUILayout.Width(90f));
+                    _warningFilter = GUILayout.Toggle(_warningFilter, Utility.Text.Format("Warning ({0})", _warningCount), GUILayout.Width(90f));
+                    _errorFilter = GUILayout.Toggle(_errorFilter, Utility.Text.Format("Error ({0})", _errorCount), GUILayout.Width(90f));
+                    _fatalFilter = GUILayout.Toggle(_fatalFilter, Utility.Text.Format("Fatal ({0})", _fatalCount), GUILayout.Width(90f));
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginVertical("box");
                 {
-                    if (m_LockScroll)
+                    if (_lockScroll)
                     {
-                        m_LogScrollPosition.y = float.MaxValue;
+                        _logScrollPosition.y = float.MaxValue;
                     }
 
-                    m_LogScrollPosition = GUILayout.BeginScrollView(m_LogScrollPosition);
+                    _logScrollPosition = GUILayout.BeginScrollView(_logScrollPosition);
                     {
                         bool selected = false;
-                        foreach (LogNode logNode in m_LogNodes)
+                        foreach (LogNode logNode in _logNodes)
                         {
                             switch (logNode.LogType)
                             {
                                 case LogType.Log:
-                                    if (!m_InfoFilter)
+                                    if (!_infoFilter)
                                     {
                                         continue;
                                     }
                                     break;
 
                                 case LogType.Warning:
-                                    if (!m_WarningFilter)
+                                    if (!_warningFilter)
                                     {
                                         continue;
                                     }
                                     break;
 
                                 case LogType.Error:
-                                    if (!m_ErrorFilter)
+                                    if (!_errorFilter)
                                     {
                                         continue;
                                     }
                                     break;
 
                                 case LogType.Exception:
-                                    if (!m_FatalFilter)
+                                    if (!_fatalFilter)
                                     {
                                         continue;
                                     }
                                     break;
                             }
-                            if (GUILayout.Toggle(m_SelectedNode == logNode, GetLogString(logNode)))
+                            if (GUILayout.Toggle(_selectedNode == logNode, GetLogString(logNode)))
                             {
                                 selected = true;
-                                if (m_SelectedNode != logNode)
+                                if (_selectedNode != logNode)
                                 {
-                                    m_SelectedNode = logNode;
-                                    m_StackScrollPosition = Vector2.zero;
+                                    _selectedNode = logNode;
+                                    _stackScrollPosition = Vector2.zero;
                                 }
                             }
                         }
                         if (!selected)
                         {
-                            m_SelectedNode = null;
+                            _selectedNode = null;
                         }
                     }
                     GUILayout.EndScrollView();
@@ -362,14 +362,14 @@ namespace EasyGameFramework
 
                 GUILayout.BeginVertical("box");
                 {
-                    m_StackScrollPosition = GUILayout.BeginScrollView(m_StackScrollPosition, GUILayout.Height(100f));
+                    _stackScrollPosition = GUILayout.BeginScrollView(_stackScrollPosition, GUILayout.Height(100f));
                     {
-                        if (m_SelectedNode != null)
+                        if (_selectedNode != null)
                         {
-                            Color32 color = GetLogStringColor(m_SelectedNode.LogType);
-                            if (GUILayout.Button(Utility.Text.Format("<color=#{0:x2}{1:x2}{2:x2}{3:x2}><b>{4}</b></color>{6}{6}{5}", color.r, color.g, color.b, color.a, m_SelectedNode.LogMessage, m_SelectedNode.StackTrack, Environment.NewLine), "label"))
+                            Color32 color = GetLogStringColor(_selectedNode.LogType);
+                            if (GUILayout.Button(Utility.Text.Format("<color=#{0:x2}{1:x2}{2:x2}{3:x2}><b>{4}</b></color>{6}{6}{5}", color.r, color.g, color.b, color.a, _selectedNode.LogMessage, _selectedNode.StackTrack, Environment.NewLine), "label"))
                             {
-                                CopyToClipboard(Utility.Text.Format("{0}{2}{2}{1}", m_SelectedNode.LogMessage, m_SelectedNode.StackTrack, Environment.NewLine));
+                                CopyToClipboard(Utility.Text.Format("{0}{2}{2}{1}", _selectedNode.LogMessage, _selectedNode.StackTrack, Environment.NewLine));
                             }
                         }
                     }
@@ -380,33 +380,33 @@ namespace EasyGameFramework
 
             private void Clear()
             {
-                m_LogNodes.Clear();
+                _logNodes.Clear();
             }
 
             public void RefreshCount()
             {
-                m_InfoCount = 0;
-                m_WarningCount = 0;
-                m_ErrorCount = 0;
-                m_FatalCount = 0;
-                foreach (LogNode logNode in m_LogNodes)
+                _infoCount = 0;
+                _warningCount = 0;
+                _errorCount = 0;
+                _fatalCount = 0;
+                foreach (LogNode logNode in _logNodes)
                 {
                     switch (logNode.LogType)
                     {
                         case LogType.Log:
-                            m_InfoCount++;
+                            _infoCount++;
                             break;
 
                         case LogType.Warning:
-                            m_WarningCount++;
+                            _warningCount++;
                             break;
 
                         case LogType.Error:
-                            m_ErrorCount++;
+                            _errorCount++;
                             break;
 
                         case LogType.Exception:
-                            m_FatalCount++;
+                            _fatalCount++;
                             break;
                     }
                 }
@@ -421,7 +421,7 @@ namespace EasyGameFramework
                 }
 
                 results.Clear();
-                foreach (LogNode logNode in m_LogNodes)
+                foreach (LogNode logNode in _logNodes)
                 {
                     results.Add(logNode);
                 }
@@ -441,7 +441,7 @@ namespace EasyGameFramework
                     return;
                 }
 
-                int position = m_LogNodes.Count - count;
+                int position = _logNodes.Count - count;
                 if (position < 0)
                 {
                     position = 0;
@@ -449,7 +449,7 @@ namespace EasyGameFramework
 
                 int index = 0;
                 results.Clear();
-                foreach (LogNode logNode in m_LogNodes)
+                foreach (LogNode logNode in _logNodes)
                 {
                     if (index++ < position)
                     {
@@ -467,10 +467,10 @@ namespace EasyGameFramework
                     logType = LogType.Error;
                 }
 
-                m_LogNodes.Enqueue(LogNode.Create(logType, logMessage, stackTrace));
-                while (m_LogNodes.Count > m_MaxLine)
+                _logNodes.Enqueue(LogNode.Create(logType, logMessage, stackTrace));
+                while (_logNodes.Count > _maxLine)
                 {
-                    ReferencePool.Release(m_LogNodes.Dequeue());
+                    ReferencePool.Release(_logNodes.Dequeue());
                 }
             }
 
@@ -486,19 +486,19 @@ namespace EasyGameFramework
                 switch (logType)
                 {
                     case LogType.Log:
-                        color = m_InfoColor;
+                        color = _infoColor;
                         break;
 
                     case LogType.Warning:
-                        color = m_WarningColor;
+                        color = _warningColor;
                         break;
 
                     case LogType.Error:
-                        color = m_ErrorColor;
+                        color = _errorColor;
                         break;
 
                     case LogType.Exception:
-                        color = m_FatalColor;
+                        color = _fatalColor;
                         break;
                 }
 

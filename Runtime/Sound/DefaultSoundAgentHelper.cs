@@ -19,12 +19,12 @@ namespace EasyGameFramework
     /// </summary>
     public class DefaultSoundAgentHelper : SoundAgentHelperBase
     {
-        private Transform m_CachedTransform = null;
-        private AudioSource m_AudioSource = null;
-        private EntityLogic m_BindingEntityLogic = null;
-        private float m_VolumeWhenPause = 0f;
-        private bool m_ApplicationPauseFlag = false;
-        private EventHandler<ResetSoundAgentEventArgs> m_ResetSoundAgentEventHandler = null;
+        private Transform _cachedTransform = null;
+        private AudioSource _audioSource = null;
+        private EntityLogic _bindingEntityLogic = null;
+        private float _volumeWhenPause = 0f;
+        private bool _applicationPauseFlag = false;
+        private EventHandler<ResetSoundAgentEventArgs> _resetSoundAgentEventHandler = null;
 
         /// <summary>
         /// 获取当前是否正在播放。
@@ -33,7 +33,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.isPlaying;
+                return _audioSource.isPlaying;
             }
         }
 
@@ -44,7 +44,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.clip != null ? m_AudioSource.clip.length : 0f;
+                return _audioSource.clip != null ? _audioSource.clip.length : 0f;
             }
         }
 
@@ -55,11 +55,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.time;
+                return _audioSource.time;
             }
             set
             {
-                m_AudioSource.time = value;
+                _audioSource.time = value;
             }
         }
 
@@ -70,11 +70,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.mute;
+                return _audioSource.mute;
             }
             set
             {
-                m_AudioSource.mute = value;
+                _audioSource.mute = value;
             }
         }
 
@@ -85,11 +85,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.loop;
+                return _audioSource.loop;
             }
             set
             {
-                m_AudioSource.loop = value;
+                _audioSource.loop = value;
             }
         }
 
@@ -100,11 +100,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return 128 - m_AudioSource.priority;
+                return 128 - _audioSource.priority;
             }
             set
             {
-                m_AudioSource.priority = 128 - value;
+                _audioSource.priority = 128 - value;
             }
         }
 
@@ -115,11 +115,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.volume;
+                return _audioSource.volume;
             }
             set
             {
-                m_AudioSource.volume = value;
+                _audioSource.volume = value;
             }
         }
 
@@ -130,11 +130,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.pitch;
+                return _audioSource.pitch;
             }
             set
             {
-                m_AudioSource.pitch = value;
+                _audioSource.pitch = value;
             }
         }
 
@@ -145,11 +145,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.panStereo;
+                return _audioSource.panStereo;
             }
             set
             {
-                m_AudioSource.panStereo = value;
+                _audioSource.panStereo = value;
             }
         }
 
@@ -160,11 +160,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.spatialBlend;
+                return _audioSource.spatialBlend;
             }
             set
             {
-                m_AudioSource.spatialBlend = value;
+                _audioSource.spatialBlend = value;
             }
         }
 
@@ -175,12 +175,12 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.maxDistance;
+                return _audioSource.maxDistance;
             }
 
             set
             {
-                m_AudioSource.maxDistance = value;
+                _audioSource.maxDistance = value;
             }
         }
 
@@ -191,11 +191,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.dopplerLevel;
+                return _audioSource.dopplerLevel;
             }
             set
             {
-                m_AudioSource.dopplerLevel = value;
+                _audioSource.dopplerLevel = value;
             }
         }
 
@@ -206,11 +206,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_AudioSource.outputAudioMixerGroup;
+                return _audioSource.outputAudioMixerGroup;
             }
             set
             {
-                m_AudioSource.outputAudioMixerGroup = value;
+                _audioSource.outputAudioMixerGroup = value;
             }
         }
 
@@ -221,11 +221,11 @@ namespace EasyGameFramework
         {
             add
             {
-                m_ResetSoundAgentEventHandler += value;
+                _resetSoundAgentEventHandler += value;
             }
             remove
             {
-                m_ResetSoundAgentEventHandler -= value;
+                _resetSoundAgentEventHandler -= value;
             }
         }
 
@@ -237,12 +237,12 @@ namespace EasyGameFramework
         {
             StopAllCoroutines();
 
-            m_AudioSource.Play();
+            _audioSource.Play();
             if (fadeInSeconds > 0f)
             {
-                float volume = m_AudioSource.volume;
-                m_AudioSource.volume = 0f;
-                StartCoroutine(FadeToVolume(m_AudioSource, volume, fadeInSeconds));
+                float volume = _audioSource.volume;
+                _audioSource.volume = 0f;
+                StartCoroutine(FadeToVolume(_audioSource, volume, fadeInSeconds));
             }
         }
 
@@ -260,7 +260,7 @@ namespace EasyGameFramework
             }
             else
             {
-                m_AudioSource.Stop();
+                _audioSource.Stop();
             }
         }
 
@@ -272,14 +272,14 @@ namespace EasyGameFramework
         {
             StopAllCoroutines();
 
-            m_VolumeWhenPause = m_AudioSource.volume;
+            _volumeWhenPause = _audioSource.volume;
             if (fadeOutSeconds > 0f && gameObject.activeInHierarchy)
             {
                 StartCoroutine(PauseCo(fadeOutSeconds));
             }
             else
             {
-                m_AudioSource.Pause();
+                _audioSource.Pause();
             }
         }
 
@@ -291,14 +291,14 @@ namespace EasyGameFramework
         {
             StopAllCoroutines();
 
-            m_AudioSource.UnPause();
+            _audioSource.UnPause();
             if (fadeInSeconds > 0f)
             {
-                StartCoroutine(FadeToVolume(m_AudioSource, m_VolumeWhenPause, fadeInSeconds));
+                StartCoroutine(FadeToVolume(_audioSource, _volumeWhenPause, fadeInSeconds));
             }
             else
             {
-                m_AudioSource.volume = m_VolumeWhenPause;
+                _audioSource.volume = _volumeWhenPause;
             }
         }
 
@@ -307,10 +307,10 @@ namespace EasyGameFramework
         /// </summary>
         public override void Reset()
         {
-            m_CachedTransform.localPosition = Vector3.zero;
-            m_AudioSource.clip = null;
-            m_BindingEntityLogic = null;
-            m_VolumeWhenPause = 0f;
+            _cachedTransform.localPosition = Vector3.zero;
+            _audioSource.clip = null;
+            _bindingEntityLogic = null;
+            _volumeWhenPause = 0f;
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace EasyGameFramework
                 return false;
             }
 
-            m_AudioSource.clip = audioClip;
+            _audioSource.clip = audioClip;
             return true;
         }
 
@@ -336,17 +336,17 @@ namespace EasyGameFramework
         /// <param name="bindingEntity">声音绑定的实体。</param>
         public override void SetBindingEntity(Entity bindingEntity)
         {
-            m_BindingEntityLogic = bindingEntity.Logic;
-            if (m_BindingEntityLogic != null)
+            _bindingEntityLogic = bindingEntity.Logic;
+            if (_bindingEntityLogic != null)
             {
                 UpdateAgentPosition();
                 return;
             }
 
-            if (m_ResetSoundAgentEventHandler != null)
+            if (_resetSoundAgentEventHandler != null)
             {
                 ResetSoundAgentEventArgs resetSoundAgentEventArgs = ResetSoundAgentEventArgs.Create();
-                m_ResetSoundAgentEventHandler(this, resetSoundAgentEventArgs);
+                _resetSoundAgentEventHandler(this, resetSoundAgentEventArgs);
                 ReferencePool.Release(resetSoundAgentEventArgs);
             }
         }
@@ -357,28 +357,28 @@ namespace EasyGameFramework
         /// <param name="worldPosition">声音所在的世界坐标。</param>
         public override void SetWorldPosition(Vector3 worldPosition)
         {
-            m_CachedTransform.position = worldPosition;
+            _cachedTransform.position = worldPosition;
         }
 
         private void Awake()
         {
-            m_CachedTransform = transform;
-            m_AudioSource = gameObject.GetOrAddComponent<AudioSource>();
-            m_AudioSource.playOnAwake = false;
-            m_AudioSource.rolloffMode = AudioRolloffMode.Custom;
+            _cachedTransform = transform;
+            _audioSource = gameObject.GetOrAddComponent<AudioSource>();
+            _audioSource.playOnAwake = false;
+            _audioSource.rolloffMode = AudioRolloffMode.Custom;
         }
 
         private void Update()
         {
-            if (!m_ApplicationPauseFlag && !IsPlaying && m_AudioSource.clip != null && m_ResetSoundAgentEventHandler != null)
+            if (!_applicationPauseFlag && !IsPlaying && _audioSource.clip != null && _resetSoundAgentEventHandler != null)
             {
                 ResetSoundAgentEventArgs resetSoundAgentEventArgs = ResetSoundAgentEventArgs.Create();
-                m_ResetSoundAgentEventHandler(this, resetSoundAgentEventArgs);
+                _resetSoundAgentEventHandler(this, resetSoundAgentEventArgs);
                 ReferencePool.Release(resetSoundAgentEventArgs);
                 return;
             }
 
-            if (m_BindingEntityLogic != null)
+            if (_bindingEntityLogic != null)
             {
                 UpdateAgentPosition();
             }
@@ -386,35 +386,35 @@ namespace EasyGameFramework
 
         private void OnApplicationPause(bool pause)
         {
-            m_ApplicationPauseFlag = pause;
+            _applicationPauseFlag = pause;
         }
 
         private void UpdateAgentPosition()
         {
-            if (m_BindingEntityLogic.Available)
+            if (_bindingEntityLogic.Available)
             {
-                m_CachedTransform.position = m_BindingEntityLogic.CachedTransform.position;
+                _cachedTransform.position = _bindingEntityLogic.CachedTransform.position;
                 return;
             }
 
-            if (m_ResetSoundAgentEventHandler != null)
+            if (_resetSoundAgentEventHandler != null)
             {
                 ResetSoundAgentEventArgs resetSoundAgentEventArgs = ResetSoundAgentEventArgs.Create();
-                m_ResetSoundAgentEventHandler(this, resetSoundAgentEventArgs);
+                _resetSoundAgentEventHandler(this, resetSoundAgentEventArgs);
                 ReferencePool.Release(resetSoundAgentEventArgs);
             }
         }
 
         private IEnumerator StopCo(float fadeOutSeconds)
         {
-            yield return FadeToVolume(m_AudioSource, 0f, fadeOutSeconds);
-            m_AudioSource.Stop();
+            yield return FadeToVolume(_audioSource, 0f, fadeOutSeconds);
+            _audioSource.Stop();
         }
 
         private IEnumerator PauseCo(float fadeOutSeconds)
         {
-            yield return FadeToVolume(m_AudioSource, 0f, fadeOutSeconds);
-            m_AudioSource.Pause();
+            yield return FadeToVolume(_audioSource, 0f, fadeOutSeconds);
+            _audioSource.Pause();
         }
 
         private IEnumerator FadeToVolume(AudioSource audioSource, float volume, float duration)

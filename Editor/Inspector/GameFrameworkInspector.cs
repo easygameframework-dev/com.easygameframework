@@ -14,21 +14,21 @@ namespace EasyGameFramework.Editor
     /// </summary>
     public abstract class GameFrameworkInspector : UnityEditor.Editor
     {
-        private bool m_IsCompiling = false;
+        private bool _isCompiling = false;
 
         /// <summary>
         /// 绘制事件。
         /// </summary>
         public override void OnInspectorGUI()
         {
-            if (m_IsCompiling && !EditorApplication.isCompiling)
+            if (_isCompiling && !EditorApplication.isCompiling)
             {
-                m_IsCompiling = false;
+                _isCompiling = false;
                 OnCompileComplete();
             }
-            else if (!m_IsCompiling && EditorApplication.isCompiling)
+            else if (!_isCompiling && EditorApplication.isCompiling)
             {
-                m_IsCompiling = true;
+                _isCompiling = true;
                 OnCompileStart();
             }
         }

@@ -17,16 +17,16 @@ namespace EasyGameFramework.Core.ObjectPool
         /// <typeparam name="T">对象类型。</typeparam>
         private sealed class Object<T> : IReference where T : ObjectBase
         {
-            private T m_Object;
-            private int m_SpawnCount;
+            private T _object;
+            private int _spawnCount;
 
             /// <summary>
             /// 初始化内部对象的新实例。
             /// </summary>
             public Object()
             {
-                m_Object = null;
-                m_SpawnCount = 0;
+                _object = null;
+                _spawnCount = 0;
             }
 
             /// <summary>
@@ -36,7 +36,7 @@ namespace EasyGameFramework.Core.ObjectPool
             {
                 get
                 {
-                    return m_Object.Name;
+                    return _object.Name;
                 }
             }
 
@@ -47,11 +47,11 @@ namespace EasyGameFramework.Core.ObjectPool
             {
                 get
                 {
-                    return m_Object.Locked;
+                    return _object.Locked;
                 }
                 internal set
                 {
-                    m_Object.Locked = value;
+                    _object.Locked = value;
                 }
             }
 
@@ -62,11 +62,11 @@ namespace EasyGameFramework.Core.ObjectPool
             {
                 get
                 {
-                    return m_Object.Priority;
+                    return _object.Priority;
                 }
                 internal set
                 {
-                    m_Object.Priority = value;
+                    _object.Priority = value;
                 }
             }
 
@@ -77,7 +77,7 @@ namespace EasyGameFramework.Core.ObjectPool
             {
                 get
                 {
-                    return m_Object.CustomCanReleaseFlag;
+                    return _object.CustomCanReleaseFlag;
                 }
             }
 
@@ -88,7 +88,7 @@ namespace EasyGameFramework.Core.ObjectPool
             {
                 get
                 {
-                    return m_Object.LastUseTime;
+                    return _object.LastUseTime;
                 }
             }
 
@@ -99,7 +99,7 @@ namespace EasyGameFramework.Core.ObjectPool
             {
                 get
                 {
-                    return m_SpawnCount > 0;
+                    return _spawnCount > 0;
                 }
             }
 
@@ -110,7 +110,7 @@ namespace EasyGameFramework.Core.ObjectPool
             {
                 get
                 {
-                    return m_SpawnCount;
+                    return _spawnCount;
                 }
             }
 
@@ -128,8 +128,8 @@ namespace EasyGameFramework.Core.ObjectPool
                 }
 
                 Object<T> internalObject = ReferencePool.Acquire<Object<T>>();
-                internalObject.m_Object = obj;
-                internalObject.m_SpawnCount = spawned ? 1 : 0;
+                internalObject._object = obj;
+                internalObject._spawnCount = spawned ? 1 : 0;
                 if (spawned)
                 {
                     obj.OnSpawn();
@@ -143,8 +143,8 @@ namespace EasyGameFramework.Core.ObjectPool
             /// </summary>
             public void Clear()
             {
-                m_Object = null;
-                m_SpawnCount = 0;
+                _object = null;
+                _spawnCount = 0;
             }
 
             /// <summary>
@@ -153,7 +153,7 @@ namespace EasyGameFramework.Core.ObjectPool
             /// <returns>对象。</returns>
             public T Peek()
             {
-                return m_Object;
+                return _object;
             }
 
             /// <summary>
@@ -162,10 +162,10 @@ namespace EasyGameFramework.Core.ObjectPool
             /// <returns>对象。</returns>
             public T Spawn()
             {
-                m_SpawnCount++;
-                m_Object.LastUseTime = DateTime.UtcNow;
-                m_Object.OnSpawn();
-                return m_Object;
+                _spawnCount++;
+                _object.LastUseTime = DateTime.UtcNow;
+                _object.OnSpawn();
+                return _object;
             }
 
             /// <summary>
@@ -173,10 +173,10 @@ namespace EasyGameFramework.Core.ObjectPool
             /// </summary>
             public void Unspawn()
             {
-                m_Object.OnUnspawn();
-                m_Object.LastUseTime = DateTime.UtcNow;
-                m_SpawnCount--;
-                if (m_SpawnCount < 0)
+                _object.OnUnspawn();
+                _object.LastUseTime = DateTime.UtcNow;
+                _spawnCount--;
+                if (_spawnCount < 0)
                 {
                     throw new GameFrameworkException(Utility.Text.Format("Object '{0}' spawn count is less than 0.", Name));
                 }
@@ -188,8 +188,8 @@ namespace EasyGameFramework.Core.ObjectPool
             /// <param name="isShutdown">是否是关闭对象池时触发。</param>
             public void Release(bool isShutdown)
             {
-                m_Object.Release(isShutdown);
-                ReferencePool.Release(m_Object);
+                _object.Release(isShutdown);
+                ReferencePool.Release(_object);
             }
         }
     }

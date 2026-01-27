@@ -17,12 +17,12 @@ namespace EasyGameFramework.Core
         /// </summary>
         public static class Assembly
         {
-            private static readonly System.Reflection.Assembly[] s_Assemblies = null;
-            private static readonly Dictionary<string, Type> s_CachedTypes = new Dictionary<string, Type>(StringComparer.Ordinal);
+            private static readonly System.Reflection.Assembly[] s_assemblies = null;
+            private static readonly Dictionary<string, Type> s_cachedTypes = new Dictionary<string, Type>(StringComparer.Ordinal);
 
             static Assembly()
             {
-                s_Assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                s_assemblies = AppDomain.CurrentDomain.GetAssemblies();
             }
 
             /// <summary>
@@ -31,7 +31,7 @@ namespace EasyGameFramework.Core
             /// <returns>已加载的程序集。</returns>
             public static System.Reflection.Assembly[] GetAssemblies()
             {
-                return s_Assemblies;
+                return s_assemblies;
             }
 
             /// <summary>
@@ -41,7 +41,7 @@ namespace EasyGameFramework.Core
             public static Type[] GetTypes()
             {
                 List<Type> results = new List<Type>();
-                foreach (System.Reflection.Assembly assembly in s_Assemblies)
+                foreach (System.Reflection.Assembly assembly in s_assemblies)
                 {
                     results.AddRange(assembly.GetTypes());
                 }
@@ -61,7 +61,7 @@ namespace EasyGameFramework.Core
                 }
 
                 results.Clear();
-                foreach (System.Reflection.Assembly assembly in s_Assemblies)
+                foreach (System.Reflection.Assembly assembly in s_assemblies)
                 {
                     results.AddRange(assembly.GetTypes());
                 }
@@ -80,7 +80,7 @@ namespace EasyGameFramework.Core
                 }
 
                 Type type = null;
-                if (s_CachedTypes.TryGetValue(typeName, out type))
+                if (s_cachedTypes.TryGetValue(typeName, out type))
                 {
                     return type;
                 }
@@ -88,16 +88,16 @@ namespace EasyGameFramework.Core
                 type = Type.GetType(typeName);
                 if (type != null)
                 {
-                    s_CachedTypes.Add(typeName, type);
+                    s_cachedTypes.Add(typeName, type);
                     return type;
                 }
 
-                foreach (System.Reflection.Assembly assembly in s_Assemblies)
+                foreach (System.Reflection.Assembly assembly in s_assemblies)
                 {
                     type = Type.GetType(Text.Format("{0}, {1}", typeName, assembly.FullName));
                     if (type != null)
                     {
-                        s_CachedTypes.Add(typeName, type);
+                        s_cachedTypes.Add(typeName, type);
                         return type;
                     }
                 }

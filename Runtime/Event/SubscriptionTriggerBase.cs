@@ -6,20 +6,20 @@ namespace EasyGameFramework
 {
     public abstract class SubscriptionTriggerBase : MonoBehaviour
     {
-        private readonly HashSet<ISubscription> m_Unsubscribes = new HashSet<ISubscription>();
+        private readonly HashSet<ISubscription> _unsubscribes = new HashSet<ISubscription>();
 
-        public void AddUnsubscribe(ISubscription subscription) => m_Unsubscribes.Add(subscription);
+        public void AddUnsubscribe(ISubscription subscription) => _unsubscribes.Add(subscription);
 
-        public void RemoveUnsubscribe(ISubscription subscription) => m_Unsubscribes.Remove(subscription);
+        public void RemoveUnsubscribe(ISubscription subscription) => _unsubscribes.Remove(subscription);
 
         public void Unsubscribe()
         {
-            foreach (var unsubscribe in m_Unsubscribes)
+            foreach (var unsubscribe in _unsubscribes)
             {
                 unsubscribe.Unsubscribe();
             }
 
-            m_Unsubscribes.Clear();
+            _unsubscribes.Clear();
         }
     }
 

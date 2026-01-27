@@ -19,8 +19,8 @@
     /// </summary>
     public class RequestPackageVersionCallbacks
     {
-        private RequestPackageVersionSuccessCallback m_RequestPackageVersionSuccessCallback;
-        private RequestPackageVersionFailureCallback m_RequestPackageVersionFailureCallback;
+        private RequestPackageVersionSuccessCallback _requestPackageVersionSuccessCallback;
+        private RequestPackageVersionFailureCallback _requestPackageVersionFailureCallback;
 
         /// <summary>
         /// 初始化请求资源包版本回调函数集的新实例。
@@ -30,18 +30,18 @@
         public RequestPackageVersionCallbacks(RequestPackageVersionSuccessCallback requestPackageVersionSuccessCallback,
             RequestPackageVersionFailureCallback requestPackageVersionFailureCallback)
         {
-            m_RequestPackageVersionSuccessCallback = requestPackageVersionSuccessCallback;
-            m_RequestPackageVersionFailureCallback = requestPackageVersionFailureCallback;
+            _requestPackageVersionSuccessCallback = requestPackageVersionSuccessCallback;
+            _requestPackageVersionFailureCallback = requestPackageVersionFailureCallback;
         }
 
         /// <summary>
         /// 获取请求资源包版本成功时的回调函数。
         /// </summary>
-        public RequestPackageVersionSuccessCallback RequestPackageVersionSuccessCallback => m_RequestPackageVersionSuccessCallback;
+        public RequestPackageVersionSuccessCallback RequestPackageVersionSuccessCallback => _requestPackageVersionSuccessCallback;
 
         /// <summary>
         /// 获取请求资源包版本失败时的回调函数。
         /// </summary>
-        public RequestPackageVersionFailureCallback RequestPackageVersionFailureCallback => m_RequestPackageVersionFailureCallback;
+        public RequestPackageVersionFailureCallback RequestPackageVersionFailureCallback => _requestPackageVersionFailureCallback;
     }
 }

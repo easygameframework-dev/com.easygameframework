@@ -19,18 +19,18 @@ namespace EasyGameFramework.Core.ObjectPool
         private const float DefaultExpireTime = float.MaxValue;
         private const int DefaultPriority = 0;
 
-        private readonly Dictionary<TypeNamePair, ObjectPoolBase> m_ObjectPools;
-        private readonly List<ObjectPoolBase> m_CachedAllObjectPools;
-        private readonly Comparison<ObjectPoolBase> m_ObjectPoolComparer;
+        private readonly Dictionary<TypeNamePair, ObjectPoolBase> _objectPools;
+        private readonly List<ObjectPoolBase> _cachedAllObjectPools;
+        private readonly Comparison<ObjectPoolBase> _objectPoolComparer;
 
         /// <summary>
         /// 初始化对象池管理器的新实例。
         /// </summary>
         public ObjectPoolManager()
         {
-            m_ObjectPools = new Dictionary<TypeNamePair, ObjectPoolBase>();
-            m_CachedAllObjectPools = new List<ObjectPoolBase>();
-            m_ObjectPoolComparer = ObjectPoolComparer;
+            _objectPools = new Dictionary<TypeNamePair, ObjectPoolBase>();
+            _cachedAllObjectPools = new List<ObjectPoolBase>();
+            _objectPoolComparer = ObjectPoolComparer;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace EasyGameFramework.Core.ObjectPool
         {
             get
             {
-                return m_ObjectPools.Count;
+                return _objectPools.Count;
             }
         }
 
@@ -63,7 +63,7 @@ namespace EasyGameFramework.Core.ObjectPool
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
             {
                 objectPool.Value.Update(elapseSeconds, realElapseSeconds);
             }
@@ -74,13 +74,13 @@ namespace EasyGameFramework.Core.ObjectPool
         /// </summary>
         internal override void Shutdown()
         {
-            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
             {
                 objectPool.Value.Shutdown();
             }
 
-            m_ObjectPools.Clear();
-            m_CachedAllObjectPools.Clear();
+            _objectPools.Clear();
+            _cachedAllObjectPools.Clear();
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace EasyGameFramework.Core.ObjectPool
                 throw new GameFrameworkException("Condition is invalid.");
             }
 
-            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
             {
                 if (condition(objectPool.Value))
                 {
@@ -242,7 +242,7 @@ namespace EasyGameFramework.Core.ObjectPool
                 throw new GameFrameworkException("Condition is invalid.");
             }
 
-            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
             {
                 if (condition(objectPool.Value))
                 {
@@ -266,7 +266,7 @@ namespace EasyGameFramework.Core.ObjectPool
             }
 
             List<ObjectPoolBase> results = new List<ObjectPoolBase>();
-            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
             {
                 if (condition(objectPool.Value))
                 {
@@ -295,7 +295,7 @@ namespace EasyGameFramework.Core.ObjectPool
             }
 
             results.Clear();
-            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
             {
                 if (condition(objectPool.Value))
                 {
@@ -332,19 +332,19 @@ namespace EasyGameFramework.Core.ObjectPool
             if (sort)
             {
                 List<ObjectPoolBase> results = new List<ObjectPoolBase>();
-                foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+                foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
                 {
                     results.Add(objectPool.Value);
                 }
 
-                results.Sort(m_ObjectPoolComparer);
+                results.Sort(_objectPoolComparer);
                 return results.ToArray();
             }
             else
             {
                 int index = 0;
-                ObjectPoolBase[] results = new ObjectPoolBase[m_ObjectPools.Count];
-                foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+                ObjectPoolBase[] results = new ObjectPoolBase[_objectPools.Count];
+                foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
                 {
                     results[index++] = objectPool.Value;
                 }
@@ -366,14 +366,14 @@ namespace EasyGameFramework.Core.ObjectPool
             }
 
             results.Clear();
-            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in m_ObjectPools)
+            foreach (KeyValuePair<TypeNamePair, ObjectPoolBase> objectPool in _objectPools)
             {
                 results.Add(objectPool.Value);
             }
 
             if (sort)
             {
-                results.Sort(m_ObjectPoolComparer);
+                results.Sort(_objectPoolComparer);
             }
         }
 
@@ -1211,8 +1211,8 @@ namespace EasyGameFramework.Core.ObjectPool
         /// </summary>
         public void Release()
         {
-            GetAllObjectPools(true, m_CachedAllObjectPools);
-            foreach (ObjectPoolBase objectPool in m_CachedAllObjectPools)
+            GetAllObjectPools(true, _cachedAllObjectPools);
+            foreach (ObjectPoolBase objectPool in _cachedAllObjectPools)
             {
                 objectPool.Release();
             }
@@ -1223,8 +1223,8 @@ namespace EasyGameFramework.Core.ObjectPool
         /// </summary>
         public void ReleaseAllUnused()
         {
-            GetAllObjectPools(true, m_CachedAllObjectPools);
-            foreach (ObjectPoolBase objectPool in m_CachedAllObjectPools)
+            GetAllObjectPools(true, _cachedAllObjectPools);
+            foreach (ObjectPoolBase objectPool in _cachedAllObjectPools)
             {
                 objectPool.ReleaseAllUnused();
             }
@@ -1232,13 +1232,13 @@ namespace EasyGameFramework.Core.ObjectPool
 
         private bool InternalHasObjectPool(TypeNamePair typeNamePair)
         {
-            return m_ObjectPools.ContainsKey(typeNamePair);
+            return _objectPools.ContainsKey(typeNamePair);
         }
 
         private ObjectPoolBase InternalGetObjectPool(TypeNamePair typeNamePair)
         {
             ObjectPoolBase objectPool = null;
-            if (m_ObjectPools.TryGetValue(typeNamePair, out objectPool))
+            if (_objectPools.TryGetValue(typeNamePair, out objectPool))
             {
                 return objectPool;
             }
@@ -1255,7 +1255,7 @@ namespace EasyGameFramework.Core.ObjectPool
             }
 
             ObjectPool<T> objectPool = new ObjectPool<T>(name, allowMultiSpawn, autoReleaseInterval, capacity, expireTime, priority);
-            m_ObjectPools.Add(typeNamePair, objectPool);
+            _objectPools.Add(typeNamePair, objectPool);
             return objectPool;
         }
 
@@ -1279,17 +1279,17 @@ namespace EasyGameFramework.Core.ObjectPool
 
             Type objectPoolType = typeof(ObjectPool<>).MakeGenericType(objectType);
             ObjectPoolBase objectPool = (ObjectPoolBase)Activator.CreateInstance(objectPoolType, name, allowMultiSpawn, autoReleaseInterval, capacity, expireTime, priority);
-            m_ObjectPools.Add(typeNamePair, objectPool);
+            _objectPools.Add(typeNamePair, objectPool);
             return objectPool;
         }
 
         private bool InternalDestroyObjectPool(TypeNamePair typeNamePair)
         {
             ObjectPoolBase objectPool = null;
-            if (m_ObjectPools.TryGetValue(typeNamePair, out objectPool))
+            if (_objectPools.TryGetValue(typeNamePair, out objectPool))
             {
                 objectPool.Shutdown();
-                return m_ObjectPools.Remove(typeNamePair);
+                return _objectPools.Remove(typeNamePair);
             }
 
             return false;

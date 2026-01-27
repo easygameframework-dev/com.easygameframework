@@ -20,12 +20,12 @@ namespace EasyGameFramework
     {
         private static readonly string SplitFlag = "!/assets/";
         private static readonly int SplitFlagLength = SplitFlag.Length;
-        private static readonly AndroidJavaObject s_AssetManager = null;
-        private static readonly IntPtr s_InternalReadMethodId = IntPtr.Zero;
-        private static readonly jvalue[] s_InternalReadArgs = null;
+        private static readonly AndroidJavaObject s_assetManager = null;
+        private static readonly IntPtr s_internalReadMethodId = IntPtr.Zero;
+        private static readonly jvalue[] s_internalReadArgs = null;
 
-        private readonly AndroidJavaObject m_FileStream;
-        private readonly IntPtr m_FileStreamRawObject;
+        private readonly AndroidJavaObject _fileStream;
+        private readonly IntPtr _fileStreamRawObject;
 
         static AndroidFileSystemStream()
         {
@@ -47,11 +47,11 @@ namespace EasyGameFramework
                 throw new GameFrameworkException("Asset manager is invalid.");
             }
 
-            s_AssetManager = assetManager;
+            s_assetManager = assetManager;
 
             IntPtr inputStreamClassPtr = AndroidJNI.FindClass("java/io/InputStream");
-            s_InternalReadMethodId = AndroidJNIHelper.GetMethodID(inputStreamClassPtr, "read", "([BII)I");
-            s_InternalReadArgs = new jvalue[3];
+            s_internalReadMethodId = AndroidJNIHelper.GetMethodID(inputStreamClassPtr, "read", "([BII)I");
+            s_internalReadArgs = new jvalue[3];
 
             AndroidJNI.DeleteLocalRef(inputStreamClassPtr);
             currentActivity.Dispose();
@@ -88,13 +88,13 @@ namespace EasyGameFramework
             }
 
             string fileName = fullPath.Substring(position + SplitFlagLength);
-            m_FileStream = InternalOpen(fileName);
-            if (m_FileStream == null)
+            _fileStream = InternalOpen(fileName);
+            if (_fileStream == null)
             {
                 throw new GameFrameworkException(Utility.Text.Format("Open file '{0}' from Android asset manager failure.", fullPath));
             }
 
-            m_FileStreamRawObject = m_FileStream.GetRawObject();
+            _fileStreamRawObject = _fileStream.GetRawObject();
         }
 
         /// <summary>
@@ -220,27 +220,27 @@ namespace EasyGameFramework
         protected internal override void Close()
         {
             InternalClose();
-            m_FileStream.Dispose();
+            _fileStream.Dispose();
         }
 
         private AndroidJavaObject InternalOpen(string fileName)
         {
-            return s_AssetManager.Call<AndroidJavaObject>("open", fileName);
+            return s_assetManager.Call<AndroidJavaObject>("open", fileName);
         }
 
         private int InternalAvailable()
         {
-            return m_FileStream.Call<int>("available");
+            return _fileStream.Call<int>("available");
         }
 
         private void InternalClose()
         {
-            m_FileStream.Call("close");
+            _fileStream.Call("close");
         }
 
         private int InternalRead()
         {
-            return m_FileStream.Call<int>("read");
+            return _fileStream.Call<int>("read");
         }
 
         private int InternalRead(int length, out byte[] result)
@@ -256,10 +256,10 @@ namespace EasyGameFramework
             int bytesLeft = length;
             while (bytesLeft > 0)
             {
-                s_InternalReadArgs[0] = new jvalue() { l = resultPtr };
-                s_InternalReadArgs[1] = new jvalue() { i = offset };
-                s_InternalReadArgs[2] = new jvalue() { i = bytesLeft };
-                int bytesRead = AndroidJNI.CallIntMethod(m_FileStreamRawObject, s_InternalReadMethodId, s_InternalReadArgs);
+                s_internalReadArgs[0] = new jvalue() { l = resultPtr };
+                s_internalReadArgs[1] = new jvalue() { i = offset };
+                s_internalReadArgs[2] = new jvalue() { i = bytesLeft };
+                int bytesRead = AndroidJNI.CallIntMethod(_fileStreamRawObject, s_internalReadMethodId, s_internalReadArgs);
                 if (bytesRead <= 0)
                 {
                     break;
@@ -282,12 +282,12 @@ namespace EasyGameFramework
 
         private void InternalReset()
         {
-            m_FileStream.Call("reset");
+            _fileStream.Call("reset");
         }
 
         private long InternalSkip(long offset)
         {
-            return m_FileStream.Call<long>("skip", offset);
+            return _fileStream.Call<long>("skip", offset);
         }
     }
 }

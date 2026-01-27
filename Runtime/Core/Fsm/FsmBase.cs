@@ -14,14 +14,14 @@ namespace EasyGameFramework.Core.Fsm
     /// </summary>
     public abstract class FsmBase
     {
-        private string m_Name;
+        private string _name;
 
         /// <summary>
         /// 初始化有限状态机基类的新实例。
         /// </summary>
         public FsmBase()
         {
-            m_Name = string.Empty;
+            _name = string.Empty;
         }
 
         /// <summary>
@@ -31,11 +31,11 @@ namespace EasyGameFramework.Core.Fsm
         {
             get
             {
-                return m_Name;
+                return _name;
             }
             protected set
             {
-                m_Name = value ?? string.Empty;
+                _name = value ?? string.Empty;
             }
         }
 
@@ -46,7 +46,7 @@ namespace EasyGameFramework.Core.Fsm
         {
             get
             {
-                return new TypeNamePair(OwnerType, m_Name).ToString();
+                return new TypeNamePair(OwnerType, _name).ToString();
             }
         }
 

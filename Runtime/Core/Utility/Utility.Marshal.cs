@@ -17,8 +17,8 @@ namespace EasyGameFramework.Core
         public static class Marshal
         {
             private const int BlockSize = 1024 * 4;
-            private static IntPtr s_CachedHGlobalPtr = IntPtr.Zero;
-            private static int s_CachedHGlobalSize = 0;
+            private static IntPtr s_cachedHGlobalPtr = IntPtr.Zero;
+            private static int s_cachedHGlobalSize = 0;
 
             /// <summary>
             /// 获取缓存的从进程的非托管内存中分配的内存的大小。
@@ -27,7 +27,7 @@ namespace EasyGameFramework.Core
             {
                 get
                 {
-                    return s_CachedHGlobalSize;
+                    return s_cachedHGlobalSize;
                 }
             }
 
@@ -42,12 +42,12 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Ensure size is invalid.");
                 }
 
-                if (s_CachedHGlobalPtr == IntPtr.Zero || s_CachedHGlobalSize < ensureSize)
+                if (s_cachedHGlobalPtr == IntPtr.Zero || s_cachedHGlobalSize < ensureSize)
                 {
                     FreeCachedHGlobal();
                     int size = (ensureSize - 1 + BlockSize) / BlockSize * BlockSize;
-                    s_CachedHGlobalPtr = System.Runtime.InteropServices.Marshal.AllocHGlobal(size);
-                    s_CachedHGlobalSize = size;
+                    s_cachedHGlobalPtr = System.Runtime.InteropServices.Marshal.AllocHGlobal(size);
+                    s_cachedHGlobalSize = size;
                 }
             }
 
@@ -56,11 +56,11 @@ namespace EasyGameFramework.Core
             /// </summary>
             public static void FreeCachedHGlobal()
             {
-                if (s_CachedHGlobalPtr != IntPtr.Zero)
+                if (s_cachedHGlobalPtr != IntPtr.Zero)
                 {
-                    System.Runtime.InteropServices.Marshal.FreeHGlobal(s_CachedHGlobalPtr);
-                    s_CachedHGlobalPtr = IntPtr.Zero;
-                    s_CachedHGlobalSize = 0;
+                    System.Runtime.InteropServices.Marshal.FreeHGlobal(s_cachedHGlobalPtr);
+                    s_cachedHGlobalPtr = IntPtr.Zero;
+                    s_cachedHGlobalSize = 0;
                 }
             }
 
@@ -90,9 +90,9 @@ namespace EasyGameFramework.Core
                 }
 
                 EnsureCachedHGlobalSize(structureSize);
-                System.Runtime.InteropServices.Marshal.StructureToPtr(structure, s_CachedHGlobalPtr, true);
+                System.Runtime.InteropServices.Marshal.StructureToPtr(structure, s_cachedHGlobalPtr, true);
                 byte[] result = new byte[structureSize];
-                System.Runtime.InteropServices.Marshal.Copy(s_CachedHGlobalPtr, result, 0, structureSize);
+                System.Runtime.InteropServices.Marshal.Copy(s_cachedHGlobalPtr, result, 0, structureSize);
                 return result;
             }
 
@@ -162,8 +162,8 @@ namespace EasyGameFramework.Core
                 }
 
                 EnsureCachedHGlobalSize(structureSize);
-                System.Runtime.InteropServices.Marshal.StructureToPtr(structure, s_CachedHGlobalPtr, true);
-                System.Runtime.InteropServices.Marshal.Copy(s_CachedHGlobalPtr, result, startIndex, structureSize);
+                System.Runtime.InteropServices.Marshal.StructureToPtr(structure, s_cachedHGlobalPtr, true);
+                System.Runtime.InteropServices.Marshal.Copy(s_cachedHGlobalPtr, result, startIndex, structureSize);
             }
 
             /// <summary>
@@ -232,8 +232,8 @@ namespace EasyGameFramework.Core
                 }
 
                 EnsureCachedHGlobalSize(structureSize);
-                System.Runtime.InteropServices.Marshal.Copy(buffer, startIndex, s_CachedHGlobalPtr, structureSize);
-                return (T)System.Runtime.InteropServices.Marshal.PtrToStructure(s_CachedHGlobalPtr, typeof(T));
+                System.Runtime.InteropServices.Marshal.Copy(buffer, startIndex, s_cachedHGlobalPtr, structureSize);
+                return (T)System.Runtime.InteropServices.Marshal.PtrToStructure(s_cachedHGlobalPtr, typeof(T));
             }
         }
     }

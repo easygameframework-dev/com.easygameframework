@@ -15,16 +15,16 @@ namespace EasyGameFramework.Core.Fsm
     /// </summary>
     internal sealed class FsmManager : GameFrameworkModule, IFsmManager
     {
-        private readonly Dictionary<TypeNamePair, FsmBase> m_Fsms;
-        private readonly List<FsmBase> m_TempFsms;
+        private readonly Dictionary<TypeNamePair, FsmBase> _fsms;
+        private readonly List<FsmBase> _tempFsms;
 
         /// <summary>
         /// 初始化有限状态机管理器的新实例。
         /// </summary>
         public FsmManager()
         {
-            m_Fsms = new Dictionary<TypeNamePair, FsmBase>();
-            m_TempFsms = new List<FsmBase>();
+            _fsms = new Dictionary<TypeNamePair, FsmBase>();
+            _tempFsms = new List<FsmBase>();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace EasyGameFramework.Core.Fsm
         {
             get
             {
-                return m_Fsms.Count;
+                return _fsms.Count;
             }
         }
 
@@ -57,18 +57,18 @@ namespace EasyGameFramework.Core.Fsm
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            m_TempFsms.Clear();
-            if (m_Fsms.Count <= 0)
+            _tempFsms.Clear();
+            if (_fsms.Count <= 0)
             {
                 return;
             }
 
-            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in m_Fsms)
+            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in _fsms)
             {
-                m_TempFsms.Add(fsm.Value);
+                _tempFsms.Add(fsm.Value);
             }
 
-            foreach (FsmBase fsm in m_TempFsms)
+            foreach (FsmBase fsm in _tempFsms)
             {
                 if (fsm.IsDestroyed)
                 {
@@ -84,13 +84,13 @@ namespace EasyGameFramework.Core.Fsm
         /// </summary>
         internal override void Shutdown()
         {
-            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in m_Fsms)
+            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in _fsms)
             {
                 fsm.Value.Shutdown();
             }
 
-            m_Fsms.Clear();
-            m_TempFsms.Clear();
+            _fsms.Clear();
+            _tempFsms.Clear();
         }
 
         /// <summary>
@@ -204,8 +204,8 @@ namespace EasyGameFramework.Core.Fsm
         public FsmBase[] GetAllFsms()
         {
             int index = 0;
-            FsmBase[] results = new FsmBase[m_Fsms.Count];
-            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in m_Fsms)
+            FsmBase[] results = new FsmBase[_fsms.Count];
+            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in _fsms)
             {
                 results[index++] = fsm.Value;
             }
@@ -225,7 +225,7 @@ namespace EasyGameFramework.Core.Fsm
             }
 
             results.Clear();
-            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in m_Fsms)
+            foreach (KeyValuePair<TypeNamePair, FsmBase> fsm in _fsms)
             {
                 results.Add(fsm.Value);
             }
@@ -260,7 +260,7 @@ namespace EasyGameFramework.Core.Fsm
             }
 
             Fsm<T> fsm = Fsm<T>.Create(name, owner, states);
-            m_Fsms.Add(typeNamePair, fsm);
+            _fsms.Add(typeNamePair, fsm);
             return fsm;
         }
 
@@ -293,7 +293,7 @@ namespace EasyGameFramework.Core.Fsm
             }
 
             Fsm<T> fsm = Fsm<T>.Create(name, owner, states);
-            m_Fsms.Add(typeNamePair, fsm);
+            _fsms.Add(typeNamePair, fsm);
             return fsm;
         }
 
@@ -382,13 +382,13 @@ namespace EasyGameFramework.Core.Fsm
 
         private bool InternalHasFsm(TypeNamePair typeNamePair)
         {
-            return m_Fsms.ContainsKey(typeNamePair);
+            return _fsms.ContainsKey(typeNamePair);
         }
 
         private FsmBase InternalGetFsm(TypeNamePair typeNamePair)
         {
             FsmBase fsm = null;
-            if (m_Fsms.TryGetValue(typeNamePair, out fsm))
+            if (_fsms.TryGetValue(typeNamePair, out fsm))
             {
                 return fsm;
             }
@@ -399,10 +399,10 @@ namespace EasyGameFramework.Core.Fsm
         private bool InternalDestroyFsm(TypeNamePair typeNamePair)
         {
             FsmBase fsm = null;
-            if (m_Fsms.TryGetValue(typeNamePair, out fsm))
+            if (_fsms.TryGetValue(typeNamePair, out fsm))
             {
                 fsm.Shutdown();
-                return m_Fsms.Remove(typeNamePair);
+                return _fsms.Remove(typeNamePair);
             }
 
             return false;

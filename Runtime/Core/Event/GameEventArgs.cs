@@ -12,18 +12,18 @@ namespace EasyGameFramework.Core.Event
     /// </summary>
     public abstract class GameEventArgs : BaseEventArgs
     {
-        private int? m_Id = 0;
+        private int? _id = 0;
         
         public override int Id
         {
             get
             {
-                if (m_Id == null)
+                if (_id == null)
                 {
-                    m_Id = EventExtensions.GetEventId(GetType());
+                    _id = EventExtensions.GetEventId(GetType());
                 }
                 
-                return m_Id.Value;
+                return _id.Value;
             }
         }
     }

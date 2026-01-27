@@ -7,40 +7,40 @@ namespace EasyGameFramework.Core.Resource
     /// </summary>
     public class AssetInfo
     {
-        private readonly AssetAddress m_AssetAddress;
-        private readonly Type m_AssetType;
-        private readonly string m_Error;
-        private readonly object m_UserData;
+        private readonly AssetAddress _assetAddress;
+        private readonly Type _assetType;
+        private readonly string _error;
+        private readonly object _userData;
 
         /// <summary>
         /// 资源地址
         /// </summary>
-        public AssetAddress Address => m_AssetAddress;
+        public AssetAddress Address => _assetAddress;
 
         /// <summary>
         /// 所属包裹
         /// </summary>
-        public string PackageName => m_AssetAddress.PackageName;
+        public string PackageName => _assetAddress.PackageName;
 
         /// <summary>
         /// 资源类型
         /// </summary>
-        public Type AssetType => m_AssetType;
+        public Type AssetType => _assetType;
 
         /// <summary>
         /// 错误信息
         /// </summary>
-        public string Error => m_Error;
+        public string Error => _error;
 
         /// <summary>
         /// 资源名称
         /// </summary>
-        public string AssetName => m_AssetAddress.Location;
+        public string AssetName => _assetAddress.Location;
 
         /// <summary>
         /// 引用对象
         /// </summary>
-        public object UserData => m_UserData;
+        public object UserData => _userData;
 
         /// <summary>
         /// 初始化资源信息的新实例。
@@ -51,10 +51,10 @@ namespace EasyGameFramework.Core.Resource
         /// <param name="userData">用户自定义数据。</param>
         public AssetInfo(AssetAddress assetAddress, Type assetType, string error, object userData)
         {
-            m_AssetAddress = assetAddress;
-            m_AssetType = assetType;
-            m_Error = error;
-            m_UserData = userData;
+            _assetAddress = assetAddress;
+            _assetType = assetType;
+            _error = error;
+            _userData = userData;
         }
     }
 }

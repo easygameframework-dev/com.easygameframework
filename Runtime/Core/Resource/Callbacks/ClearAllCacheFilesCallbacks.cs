@@ -11,9 +11,9 @@
     /// </summary>
     public class ClearAllCacheFilesCallbacks
     {
-        private ClearAllCacheFilesCompleteCallback m_ClearAllCacheFilesComplete;
-        private ClearPackageCacheFilesSuccessCallback m_ClearPackageCacheFilesSuccess;
-        private ClearPackageCacheFilesFailureCallback m_ClearPackageCacheFilesFailure;
+        private ClearAllCacheFilesCompleteCallback _clearAllCacheFilesComplete;
+        private ClearPackageCacheFilesSuccessCallback _clearPackageCacheFilesSuccess;
+        private ClearPackageCacheFilesFailureCallback _clearPackageCacheFilesFailure;
 
         /// <summary>
         /// 初始化清理所有缓存文件回调函数集的新实例。
@@ -26,27 +26,27 @@
             ClearPackageCacheFilesSuccessCallback clearPackageCacheFilesSuccess,
             ClearPackageCacheFilesFailureCallback clearPackageCacheFilesFailure)
         {
-            m_ClearAllCacheFilesComplete = clearAllCacheFilesComplete;
-            m_ClearPackageCacheFilesSuccess = clearPackageCacheFilesSuccess;
-            m_ClearPackageCacheFilesFailure = clearPackageCacheFilesFailure;
+            _clearAllCacheFilesComplete = clearAllCacheFilesComplete;
+            _clearPackageCacheFilesSuccess = clearPackageCacheFilesSuccess;
+            _clearPackageCacheFilesFailure = clearPackageCacheFilesFailure;
         }
 
         /// <summary>
         /// 获取清理所有缓存文件完成时的回调函数。
         /// </summary>
         public ClearAllCacheFilesCompleteCallback ClearAllCacheFilesComplete =>
-            m_ClearAllCacheFilesComplete;
+            _clearAllCacheFilesComplete;
 
         /// <summary>
         /// 获取清理资源包缓存文件成功时的回调函数。
         /// </summary>
         public ClearPackageCacheFilesSuccessCallback ClearPackageCacheFilesSuccess =>
-            m_ClearPackageCacheFilesSuccess;
+            _clearPackageCacheFilesSuccess;
 
         /// <summary>
         /// 获取清理资源包缓存文件失败时的回调函数。
         /// </summary>
         public ClearPackageCacheFilesFailureCallback ClearPackageCacheFilesFailure =>
-            m_ClearPackageCacheFilesFailure;
+            _clearPackageCacheFilesFailure;
     }
 }

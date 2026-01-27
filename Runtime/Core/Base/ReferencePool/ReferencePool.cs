@@ -20,8 +20,8 @@ namespace EasyGameFramework.Core
             public static readonly ReferenceCollection Instance = GetReferenceCollection(typeof(T));
         }
 
-        private static readonly Dictionary<Type, ReferenceCollection> s_ReferenceCollections = new Dictionary<Type, ReferenceCollection>();
-        private static bool m_EnableStrictCheck = false;
+        private static readonly Dictionary<Type, ReferenceCollection> s_referenceCollections = new Dictionary<Type, ReferenceCollection>();
+        private static bool _enableStrictCheck = false;
 
         /// <summary>
         /// 获取或设置是否开启强制检查。
@@ -30,11 +30,11 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_EnableStrictCheck;
+                return _enableStrictCheck;
             }
             set
             {
-                m_EnableStrictCheck = value;
+                _enableStrictCheck = value;
             }
         }
 
@@ -45,7 +45,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return s_ReferenceCollections.Count;
+                return s_referenceCollections.Count;
             }
         }
 
@@ -58,10 +58,10 @@ namespace EasyGameFramework.Core
             int index = 0;
             ReferencePoolInfo[] results = null;
 
-            lock (s_ReferenceCollections)
+            lock (s_referenceCollections)
             {
-                results = new ReferencePoolInfo[s_ReferenceCollections.Count];
-                foreach (KeyValuePair<Type, ReferenceCollection> referenceCollection in s_ReferenceCollections)
+                results = new ReferencePoolInfo[s_referenceCollections.Count];
+                foreach (KeyValuePair<Type, ReferenceCollection> referenceCollection in s_referenceCollections)
                 {
                     results[index++] = new ReferencePoolInfo(referenceCollection.Key, referenceCollection.Value.UnusedReferenceCount, referenceCollection.Value.UsingReferenceCount, referenceCollection.Value.AcquireReferenceCount, referenceCollection.Value.ReleaseReferenceCount, referenceCollection.Value.AddReferenceCount, referenceCollection.Value.RemoveReferenceCount);
                 }
@@ -75,14 +75,14 @@ namespace EasyGameFramework.Core
         /// </summary>
         public static void ClearAll()
         {
-            lock (s_ReferenceCollections)
+            lock (s_referenceCollections)
             {
-                foreach (KeyValuePair<Type, ReferenceCollection> referenceCollection in s_ReferenceCollections)
+                foreach (KeyValuePair<Type, ReferenceCollection> referenceCollection in s_referenceCollections)
                 {
                     referenceCollection.Value.RemoveAll();
                 }
 
-                s_ReferenceCollections.Clear();
+                s_referenceCollections.Clear();
             }
         }
 
@@ -206,7 +206,7 @@ namespace EasyGameFramework.Core
 
         private static void InternalCheckReferenceType(Type referenceType)
         {
-            if (!m_EnableStrictCheck)
+            if (!_enableStrictCheck)
             {
                 return;
             }
@@ -235,12 +235,12 @@ namespace EasyGameFramework.Core
             }
 
             ReferenceCollection referenceCollection = null;
-            lock (s_ReferenceCollections)
+            lock (s_referenceCollections)
             {
-                if (!s_ReferenceCollections.TryGetValue(referenceType, out referenceCollection))
+                if (!s_referenceCollections.TryGetValue(referenceType, out referenceCollection))
                 {
                     referenceCollection = new ReferenceCollection(referenceType);
-                    s_ReferenceCollections.Add(referenceType, referenceCollection);
+                    s_referenceCollections.Add(referenceType, referenceCollection);
                 }
             }
 

@@ -11,12 +11,12 @@ namespace EasyGameFramework.Core.Download
     {
         private sealed partial class DownloadCounter
         {
-            private readonly GameFrameworkLinkedList<DownloadCounterNode> m_DownloadCounterNodes;
-            private float m_UpdateInterval;
-            private float m_RecordInterval;
-            private float m_CurrentSpeed;
-            private float m_Accumulator;
-            private float m_TimeLeft;
+            private readonly GameFrameworkLinkedList<DownloadCounterNode> _downloadCounterNodes;
+            private float _updateInterval;
+            private float _recordInterval;
+            private float _currentSpeed;
+            private float _accumulator;
+            private float _timeLeft;
 
             public DownloadCounter(float updateInterval, float recordInterval)
             {
@@ -30,9 +30,9 @@ namespace EasyGameFramework.Core.Download
                     throw new GameFrameworkException("Record interval is invalid.");
                 }
 
-                m_DownloadCounterNodes = new GameFrameworkLinkedList<DownloadCounterNode>();
-                m_UpdateInterval = updateInterval;
-                m_RecordInterval = recordInterval;
+                _downloadCounterNodes = new GameFrameworkLinkedList<DownloadCounterNode>();
+                _updateInterval = updateInterval;
+                _recordInterval = recordInterval;
                 Reset();
             }
 
@@ -40,7 +40,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_UpdateInterval;
+                    return _updateInterval;
                 }
                 set
                 {
@@ -49,7 +49,7 @@ namespace EasyGameFramework.Core.Download
                         throw new GameFrameworkException("Update interval is invalid.");
                     }
 
-                    m_UpdateInterval = value;
+                    _updateInterval = value;
                     Reset();
                 }
             }
@@ -58,7 +58,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_RecordInterval;
+                    return _recordInterval;
                 }
                 set
                 {
@@ -67,7 +67,7 @@ namespace EasyGameFramework.Core.Download
                         throw new GameFrameworkException("Record interval is invalid.");
                     }
 
-                    m_RecordInterval = value;
+                    _recordInterval = value;
                     Reset();
                 }
             }
@@ -76,7 +76,7 @@ namespace EasyGameFramework.Core.Download
             {
                 get
                 {
-                    return m_CurrentSpeed;
+                    return _currentSpeed;
                 }
             }
 
@@ -87,51 +87,51 @@ namespace EasyGameFramework.Core.Download
 
             public void Update(float elapseSeconds, float realElapseSeconds)
             {
-                if (m_DownloadCounterNodes.Count <= 0)
+                if (_downloadCounterNodes.Count <= 0)
                 {
                     return;
                 }
 
-                m_Accumulator += realElapseSeconds;
-                if (m_Accumulator > m_RecordInterval)
+                _accumulator += realElapseSeconds;
+                if (_accumulator > _recordInterval)
                 {
-                    m_Accumulator = m_RecordInterval;
+                    _accumulator = _recordInterval;
                 }
 
-                m_TimeLeft -= realElapseSeconds;
-                foreach (DownloadCounterNode downloadCounterNode in m_DownloadCounterNodes)
+                _timeLeft -= realElapseSeconds;
+                foreach (DownloadCounterNode downloadCounterNode in _downloadCounterNodes)
                 {
                     downloadCounterNode.Update(elapseSeconds, realElapseSeconds);
                 }
 
-                while (m_DownloadCounterNodes.Count > 0)
+                while (_downloadCounterNodes.Count > 0)
                 {
-                    DownloadCounterNode downloadCounterNode = m_DownloadCounterNodes.First.Value;
-                    if (downloadCounterNode.ElapseSeconds < m_RecordInterval)
+                    DownloadCounterNode downloadCounterNode = _downloadCounterNodes.First.Value;
+                    if (downloadCounterNode.ElapseSeconds < _recordInterval)
                     {
                         break;
                     }
 
                     ReferencePool.Release(downloadCounterNode);
-                    m_DownloadCounterNodes.RemoveFirst();
+                    _downloadCounterNodes.RemoveFirst();
                 }
 
-                if (m_DownloadCounterNodes.Count <= 0)
+                if (_downloadCounterNodes.Count <= 0)
                 {
                     Reset();
                     return;
                 }
 
-                if (m_TimeLeft <= 0f)
+                if (_timeLeft <= 0f)
                 {
                     long totalDeltaLength = 0L;
-                    foreach (DownloadCounterNode downloadCounterNode in m_DownloadCounterNodes)
+                    foreach (DownloadCounterNode downloadCounterNode in _downloadCounterNodes)
                     {
                         totalDeltaLength += downloadCounterNode.DeltaLength;
                     }
 
-                    m_CurrentSpeed = m_Accumulator > 0f ? totalDeltaLength / m_Accumulator : 0f;
-                    m_TimeLeft += m_UpdateInterval;
+                    _currentSpeed = _accumulator > 0f ? totalDeltaLength / _accumulator : 0f;
+                    _timeLeft += _updateInterval;
                 }
             }
 
@@ -143,10 +143,10 @@ namespace EasyGameFramework.Core.Download
                 }
 
                 DownloadCounterNode downloadCounterNode = null;
-                if (m_DownloadCounterNodes.Count > 0)
+                if (_downloadCounterNodes.Count > 0)
                 {
-                    downloadCounterNode = m_DownloadCounterNodes.Last.Value;
-                    if (downloadCounterNode.ElapseSeconds < m_UpdateInterval)
+                    downloadCounterNode = _downloadCounterNodes.Last.Value;
+                    if (downloadCounterNode.ElapseSeconds < _updateInterval)
                     {
                         downloadCounterNode.AddDeltaLength(deltaLength);
                         return;
@@ -155,15 +155,15 @@ namespace EasyGameFramework.Core.Download
 
                 downloadCounterNode = DownloadCounterNode.Create();
                 downloadCounterNode.AddDeltaLength(deltaLength);
-                m_DownloadCounterNodes.AddLast(downloadCounterNode);
+                _downloadCounterNodes.AddLast(downloadCounterNode);
             }
 
             private void Reset()
             {
-                m_DownloadCounterNodes.Clear();
-                m_CurrentSpeed = 0f;
-                m_Accumulator = 0f;
-                m_TimeLeft = 0f;
+                _downloadCounterNodes.Clear();
+                _currentSpeed = 0f;
+                _accumulator = 0f;
+                _timeLeft = 0f;
             }
         }
     }

@@ -13,22 +13,22 @@ namespace EasyGameFramework
         {
             private sealed class Record
             {
-                private readonly string m_Name;
-                private int m_Count;
-                private long m_Size;
+                private readonly string _name;
+                private int _count;
+                private long _size;
 
                 public Record(string name)
                 {
-                    m_Name = name;
-                    m_Count = 0;
-                    m_Size = 0L;
+                    _name = name;
+                    _count = 0;
+                    _size = 0L;
                 }
 
                 public string Name
                 {
                     get
                     {
-                        return m_Name;
+                        return _name;
                     }
                 }
 
@@ -36,11 +36,11 @@ namespace EasyGameFramework
                 {
                     get
                     {
-                        return m_Count;
+                        return _count;
                     }
                     set
                     {
-                        m_Count = value;
+                        _count = value;
                     }
                 }
 
@@ -48,11 +48,11 @@ namespace EasyGameFramework
                 {
                     get
                     {
-                        return m_Size;
+                        return _size;
                     }
                     set
                     {
-                        m_Size = value;
+                        _size = value;
                     }
                 }
             }

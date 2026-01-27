@@ -15,8 +15,8 @@ namespace EasyGameFramework.Editor
     [CustomEditor(typeof(SceneComponent))]
     internal sealed class SceneComponentInspector : GameFrameworkInspector
     {
-        // private SerializedProperty m_EnableLoadSceneUpdateEvent = null;
-        // private SerializedProperty m_EnableLoadSceneDependencyAssetEvent = null;
+        // private SerializedProperty _enableLoadSceneUpdateEvent = null;
+        // private SerializedProperty _enableLoadSceneDependencyAssetEvent = null;
 
         public override void OnInspectorGUI()
         {
@@ -28,8 +28,8 @@ namespace EasyGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                // EditorGUILayout.PropertyField(m_EnableLoadSceneUpdateEvent);
-                // EditorGUILayout.PropertyField(m_EnableLoadSceneDependencyAssetEvent);
+                // EditorGUILayout.PropertyField(_enableLoadSceneUpdateEvent);
+                // EditorGUILayout.PropertyField(_enableLoadSceneDependencyAssetEvent);
             }
             EditorGUI.EndDisabledGroup();
 
@@ -48,8 +48,8 @@ namespace EasyGameFramework.Editor
 
         private void OnEnable()
         {
-            // m_EnableLoadSceneUpdateEvent = serializedObject.FindProperty("m_EnableLoadSceneUpdateEvent");
-            // m_EnableLoadSceneDependencyAssetEvent = serializedObject.FindProperty("m_EnableLoadSceneDependencyAssetEvent");
+            // _enableLoadSceneUpdateEvent = serializedObject.FindProperty("_enableLoadSceneUpdateEvent");
+            // _enableLoadSceneDependencyAssetEvent = serializedObject.FindProperty("_enableLoadSceneDependencyAssetEvent");
         }
 
         private string GetSceneNameString(AssetAddress[] sceneAssetAddresses)

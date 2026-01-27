@@ -17,14 +17,14 @@ namespace EasyGameFramework.Core
     internal sealed class DataProvider<T> : IDataProvider<T>
     {
         private const int BlockSize = 1024 * 4;
-        private static byte[] s_CachedBytes = null;
+        private static byte[] s_cachedBytes = null;
 
-        private readonly T m_Owner;
-        private readonly LoadAssetCallbacks m_LoadAssetCallbacks;
-        private IResourceManager m_ResourceManager;
-        private IDataProviderHelper<T> m_DataProviderHelper;
-        private EventHandler<ReadDataSuccessEventArgs> m_ReadDataSuccessEventHandler;
-        private EventHandler<ReadDataFailureEventArgs> m_ReadDataFailureEventHandler;
+        private readonly T _owner;
+        private readonly LoadAssetCallbacks _loadAssetCallbacks;
+        private IResourceManager _resourceManager;
+        private IDataProviderHelper<T> _dataProviderHelper;
+        private EventHandler<ReadDataSuccessEventArgs> _readDataSuccessEventHandler;
+        private EventHandler<ReadDataFailureEventArgs> _readDataFailureEventHandler;
 
         /// <summary>
         /// 初始化数据提供者的新实例。
@@ -32,12 +32,12 @@ namespace EasyGameFramework.Core
         /// <param name="owner">数据提供者的持有者。</param>
         public DataProvider(T owner)
         {
-            m_Owner = owner;
-            m_LoadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetOrBinaryFailureCallback);
-            m_ResourceManager = null;
-            m_DataProviderHelper = null;
-            m_ReadDataSuccessEventHandler = null;
-            m_ReadDataFailureEventHandler = null;
+            _owner = owner;
+            _loadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetOrBinaryFailureCallback);
+            _resourceManager = null;
+            _dataProviderHelper = null;
+            _readDataSuccessEventHandler = null;
+            _readDataFailureEventHandler = null;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return s_CachedBytes != null ? s_CachedBytes.Length : 0;
+                return s_cachedBytes != null ? s_cachedBytes.Length : 0;
             }
         }
 
@@ -58,11 +58,11 @@ namespace EasyGameFramework.Core
         {
             add
             {
-                m_ReadDataSuccessEventHandler += value;
+                _readDataSuccessEventHandler += value;
             }
             remove
             {
-                m_ReadDataSuccessEventHandler -= value;
+                _readDataSuccessEventHandler -= value;
             }
         }
 
@@ -73,11 +73,11 @@ namespace EasyGameFramework.Core
         {
             add
             {
-                m_ReadDataFailureEventHandler += value;
+                _readDataFailureEventHandler += value;
             }
             remove
             {
-                m_ReadDataFailureEventHandler -= value;
+                _readDataFailureEventHandler -= value;
             }
         }
 
@@ -92,11 +92,11 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Ensure size is invalid.");
             }
 
-            if (s_CachedBytes == null || s_CachedBytes.Length < ensureSize)
+            if (s_cachedBytes == null || s_cachedBytes.Length < ensureSize)
             {
                 FreeCachedBytes();
                 int size = (ensureSize - 1 + BlockSize) / BlockSize * BlockSize;
-                s_CachedBytes = new byte[size];
+                s_cachedBytes = new byte[size];
             }
         }
 
@@ -105,7 +105,7 @@ namespace EasyGameFramework.Core
         /// </summary>
         public static void FreeCachedBytes()
         {
-            s_CachedBytes = null;
+            s_cachedBytes = null;
         }
 
         /// <summary>
@@ -145,22 +145,22 @@ namespace EasyGameFramework.Core
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(AssetAddress dataAssetAddress, int priority, object userData)
         {
-            if (m_ResourceManager == null)
+            if (_resourceManager == null)
             {
                 throw new GameFrameworkException("You must set resource manager first.");
             }
 
-            if (m_DataProviderHelper == null)
+            if (_dataProviderHelper == null)
             {
                 throw new GameFrameworkException("You must set data provider helper first.");
             }
 
-            HasAssetResult result = m_ResourceManager.HasAsset(dataAssetAddress);
+            HasAssetResult result = _resourceManager.HasAsset(dataAssetAddress);
             switch (result)
             {
                 case HasAssetResult.AssetOnDisk:
                 case HasAssetResult.AssetOnFileSystem:
-                    m_ResourceManager.LoadAsset(dataAssetAddress, m_LoadAssetCallbacks, null, priority, userData);
+                    _resourceManager.LoadAsset(dataAssetAddress, _loadAssetCallbacks, null, priority, userData);
                     break;
                 default:
                     throw new GameFrameworkException(Utility.Text.Format("Data asset '{0}' is '{1}'.", dataAssetAddress, result));
@@ -185,7 +185,7 @@ namespace EasyGameFramework.Core
         /// <returns>是否解析内容成功。</returns>
         public bool ParseData(string dataString, object userData)
         {
-            if (m_DataProviderHelper == null)
+            if (_dataProviderHelper == null)
             {
                 throw new GameFrameworkException("You must set data helper first.");
             }
@@ -197,7 +197,7 @@ namespace EasyGameFramework.Core
 
             try
             {
-                return m_DataProviderHelper.ParseData(m_Owner, dataString, userData);
+                return _dataProviderHelper.ParseData(_owner, dataString, userData);
             }
             catch (Exception exception)
             {
@@ -263,7 +263,7 @@ namespace EasyGameFramework.Core
         /// <returns>是否解析内容成功。</returns>
         public bool ParseData(byte[] dataBytes, int startIndex, int length, object userData)
         {
-            if (m_DataProviderHelper == null)
+            if (_dataProviderHelper == null)
             {
                 throw new GameFrameworkException("You must set data helper first.");
             }
@@ -280,7 +280,7 @@ namespace EasyGameFramework.Core
 
             try
             {
-                return m_DataProviderHelper.ParseData(m_Owner, dataBytes, startIndex, length, userData);
+                return _dataProviderHelper.ParseData(_owner, dataBytes, startIndex, length, userData);
             }
             catch (Exception exception)
             {
@@ -304,7 +304,7 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Resource manager is invalid.");
             }
 
-            m_ResourceManager = resourceManager;
+            _resourceManager = resourceManager;
         }
 
         /// <summary>
@@ -318,31 +318,31 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Data provider helper is invalid.");
             }
 
-            m_DataProviderHelper = dataProviderHelper;
+            _dataProviderHelper = dataProviderHelper;
         }
 
         private void LoadAssetSuccessCallback(AssetAddress assetAddress, object dataAsset, float duration, object userData)
         {
             try
             {
-                if (!m_DataProviderHelper.ReadData(m_Owner, assetAddress, dataAsset, userData))
+                if (!_dataProviderHelper.ReadData(_owner, assetAddress, dataAsset, userData))
                 {
                     throw new GameFrameworkException(Utility.Text.Format("Load data failure in data provider helper, data asset name '{0}'.", assetAddress));
                 }
 
-                if (m_ReadDataSuccessEventHandler != null)
+                if (_readDataSuccessEventHandler != null)
                 {
                     ReadDataSuccessEventArgs loadDataSuccessEventArgs = ReadDataSuccessEventArgs.Create(assetAddress, duration, userData);
-                    m_ReadDataSuccessEventHandler(this, loadDataSuccessEventArgs);
+                    _readDataSuccessEventHandler(this, loadDataSuccessEventArgs);
                     ReferencePool.Release(loadDataSuccessEventArgs);
                 }
             }
             catch (Exception exception)
             {
-                if (m_ReadDataFailureEventHandler != null)
+                if (_readDataFailureEventHandler != null)
                 {
                     ReadDataFailureEventArgs loadDataFailureEventArgs = ReadDataFailureEventArgs.Create(assetAddress, exception.ToString(), userData);
-                    m_ReadDataFailureEventHandler(this, loadDataFailureEventArgs);
+                    _readDataFailureEventHandler(this, loadDataFailureEventArgs);
                     ReferencePool.Release(loadDataFailureEventArgs);
                     return;
                 }
@@ -351,17 +351,17 @@ namespace EasyGameFramework.Core
             }
             finally
             {
-                m_DataProviderHelper.ReleaseDataAsset(m_Owner, dataAsset);
+                _dataProviderHelper.ReleaseDataAsset(_owner, dataAsset);
             }
         }
 
         private void LoadAssetOrBinaryFailureCallback(AssetAddress assetAddress, LoadResourceStatus status, string errorMessage, object userData)
         {
             string appendErrorMessage = Utility.Text.Format("Load data failure, data asset name '{0}', status '{1}', error message '{2}'.", assetAddress, status, errorMessage);
-            if (m_ReadDataFailureEventHandler != null)
+            if (_readDataFailureEventHandler != null)
             {
                 ReadDataFailureEventArgs loadDataFailureEventArgs = ReadDataFailureEventArgs.Create(assetAddress, appendErrorMessage, userData);
-                m_ReadDataFailureEventHandler(this, loadDataFailureEventArgs);
+                _readDataFailureEventHandler(this, loadDataFailureEventArgs);
                 ReferencePool.Release(loadDataFailureEventArgs);
                 return;
             }

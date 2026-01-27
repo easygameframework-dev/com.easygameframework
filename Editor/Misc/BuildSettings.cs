@@ -19,17 +19,17 @@ namespace EasyGameFramework.Editor
     /// </summary>
     internal static class BuildSettings
     {
-        private static readonly string s_ConfigurationPath = null;
-        private static readonly List<string> s_DefaultSceneNames = new List<string>();
-        private static readonly List<string> s_SearchScenePaths = new List<string>();
+        private static readonly string s_configurationPath = null;
+        private static readonly List<string> s_defaultSceneNames = new List<string>();
+        private static readonly List<string> s_searchScenePaths = new List<string>();
 
         static BuildSettings()
         {
-            s_ConfigurationPath = Type.GetConfigurationPath<BuildSettingsConfigPathAttribute>() ?? Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameFramework/Configs/BuildSettings.xml"));
-            s_DefaultSceneNames.Clear();
-            s_SearchScenePaths.Clear();
+            s_configurationPath = Type.GetConfigurationPath<BuildSettingsConfigPathAttribute>() ?? Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameFramework/Configs/BuildSettings.xml"));
+            s_defaultSceneNames.Clear();
+            s_searchScenePaths.Clear();
 
-            if (!File.Exists(s_ConfigurationPath))
+            if (!File.Exists(s_configurationPath))
             {
                 return;
             }
@@ -37,7 +37,7 @@ namespace EasyGameFramework.Editor
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(s_ConfigurationPath);
+                xmlDocument.Load(s_configurationPath);
                 XmlNode xmlRoot = xmlDocument.SelectSingleNode("UnityGameFramework");
                 XmlNode xmlBuildSettings = xmlRoot.SelectSingleNode("BuildSettings");
                 XmlNode xmlDefaultScenes = xmlBuildSettings.SelectSingleNode("DefaultScenes");
@@ -56,7 +56,7 @@ namespace EasyGameFramework.Editor
                     }
 
                     string defaultSceneName = xmlNode.Attributes.GetNamedItem("Name").Value;
-                    s_DefaultSceneNames.Add(defaultSceneName);
+                    s_defaultSceneNames.Add(defaultSceneName);
                 }
 
                 xmlNodeList = xmlSearchScenePaths.ChildNodes;
@@ -69,7 +69,7 @@ namespace EasyGameFramework.Editor
                     }
 
                     string searchScenePath = xmlNode.Attributes.GetNamedItem("Path").Value;
-                    s_SearchScenePaths.Add(searchScenePath);
+                    s_searchScenePaths.Add(searchScenePath);
                 }
             }
             catch
@@ -84,7 +84,7 @@ namespace EasyGameFramework.Editor
         public static void DefaultScenes()
         {
             HashSet<string> sceneNames = new HashSet<string>();
-            foreach (string sceneName in s_DefaultSceneNames)
+            foreach (string sceneName in s_defaultSceneNames)
             {
                 sceneNames.Add(sceneName);
             }
@@ -107,12 +107,12 @@ namespace EasyGameFramework.Editor
         public static void AllScenes()
         {
             HashSet<string> sceneNames = new HashSet<string>();
-            foreach (string sceneName in s_DefaultSceneNames)
+            foreach (string sceneName in s_defaultSceneNames)
             {
                 sceneNames.Add(sceneName);
             }
 
-            string[] sceneGuids = AssetDatabase.FindAssets("t:Scene", s_SearchScenePaths.ToArray());
+            string[] sceneGuids = AssetDatabase.FindAssets("t:Scene", s_searchScenePaths.ToArray());
             foreach (string sceneGuid in sceneGuids)
             {
                 string sceneName = AssetDatabase.GUIDToAssetPath(sceneGuid);

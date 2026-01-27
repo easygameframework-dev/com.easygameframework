@@ -16,13 +16,13 @@ namespace EasyGameFramework.Core
     [StructLayout(LayoutKind.Auto)]
     public struct ReferencePoolInfo
     {
-        private readonly Type m_Type;
-        private readonly int m_UnusedReferenceCount;
-        private readonly int m_UsingReferenceCount;
-        private readonly int m_AcquireReferenceCount;
-        private readonly int m_ReleaseReferenceCount;
-        private readonly int m_AddReferenceCount;
-        private readonly int m_RemoveReferenceCount;
+        private readonly Type _type;
+        private readonly int _unusedReferenceCount;
+        private readonly int _usingReferenceCount;
+        private readonly int _acquireReferenceCount;
+        private readonly int _releaseReferenceCount;
+        private readonly int _addReferenceCount;
+        private readonly int _removeReferenceCount;
 
         /// <summary>
         /// 初始化引用池信息的新实例。
@@ -36,13 +36,13 @@ namespace EasyGameFramework.Core
         /// <param name="removeReferenceCount">移除引用数量。</param>
         public ReferencePoolInfo(Type type, int unusedReferenceCount, int usingReferenceCount, int acquireReferenceCount, int releaseReferenceCount, int addReferenceCount, int removeReferenceCount)
         {
-            m_Type = type;
-            m_UnusedReferenceCount = unusedReferenceCount;
-            m_UsingReferenceCount = usingReferenceCount;
-            m_AcquireReferenceCount = acquireReferenceCount;
-            m_ReleaseReferenceCount = releaseReferenceCount;
-            m_AddReferenceCount = addReferenceCount;
-            m_RemoveReferenceCount = removeReferenceCount;
+            _type = type;
+            _unusedReferenceCount = unusedReferenceCount;
+            _usingReferenceCount = usingReferenceCount;
+            _acquireReferenceCount = acquireReferenceCount;
+            _releaseReferenceCount = releaseReferenceCount;
+            _addReferenceCount = addReferenceCount;
+            _removeReferenceCount = removeReferenceCount;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Type;
+                return _type;
             }
         }
 
@@ -63,7 +63,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_UnusedReferenceCount;
+                return _unusedReferenceCount;
             }
         }
 
@@ -74,7 +74,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_UsingReferenceCount;
+                return _usingReferenceCount;
             }
         }
 
@@ -85,7 +85,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_AcquireReferenceCount;
+                return _acquireReferenceCount;
             }
         }
 
@@ -96,7 +96,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_ReleaseReferenceCount;
+                return _releaseReferenceCount;
             }
         }
 
@@ -107,7 +107,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_AddReferenceCount;
+                return _addReferenceCount;
             }
         }
 
@@ -118,7 +118,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_RemoveReferenceCount;
+                return _removeReferenceCount;
             }
         }
     }

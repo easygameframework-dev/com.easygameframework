@@ -19,9 +19,9 @@ namespace EasyGameFramework.Core.FileSystem
         {
             public static readonly BlockData Empty = new BlockData(0, 0);
 
-            private readonly int m_StringIndex;
-            private readonly int m_ClusterIndex;
-            private readonly int m_Length;
+            private readonly int _stringIndex;
+            private readonly int _clusterIndex;
+            private readonly int _length;
 
             public BlockData(int clusterIndex, int length)
                 : this(-1, clusterIndex, length)
@@ -30,16 +30,16 @@ namespace EasyGameFramework.Core.FileSystem
 
             public BlockData(int stringIndex, int clusterIndex, int length)
             {
-                m_StringIndex = stringIndex;
-                m_ClusterIndex = clusterIndex;
-                m_Length = length;
+                _stringIndex = stringIndex;
+                _clusterIndex = clusterIndex;
+                _length = length;
             }
 
             public bool Using
             {
                 get
                 {
-                    return m_StringIndex >= 0;
+                    return _stringIndex >= 0;
                 }
             }
 
@@ -47,7 +47,7 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 get
                 {
-                    return m_StringIndex;
+                    return _stringIndex;
                 }
             }
 
@@ -55,7 +55,7 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 get
                 {
-                    return m_ClusterIndex;
+                    return _clusterIndex;
                 }
             }
 
@@ -63,13 +63,13 @@ namespace EasyGameFramework.Core.FileSystem
             {
                 get
                 {
-                    return m_Length;
+                    return _length;
                 }
             }
 
             public BlockData Free()
             {
-                return new BlockData(m_ClusterIndex, (int)GetUpBoundClusterOffset(m_Length));
+                return new BlockData(_clusterIndex, (int)GetUpBoundClusterOffset(_length));
             }
         }
     }

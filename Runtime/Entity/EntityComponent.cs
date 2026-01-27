@@ -24,29 +24,29 @@ namespace EasyGameFramework
     {
         private const int DefaultPriority = 0;
 
-        private IEntityManager m_EntityManager = null;
-        private EventComponent m_EventComponent = null;
-        private IResourceManager m_ResourceManager = null;
+        private IEntityManager _entityManager = null;
+        private EventComponent _eventComponent = null;
+        private IResourceManager _resourceManager = null;
 
-        private readonly List<IEntity> m_InternalEntityResults = new List<IEntity>();
-
-        [SerializeField]
-        private Transform m_InstanceRoot = null;
+        private readonly List<IEntity> _internalEntityResults = new List<IEntity>();
 
         [SerializeField]
-        private string m_EntityHelperTypeName = "UnityGameFramework.Runtime.DefaultEntityHelper";
+        private Transform _instanceRoot = null;
 
         [SerializeField]
-        private EntityHelperBase m_CustomEntityHelper = null;
+        private string _entityHelperTypeName = "UnityGameFramework.Runtime.DefaultEntityHelper";
 
         [SerializeField]
-        private string m_EntityGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultEntityGroupHelper";
+        private EntityHelperBase _customEntityHelper = null;
 
         [SerializeField]
-        private EntityGroupHelperBase m_CustomEntityGroupHelper = null;
+        private string _entityGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultEntityGroupHelper";
 
         [SerializeField]
-        private EntityGroup[] m_EntityGroups = null;
+        private EntityGroupHelperBase _customEntityGroupHelper = null;
+
+        [SerializeField]
+        private EntityGroup[] _entityGroups = null;
 
         /// <summary>
         /// 获取实体数量。
@@ -55,7 +55,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_EntityManager.EntityCount;
+                return _entityManager.EntityCount;
             }
         }
 
@@ -66,7 +66,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_EntityManager.EntityGroupCount;
+                return _entityManager.EntityGroupCount;
             }
         }
 
@@ -77,17 +77,17 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_EntityManager = GameFrameworkEntry.GetModule<IEntityManager>();
-            if (m_EntityManager == null)
+            _entityManager = GameFrameworkEntry.GetModule<IEntityManager>();
+            if (_entityManager == null)
             {
                 Log.Fatal("Entity manager is invalid.");
                 return;
             }
 
-            m_EntityManager.ShowEntitySuccess += OnShowEntitySuccess;
-            m_EntityManager.ShowEntityFailure += OnShowEntityFailure;
+            _entityManager.ShowEntitySuccess += OnShowEntitySuccess;
+            _entityManager.ShowEntityFailure += OnShowEntityFailure;
 
-            m_EntityManager.HideEntityComplete += OnHideEntityComplete;
+            _entityManager.HideEntityComplete += OnHideEntityComplete;
         }
 
         private void Start()
@@ -99,19 +99,19 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            m_ResourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
-            m_EntityManager.SetResourceManager(m_ResourceManager);
+            _resourceManager = GameFrameworkEntry.GetModule<IResourceManager>();
+            _entityManager.SetResourceManager(_resourceManager);
 
-            m_EntityManager.SetObjectPoolManager(GameFrameworkEntry.GetModule<IObjectPoolManager>());
+            _entityManager.SetObjectPoolManager(GameFrameworkEntry.GetModule<IObjectPoolManager>());
 
-            EntityHelperBase entityHelper = Helper.CreateHelper(m_EntityHelperTypeName, m_CustomEntityHelper);
+            EntityHelperBase entityHelper = Helper.CreateHelper(_entityHelperTypeName, _customEntityHelper);
             if (entityHelper == null)
             {
                 Log.Error("Can not create entity helper.");
@@ -123,20 +123,20 @@ namespace EasyGameFramework
             transform.SetParent(this.transform);
             transform.localScale = Vector3.one;
 
-            m_EntityManager.SetEntityHelper(entityHelper);
+            _entityManager.SetEntityHelper(entityHelper);
 
-            if (m_InstanceRoot == null)
+            if (_instanceRoot == null)
             {
-                m_InstanceRoot = new GameObject("Entity Instances").transform;
-                m_InstanceRoot.SetParent(gameObject.transform);
-                m_InstanceRoot.localScale = Vector3.one;
+                _instanceRoot = new GameObject("Entity Instances").transform;
+                _instanceRoot.SetParent(gameObject.transform);
+                _instanceRoot.localScale = Vector3.one;
             }
 
-            for (int i = 0; i < m_EntityGroups.Length; i++)
+            for (int i = 0; i < _entityGroups.Length; i++)
             {
-                if (!AddEntityGroup(m_EntityGroups[i].Name, m_EntityGroups[i].InstanceAutoReleaseInterval, m_EntityGroups[i].InstanceCapacity, m_EntityGroups[i].InstanceExpireTime, m_EntityGroups[i].InstancePriority))
+                if (!AddEntityGroup(_entityGroups[i].Name, _entityGroups[i].InstanceAutoReleaseInterval, _entityGroups[i].InstanceCapacity, _entityGroups[i].InstanceExpireTime, _entityGroups[i].InstancePriority))
                 {
-                    Log.Warning("Add entity group '{0}' failure.", m_EntityGroups[i].Name);
+                    Log.Warning("Add entity group '{0}' failure.", _entityGroups[i].Name);
                     continue;
                 }
             }
@@ -149,7 +149,7 @@ namespace EasyGameFramework
         /// <returns>是否存在实体组。</returns>
         public bool HasEntityGroup(string entityGroupName)
         {
-            return m_EntityManager.HasEntityGroup(entityGroupName);
+            return _entityManager.HasEntityGroup(entityGroupName);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace EasyGameFramework
         /// <returns>要获取的实体组。</returns>
         public IEntityGroup GetEntityGroup(string entityGroupName)
         {
-            return m_EntityManager.GetEntityGroup(entityGroupName);
+            return _entityManager.GetEntityGroup(entityGroupName);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace EasyGameFramework
         /// <returns>所有实体组。</returns>
         public IEntityGroup[] GetAllEntityGroups()
         {
-            return m_EntityManager.GetAllEntityGroups();
+            return _entityManager.GetAllEntityGroups();
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace EasyGameFramework
         /// <param name="results">所有实体组。</param>
         public void GetAllEntityGroups(List<IEntityGroup> results)
         {
-            m_EntityManager.GetAllEntityGroups(results);
+            _entityManager.GetAllEntityGroups(results);
         }
 
         /// <summary>
@@ -191,12 +191,12 @@ namespace EasyGameFramework
         /// <returns>是否增加实体组成功。</returns>
         public bool AddEntityGroup(string entityGroupName, float instanceAutoReleaseInterval, int instanceCapacity, float instanceExpireTime, int instancePriority)
         {
-            if (m_EntityManager.HasEntityGroup(entityGroupName))
+            if (_entityManager.HasEntityGroup(entityGroupName))
             {
                 return false;
             }
 
-            EntityGroupHelperBase entityGroupHelper = Helper.CreateHelper(m_EntityGroupHelperTypeName, m_CustomEntityGroupHelper, EntityGroupCount);
+            EntityGroupHelperBase entityGroupHelper = Helper.CreateHelper(_entityGroupHelperTypeName, _customEntityGroupHelper, EntityGroupCount);
             if (entityGroupHelper == null)
             {
                 Log.Error("Can not create entity group helper.");
@@ -205,10 +205,10 @@ namespace EasyGameFramework
 
             entityGroupHelper.name = Utility.Text.Format("Entity Group - {0}", entityGroupName);
             Transform transform = entityGroupHelper.transform;
-            transform.SetParent(m_InstanceRoot);
+            transform.SetParent(_instanceRoot);
             transform.localScale = Vector3.one;
 
-            return m_EntityManager.AddEntityGroup(entityGroupName, instanceAutoReleaseInterval, instanceCapacity, instanceExpireTime, instancePriority, entityGroupHelper);
+            return _entityManager.AddEntityGroup(entityGroupName, instanceAutoReleaseInterval, instanceCapacity, instanceExpireTime, instancePriority, entityGroupHelper);
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace EasyGameFramework
         /// <returns>是否存在实体。</returns>
         public bool HasEntity(int entityId)
         {
-            return m_EntityManager.HasEntity(entityId);
+            return _entityManager.HasEntity(entityId);
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace EasyGameFramework
         /// <returns>是否存在实体。</returns>
         public bool HasEntity(AssetAddress entityAssetAddress)
         {
-            return m_EntityManager.HasEntity(entityAssetAddress);
+            return _entityManager.HasEntity(entityAssetAddress);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace EasyGameFramework
         /// <returns>实体。</returns>
         public Entity GetEntity(int entityId)
         {
-            return (Entity)m_EntityManager.GetEntity(entityId);
+            return (Entity)_entityManager.GetEntity(entityId);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace EasyGameFramework
         /// <returns>要获取的实体。</returns>
         public Entity GetEntity(AssetAddress entityAssetAddress)
         {
-            return (Entity)m_EntityManager.GetEntity(entityAssetAddress);
+            return (Entity)_entityManager.GetEntity(entityAssetAddress);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace EasyGameFramework
         /// <returns>要获取的实体。</returns>
         public Entity[] GetEntities(AssetAddress entityAssetAddress)
         {
-            IEntity[] entities = m_EntityManager.GetEntities(entityAssetAddress);
+            IEntity[] entities = _entityManager.GetEntities(entityAssetAddress);
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
@@ -282,8 +282,8 @@ namespace EasyGameFramework
             }
 
             results.Clear();
-            m_EntityManager.GetEntities(entityAssetAddress, m_InternalEntityResults);
-            foreach (IEntity entity in m_InternalEntityResults)
+            _entityManager.GetEntities(entityAssetAddress, _internalEntityResults);
+            foreach (IEntity entity in _internalEntityResults)
             {
                 results.Add((Entity)entity);
             }
@@ -295,7 +295,7 @@ namespace EasyGameFramework
         /// <returns>所有已加载的实体。</returns>
         public Entity[] GetAllLoadedEntities()
         {
-            IEntity[] entities = m_EntityManager.GetAllLoadedEntities();
+            IEntity[] entities = _entityManager.GetAllLoadedEntities();
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
@@ -318,8 +318,8 @@ namespace EasyGameFramework
             }
 
             results.Clear();
-            m_EntityManager.GetAllLoadedEntities(m_InternalEntityResults);
-            foreach (IEntity entity in m_InternalEntityResults)
+            _entityManager.GetAllLoadedEntities(_internalEntityResults);
+            foreach (IEntity entity in _internalEntityResults)
             {
                 results.Add((Entity)entity);
             }
@@ -331,7 +331,7 @@ namespace EasyGameFramework
         /// <returns>所有正在加载实体的编号。</returns>
         public int[] GetAllLoadingEntityIds()
         {
-            return m_EntityManager.GetAllLoadingEntityIds();
+            return _entityManager.GetAllLoadingEntityIds();
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace EasyGameFramework
         /// <param name="results">所有正在加载实体的编号。</param>
         public void GetAllLoadingEntityIds(List<int> results)
         {
-            m_EntityManager.GetAllLoadingEntityIds(results);
+            _entityManager.GetAllLoadingEntityIds(results);
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace EasyGameFramework
         /// <returns>是否正在加载实体。</returns>
         public bool IsLoadingEntity(int entityId)
         {
-            return m_EntityManager.IsLoadingEntity(entityId);
+            return _entityManager.IsLoadingEntity(entityId);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace EasyGameFramework
         /// <returns>实体是否合法。</returns>
         public bool IsValidEntity(Entity entity)
         {
-            return m_EntityManager.IsValidEntity(entity);
+            return _entityManager.IsValidEntity(entity);
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_EntityManager.ShowEntity(entityId, entityAssetAddress, entityGroupName, customPriority, ShowEntityInfo.Create(entityLogicType, userData));
+            _entityManager.ShowEntity(entityId, entityAssetAddress, entityGroupName, customPriority, ShowEntityInfo.Create(entityLogicType, userData));
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace EasyGameFramework
         /// <param name="entityId">实体编号。</param>
         public void HideEntity(int entityId)
         {
-            m_EntityManager.HideEntity(entityId);
+            _entityManager.HideEntity(entityId);
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void HideEntity(int entityId, object userData)
         {
-            m_EntityManager.HideEntity(entityId, userData);
+            _entityManager.HideEntity(entityId, userData);
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace EasyGameFramework
         /// <param name="entity">实体。</param>
         public void HideEntity(Entity entity)
         {
-            m_EntityManager.HideEntity(entity);
+            _entityManager.HideEntity(entity);
         }
 
         /// <summary>
@@ -418,7 +418,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void HideEntity(Entity entity, object userData)
         {
-            m_EntityManager.HideEntity(entity, userData);
+            _entityManager.HideEntity(entity, userData);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace EasyGameFramework
         /// </summary>
         public void HideAllLoadedEntities()
         {
-            m_EntityManager.HideAllLoadedEntities();
+            _entityManager.HideAllLoadedEntities();
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void HideAllLoadedEntities(object userData)
         {
-            m_EntityManager.HideAllLoadedEntities(userData);
+            _entityManager.HideAllLoadedEntities(userData);
         }
 
         /// <summary>
@@ -443,7 +443,7 @@ namespace EasyGameFramework
         /// </summary>
         public void HideAllLoadingEntities()
         {
-            m_EntityManager.HideAllLoadingEntities();
+            _entityManager.HideAllLoadingEntities();
         }
 
         /// <summary>
@@ -453,7 +453,7 @@ namespace EasyGameFramework
         /// <returns>子实体的父实体。</returns>
         public Entity GetParentEntity(int childEntityId)
         {
-            return (Entity)m_EntityManager.GetParentEntity(childEntityId);
+            return (Entity)_entityManager.GetParentEntity(childEntityId);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace EasyGameFramework
         /// <returns>子实体的父实体。</returns>
         public Entity GetParentEntity(Entity childEntity)
         {
-            return (Entity)m_EntityManager.GetParentEntity(childEntity);
+            return (Entity)_entityManager.GetParentEntity(childEntity);
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace EasyGameFramework
         /// <returns>子实体数量。</returns>
         public int GetChildEntityCount(int parentEntityId)
         {
-            return m_EntityManager.GetChildEntityCount(parentEntityId);
+            return _entityManager.GetChildEntityCount(parentEntityId);
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace EasyGameFramework
         /// <returns>子实体。</returns>
         public Entity GetChildEntity(int parentEntityId)
         {
-            return (Entity)m_EntityManager.GetChildEntity(parentEntityId);
+            return (Entity)_entityManager.GetChildEntity(parentEntityId);
         }
 
         /// <summary>
@@ -493,7 +493,7 @@ namespace EasyGameFramework
         /// <returns>子实体。</returns>
         public Entity GetChildEntity(IEntity parentEntity)
         {
-            return (Entity)m_EntityManager.GetChildEntity(parentEntity);
+            return (Entity)_entityManager.GetChildEntity(parentEntity);
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace EasyGameFramework
         /// <returns>所有子实体。</returns>
         public Entity[] GetChildEntities(int parentEntityId)
         {
-            IEntity[] entities = m_EntityManager.GetChildEntities(parentEntityId);
+            IEntity[] entities = _entityManager.GetChildEntities(parentEntityId);
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
@@ -527,8 +527,8 @@ namespace EasyGameFramework
             }
 
             results.Clear();
-            m_EntityManager.GetChildEntities(parentEntityId, m_InternalEntityResults);
-            foreach (IEntity entity in m_InternalEntityResults)
+            _entityManager.GetChildEntities(parentEntityId, _internalEntityResults);
+            foreach (IEntity entity in _internalEntityResults)
             {
                 results.Add((Entity)entity);
             }
@@ -541,7 +541,7 @@ namespace EasyGameFramework
         /// <returns>所有子实体。</returns>
         public Entity[] GetChildEntities(Entity parentEntity)
         {
-            IEntity[] entities = m_EntityManager.GetChildEntities(parentEntity);
+            IEntity[] entities = _entityManager.GetChildEntities(parentEntity);
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
@@ -565,8 +565,8 @@ namespace EasyGameFramework
             }
 
             results.Clear();
-            m_EntityManager.GetChildEntities(parentEntity, m_InternalEntityResults);
-            foreach (IEntity entity in m_InternalEntityResults)
+            _entityManager.GetChildEntities(parentEntity, _internalEntityResults);
+            foreach (IEntity entity in _internalEntityResults)
             {
                 results.Add((Entity)entity);
             }
@@ -881,7 +881,7 @@ namespace EasyGameFramework
                 parentTransform = parentEntity.Logic.CachedTransform;
             }
 
-            m_EntityManager.AttachEntity(childEntity, parentEntity, AttachEntityInfo.Create(parentTransform, userData));
+            _entityManager.AttachEntity(childEntity, parentEntity, AttachEntityInfo.Create(parentTransform, userData));
         }
 
         /// <summary>
@@ -890,7 +890,7 @@ namespace EasyGameFramework
         /// <param name="childEntityId">要解除的子实体的实体编号。</param>
         public void DetachEntity(int childEntityId)
         {
-            m_EntityManager.DetachEntity(childEntityId);
+            _entityManager.DetachEntity(childEntityId);
         }
 
         /// <summary>
@@ -900,7 +900,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void DetachEntity(int childEntityId, object userData)
         {
-            m_EntityManager.DetachEntity(childEntityId, userData);
+            _entityManager.DetachEntity(childEntityId, userData);
         }
 
         /// <summary>
@@ -909,7 +909,7 @@ namespace EasyGameFramework
         /// <param name="childEntity">要解除的子实体。</param>
         public void DetachEntity(Entity childEntity)
         {
-            m_EntityManager.DetachEntity(childEntity);
+            _entityManager.DetachEntity(childEntity);
         }
 
         /// <summary>
@@ -919,7 +919,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void DetachEntity(Entity childEntity, object userData)
         {
-            m_EntityManager.DetachEntity(childEntity, userData);
+            _entityManager.DetachEntity(childEntity, userData);
         }
 
         /// <summary>
@@ -928,7 +928,7 @@ namespace EasyGameFramework
         /// <param name="parentEntityId">被解除的父实体的实体编号。</param>
         public void DetachChildEntities(int parentEntityId)
         {
-            m_EntityManager.DetachChildEntities(parentEntityId);
+            _entityManager.DetachChildEntities(parentEntityId);
         }
 
         /// <summary>
@@ -938,7 +938,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void DetachChildEntities(int parentEntityId, object userData)
         {
-            m_EntityManager.DetachChildEntities(parentEntityId, userData);
+            _entityManager.DetachChildEntities(parentEntityId, userData);
         }
 
         /// <summary>
@@ -947,7 +947,7 @@ namespace EasyGameFramework
         /// <param name="parentEntity">被解除的父实体。</param>
         public void DetachChildEntities(Entity parentEntity)
         {
-            m_EntityManager.DetachChildEntities(parentEntity);
+            _entityManager.DetachChildEntities(parentEntity);
         }
 
         /// <summary>
@@ -957,7 +957,7 @@ namespace EasyGameFramework
         /// <param name="userData">用户自定义数据。</param>
         public void DetachChildEntities(Entity parentEntity, object userData)
         {
-            m_EntityManager.DetachChildEntities(parentEntity, userData);
+            _entityManager.DetachChildEntities(parentEntity, userData);
         }
 
         /// <summary>
@@ -1008,18 +1008,18 @@ namespace EasyGameFramework
 
         private void OnShowEntitySuccess(object sender, EasyGameFramework.Core.Entity.ShowEntitySuccessEventArgs e)
         {
-            m_EventComponent.Fire(this, ShowEntitySuccessEventArgs.Create(e));
+            _eventComponent.Fire(this, ShowEntitySuccessEventArgs.Create(e));
         }
 
         private void OnShowEntityFailure(object sender, EasyGameFramework.Core.Entity.ShowEntityFailureEventArgs e)
         {
             Log.Warning("Show entity failure, entity id '{0}', asset address '{1}', entity group name '{2}', error message '{3}'.", e.EntityId, e.EntityAssetAddress, e.EntityGroupName, e.ErrorMessage);
-            m_EventComponent.Fire(this, ShowEntityFailureEventArgs.Create(e));
+            _eventComponent.Fire(this, ShowEntityFailureEventArgs.Create(e));
         }
 
         private void OnHideEntityComplete(object sender, EasyGameFramework.Core.Entity.HideEntityCompleteEventArgs e)
         {
-            m_EventComponent.Fire(this, HideEntityCompleteEventArgs.Create(e));
+            _eventComponent.Fire(this, HideEntityCompleteEventArgs.Create(e));
         }
     }
 }

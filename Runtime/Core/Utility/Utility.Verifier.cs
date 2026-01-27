@@ -18,8 +18,8 @@ namespace EasyGameFramework.Core
         public static partial class Verifier
         {
             private const int CachedBytesLength = 0x1000;
-            private static readonly byte[] s_CachedBytes = new byte[CachedBytesLength];
-            private static readonly Crc32 s_Algorithm = new Crc32();
+            private static readonly byte[] s_cachedBytes = new byte[CachedBytesLength];
+            private static readonly Crc32 s_algorithm = new Crc32();
 
             /// <summary>
             /// 计算二进制流的 CRC32。
@@ -55,9 +55,9 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Offset or length is invalid.");
                 }
 
-                s_Algorithm.HashCore(bytes, offset, length);
-                int result = (int)s_Algorithm.HashFinal();
-                s_Algorithm.Initialize();
+                s_algorithm.HashCore(bytes, offset, length);
+                int result = (int)s_algorithm.HashFinal();
+                s_algorithm.Initialize();
                 return result;
             }
 
@@ -75,10 +75,10 @@ namespace EasyGameFramework.Core
 
                 while (true)
                 {
-                    int bytesRead = stream.Read(s_CachedBytes, 0, CachedBytesLength);
+                    int bytesRead = stream.Read(s_cachedBytes, 0, CachedBytesLength);
                     if (bytesRead > 0)
                     {
-                        s_Algorithm.HashCore(s_CachedBytes, 0, bytesRead);
+                        s_algorithm.HashCore(s_cachedBytes, 0, bytesRead);
                     }
                     else
                     {
@@ -86,9 +86,9 @@ namespace EasyGameFramework.Core
                     }
                 }
 
-                int result = (int)s_Algorithm.HashFinal();
-                s_Algorithm.Initialize();
-                Array.Clear(s_CachedBytes, 0, CachedBytesLength);
+                int result = (int)s_algorithm.HashFinal();
+                s_algorithm.Initialize();
+                Array.Clear(s_cachedBytes, 0, CachedBytesLength);
                 return result;
             }
 
@@ -163,21 +163,21 @@ namespace EasyGameFramework.Core
                 int codeIndex = 0;
                 while (true)
                 {
-                    int bytesRead = stream.Read(s_CachedBytes, 0, CachedBytesLength);
+                    int bytesRead = stream.Read(s_cachedBytes, 0, CachedBytesLength);
                     if (bytesRead > 0)
                     {
                         if (length > 0)
                         {
                             for (int i = 0; i < bytesRead && i < length; i++)
                             {
-                                s_CachedBytes[i] ^= code[codeIndex++];
+                                s_cachedBytes[i] ^= code[codeIndex++];
                                 codeIndex %= codeLength;
                             }
 
                             length -= bytesRead;
                         }
 
-                        s_Algorithm.HashCore(s_CachedBytes, 0, bytesRead);
+                        s_algorithm.HashCore(s_cachedBytes, 0, bytesRead);
                     }
                     else
                     {
@@ -185,9 +185,9 @@ namespace EasyGameFramework.Core
                     }
                 }
 
-                int result = (int)s_Algorithm.HashFinal();
-                s_Algorithm.Initialize();
-                Array.Clear(s_CachedBytes, 0, CachedBytesLength);
+                int result = (int)s_algorithm.HashFinal();
+                s_algorithm.Initialize();
+                Array.Clear(s_cachedBytes, 0, CachedBytesLength);
                 return result;
             }
         }

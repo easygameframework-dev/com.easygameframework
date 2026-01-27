@@ -18,8 +18,8 @@ namespace EasyGameFramework.Core
     [StructLayout(LayoutKind.Auto)]
     public struct GameFrameworkLinkedListRange<T> : IEnumerable<T>, IEnumerable
     {
-        private readonly LinkedListNode<T> m_First;
-        private readonly LinkedListNode<T> m_Terminal;
+        private readonly LinkedListNode<T> _first;
+        private readonly LinkedListNode<T> _terminal;
 
         /// <summary>
         /// 初始化游戏框架链表范围的新实例。
@@ -33,8 +33,8 @@ namespace EasyGameFramework.Core
                 throw new GameFrameworkException("Range is invalid.");
             }
 
-            m_First = first;
-            m_Terminal = terminal;
+            _first = first;
+            _terminal = terminal;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_First != null && m_Terminal != null && m_First != m_Terminal;
+                return _first != null && _terminal != null && _first != _terminal;
             }
         }
 
@@ -55,7 +55,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_First;
+                return _first;
             }
         }
 
@@ -66,7 +66,7 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                return m_Terminal;
+                return _terminal;
             }
         }
 
@@ -83,7 +83,7 @@ namespace EasyGameFramework.Core
                 }
 
                 int count = 0;
-                for (LinkedListNode<T> current = m_First; current != null && current != m_Terminal; current = current.Next)
+                for (LinkedListNode<T> current = _first; current != null && current != _terminal; current = current.Next)
                 {
                     count++;
                 }
@@ -99,7 +99,7 @@ namespace EasyGameFramework.Core
         /// <returns>是否包含指定值。</returns>
         public bool Contains(T value)
         {
-            for (LinkedListNode<T> current = m_First; current != null && current != m_Terminal; current = current.Next)
+            for (LinkedListNode<T> current = _first; current != null && current != _terminal; current = current.Next)
             {
                 if (current.Value.Equals(value))
                 {
@@ -143,9 +143,9 @@ namespace EasyGameFramework.Core
         [StructLayout(LayoutKind.Auto)]
         public struct Enumerator : IEnumerator<T>, IEnumerator
         {
-            private readonly GameFrameworkLinkedListRange<T> m_GameFrameworkLinkedListRange;
-            private LinkedListNode<T> m_Current;
-            private T m_CurrentValue;
+            private readonly GameFrameworkLinkedListRange<T> _gameFrameworkLinkedListRange;
+            private LinkedListNode<T> _current;
+            private T _currentValue;
 
             internal Enumerator(GameFrameworkLinkedListRange<T> range)
             {
@@ -154,9 +154,9 @@ namespace EasyGameFramework.Core
                     throw new GameFrameworkException("Range is invalid.");
                 }
 
-                m_GameFrameworkLinkedListRange = range;
-                m_Current = m_GameFrameworkLinkedListRange.m_First;
-                m_CurrentValue = default(T);
+                _gameFrameworkLinkedListRange = range;
+                _current = _gameFrameworkLinkedListRange._first;
+                _currentValue = default(T);
             }
 
             /// <summary>
@@ -166,7 +166,7 @@ namespace EasyGameFramework.Core
             {
                 get
                 {
-                    return m_CurrentValue;
+                    return _currentValue;
                 }
             }
 
@@ -177,7 +177,7 @@ namespace EasyGameFramework.Core
             {
                 get
                 {
-                    return m_CurrentValue;
+                    return _currentValue;
                 }
             }
 
@@ -194,13 +194,13 @@ namespace EasyGameFramework.Core
             /// <returns>返回下一个结点。</returns>
             public bool MoveNext()
             {
-                if (m_Current == null || m_Current == m_GameFrameworkLinkedListRange.m_Terminal)
+                if (_current == null || _current == _gameFrameworkLinkedListRange._terminal)
                 {
                     return false;
                 }
 
-                m_CurrentValue = m_Current.Value;
-                m_Current = m_Current.Next;
+                _currentValue = _current.Value;
+                _current = _current.Next;
                 return true;
             }
 
@@ -209,8 +209,8 @@ namespace EasyGameFramework.Core
             /// </summary>
             void IEnumerator.Reset()
             {
-                m_Current = m_GameFrameworkLinkedListRange.m_First;
-                m_CurrentValue = default(T);
+                _current = _gameFrameworkLinkedListRange._first;
+                _currentValue = default(T);
             }
         }
     }

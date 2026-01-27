@@ -16,25 +16,25 @@ namespace EasyGameFramework
         private sealed class SoundGroup
         {
             [SerializeField]
-            private string m_Name = null;
+            private string _name = null;
 
             [SerializeField]
-            private bool m_AvoidBeingReplacedBySamePriority = false;
+            private bool _avoidBeingReplacedBySamePriority = false;
 
             [SerializeField]
-            private bool m_Mute = false;
+            private bool _mute = false;
 
             [SerializeField, Range(0f, 1f)]
-            private float m_Volume = 1f;
+            private float _volume = 1f;
 
             [SerializeField]
-            private int m_AgentHelperCount = 1;
+            private int _agentHelperCount = 1;
 
             public string Name
             {
                 get
                 {
-                    return m_Name;
+                    return _name;
                 }
             }
 
@@ -42,7 +42,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_AvoidBeingReplacedBySamePriority;
+                    return _avoidBeingReplacedBySamePriority;
                 }
             }
 
@@ -50,7 +50,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_Mute;
+                    return _mute;
                 }
             }
 
@@ -58,7 +58,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_Volume;
+                    return _volume;
                 }
             }
 
@@ -66,7 +66,7 @@ namespace EasyGameFramework
             {
                 get
                 {
-                    return m_AgentHelperCount;
+                    return _agentHelperCount;
                 }
             }
         }

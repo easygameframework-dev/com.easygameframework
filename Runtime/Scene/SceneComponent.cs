@@ -23,12 +23,12 @@ namespace EasyGameFramework
     [AddComponentMenu("Game Framework/Scene")]
     public sealed class SceneComponent : GameFrameworkComponent
     {
-        private ISceneManager m_SceneManager = null;
-        private EventComponent m_EventComponent = null;
-        private readonly Dictionary<AssetAddress, string> m_SceneAssetAddressToSceneName = new Dictionary<AssetAddress, string>();
-        private readonly Dictionary<AssetAddress, int> m_SceneOrder = new Dictionary<AssetAddress, int>();
-        private Camera m_MainCamera = null;
-        private Scene m_GameFrameworkScene = default(Scene);
+        private ISceneManager _sceneManager = null;
+        private EventComponent _eventComponent = null;
+        private readonly Dictionary<AssetAddress, string> _sceneAssetAddressToSceneName = new Dictionary<AssetAddress, string>();
+        private readonly Dictionary<AssetAddress, int> _sceneOrder = new Dictionary<AssetAddress, int>();
+        private Camera _mainCamera = null;
+        private Scene _gameFrameworkScene = default(Scene);
 
         /// <summary>
         /// 获取当前场景主摄像机。
@@ -37,7 +37,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_MainCamera;
+                return _mainCamera;
             }
         }
 
@@ -48,21 +48,21 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_SceneManager = GameFrameworkEntry.GetModule<ISceneManager>();
-            if (m_SceneManager == null)
+            _sceneManager = GameFrameworkEntry.GetModule<ISceneManager>();
+            if (_sceneManager == null)
             {
                 Log.Fatal("Scene manager is invalid.");
                 return;
             }
 
-            m_SceneManager.LoadSceneSuccess += OnLoadSceneSuccess;
-            m_SceneManager.LoadSceneFailure += OnLoadSceneFailure;
+            _sceneManager.LoadSceneSuccess += OnLoadSceneSuccess;
+            _sceneManager.LoadSceneFailure += OnLoadSceneFailure;
 
-            m_SceneManager.UnloadSceneSuccess += OnUnloadSceneSuccess;
-            m_SceneManager.UnloadSceneFailure += OnUnloadSceneFailure;
+            _sceneManager.UnloadSceneSuccess += OnUnloadSceneSuccess;
+            _sceneManager.UnloadSceneFailure += OnUnloadSceneFailure;
 
-            m_GameFrameworkScene = SceneManager.GetSceneAt(GameEntry.GameFrameworkSceneId);
-            if (!m_GameFrameworkScene.IsValid())
+            _gameFrameworkScene = SceneManager.GetSceneAt(GameEntry.GameFrameworkSceneId);
+            if (!_gameFrameworkScene.IsValid())
             {
                 Log.Fatal("Game Framework scene is invalid.");
                 return;
@@ -78,14 +78,14 @@ namespace EasyGameFramework
                 return;
             }
 
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            m_SceneManager.SetResourceManager(GameFrameworkEntry.GetModule<IResourceManager>());
+            _sceneManager.SetResourceManager(GameFrameworkEntry.GetModule<IResourceManager>());
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace EasyGameFramework
             //
             // return sceneName;
 
-            if (m_SceneAssetAddressToSceneName.TryGetValue(sceneAssetAddress, out var sceneName))
+            if (_sceneAssetAddressToSceneName.TryGetValue(sceneAssetAddress, out var sceneName))
             {
                 return sceneName;
             }
@@ -132,7 +132,7 @@ namespace EasyGameFramework
         /// <returns>场景是否已加载。</returns>
         public bool SceneIsLoaded(AssetAddress sceneAssetAddress)
         {
-            return m_SceneManager.SceneIsLoaded(sceneAssetAddress);
+            return _sceneManager.SceneIsLoaded(sceneAssetAddress);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace EasyGameFramework
         /// <returns>已加载场景的资源地址。</returns>
         public AssetAddress[] GetLoadedSceneAssetAddresses()
         {
-            return m_SceneManager.GetLoadedSceneAssetAddresses();
+            return _sceneManager.GetLoadedSceneAssetAddresses();
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace EasyGameFramework
         /// <returns>场景是否正在加载。</returns>
         public bool SceneIsLoading(AssetAddress sceneAssetAddress)
         {
-            return m_SceneManager.SceneIsLoading(sceneAssetAddress);
+            return _sceneManager.SceneIsLoading(sceneAssetAddress);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace EasyGameFramework
         /// <returns>正在加载场景的资源地址。</returns>
         public AssetAddress[] GetLoadingSceneAssetAddresses()
         {
-            return m_SceneManager.GetLoadingSceneAssetAddresses();
+            return _sceneManager.GetLoadingSceneAssetAddresses();
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace EasyGameFramework
         /// <returns>场景是否正在卸载。</returns>
         public bool SceneIsUnloading(AssetAddress sceneAssetAddress)
         {
-            return m_SceneManager.SceneIsUnloading(sceneAssetAddress);
+            return _sceneManager.SceneIsUnloading(sceneAssetAddress);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace EasyGameFramework
         /// <returns>正在卸载场景的资源地址。</returns>
         public AssetAddress[] GetUnloadingSceneAssetAddresses()
         {
-            return m_SceneManager.GetUnloadingSceneAssetAddresses();
+            return _sceneManager.GetUnloadingSceneAssetAddresses();
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace EasyGameFramework
             //     return false;
             // }
 
-            return m_SceneManager.HasScene(sceneAssetAddress);
+            return _sceneManager.HasScene(sceneAssetAddress);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace EasyGameFramework
             //     return;
             // }
 
-            m_SceneManager.LoadScene(sceneAssetAddress, customPriority, userData);
+            _sceneManager.LoadScene(sceneAssetAddress, customPriority, userData);
         }
 
         /// <summary>
@@ -246,8 +246,8 @@ namespace EasyGameFramework
             //     return;
             // }
 
-            m_SceneManager.UnloadScene(sceneAssetAddress, userData);
-            m_SceneOrder.Remove(sceneAssetAddress);
+            _sceneManager.UnloadScene(sceneAssetAddress, userData);
+            _sceneOrder.Remove(sceneAssetAddress);
         }
 
         /// <summary>
@@ -271,13 +271,13 @@ namespace EasyGameFramework
 
             if (SceneIsLoading(sceneAssetAddress))
             {
-                m_SceneOrder[sceneAssetAddress] = sceneOrder;
+                _sceneOrder[sceneAssetAddress] = sceneOrder;
                 return;
             }
 
             if (SceneIsLoaded(sceneAssetAddress))
             {
-                m_SceneOrder[sceneAssetAddress] = sceneOrder;
+                _sceneOrder[sceneAssetAddress] = sceneOrder;
                 RefreshSceneOrder();
                 return;
             }
@@ -290,16 +290,16 @@ namespace EasyGameFramework
         /// </summary>
         public void RefreshMainCamera()
         {
-            m_MainCamera = Camera.main;
+            _mainCamera = Camera.main;
         }
 
         private void RefreshSceneOrder()
         {
-            if (m_SceneOrder.Count > 0)
+            if (_sceneOrder.Count > 0)
             {
                 AssetAddress maxSceneName = AssetAddress.Empty;
                 int maxSceneOrder = 0;
-                foreach (KeyValuePair<AssetAddress, int> sceneOrder in m_SceneOrder)
+                foreach (KeyValuePair<AssetAddress, int> sceneOrder in _sceneOrder)
                 {
                     if (SceneIsLoading(sceneOrder.Key))
                     {
@@ -322,7 +322,7 @@ namespace EasyGameFramework
 
                 if (maxSceneName == AssetAddress.Empty)
                 {
-                    SetActiveScene(m_GameFrameworkScene);
+                    SetActiveScene(_gameFrameworkScene);
                     return;
                 }
 
@@ -337,7 +337,7 @@ namespace EasyGameFramework
             }
             else
             {
-                SetActiveScene(m_GameFrameworkScene);
+                SetActiveScene(_gameFrameworkScene);
             }
         }
 
@@ -347,7 +347,7 @@ namespace EasyGameFramework
             if (lastActiveScene != activeScene)
             {
                 SceneManager.SetActiveScene(activeScene);
-                m_EventComponent.Fire(this, ActiveSceneChangedEventArgs.Create(lastActiveScene, activeScene));
+                _eventComponent.Fire(this, ActiveSceneChangedEventArgs.Create(lastActiveScene, activeScene));
             }
 
             RefreshMainCamera();
@@ -355,34 +355,34 @@ namespace EasyGameFramework
 
         private void OnLoadSceneSuccess(object sender, EasyGameFramework.Core.Scene.LoadSceneSuccessEventArgs e)
         {
-            m_SceneAssetAddressToSceneName[e.SceneAssetAddress] = ((Scene)e.SceneAsset).name;
-            if (!m_SceneOrder.ContainsKey(e.SceneAssetAddress))
+            _sceneAssetAddressToSceneName[e.SceneAssetAddress] = ((Scene)e.SceneAsset).name;
+            if (!_sceneOrder.ContainsKey(e.SceneAssetAddress))
             {
-                m_SceneOrder.Add(e.SceneAssetAddress, 0);
+                _sceneOrder.Add(e.SceneAssetAddress, 0);
             }
 
-            m_EventComponent.Fire(this, LoadSceneSuccessEventArgs.Create(e));
+            _eventComponent.Fire(this, LoadSceneSuccessEventArgs.Create(e));
             RefreshSceneOrder();
         }
 
         private void OnLoadSceneFailure(object sender, EasyGameFramework.Core.Scene.LoadSceneFailureEventArgs e)
         {
             Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", e.SceneAssetAddress, e.ErrorMessage);
-            m_EventComponent.Fire(this, LoadSceneFailureEventArgs.Create(e));
+            _eventComponent.Fire(this, LoadSceneFailureEventArgs.Create(e));
         }
 
         private void OnUnloadSceneSuccess(object sender, EasyGameFramework.Core.Scene.UnloadSceneSuccessEventArgs e)
         {
-            m_SceneAssetAddressToSceneName.Remove(e.SceneAssetAddress);
-            m_EventComponent.Fire(this, UnloadSceneSuccessEventArgs.Create(e));
-            m_SceneOrder.Remove(e.SceneAssetAddress);
+            _sceneAssetAddressToSceneName.Remove(e.SceneAssetAddress);
+            _eventComponent.Fire(this, UnloadSceneSuccessEventArgs.Create(e));
+            _sceneOrder.Remove(e.SceneAssetAddress);
             RefreshSceneOrder();
         }
 
         private void OnUnloadSceneFailure(object sender, EasyGameFramework.Core.Scene.UnloadSceneFailureEventArgs e)
         {
             Log.Warning("Unload scene failure, scene asset name '{0}'.", e.SceneAssetAddress);
-            m_EventComponent.Fire(this, UnloadSceneFailureEventArgs.Create(e));
+            _eventComponent.Fire(this, UnloadSceneFailureEventArgs.Create(e));
         }
     }
 }

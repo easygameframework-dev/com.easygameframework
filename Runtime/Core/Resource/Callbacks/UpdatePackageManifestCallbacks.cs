@@ -18,8 +18,8 @@
     /// </summary>
     public class UpdatePackageManifestCallbacks
     {
-        private UpdatePackageManifestSuccessCallback m_UpdatePackageManifestSuccessCallback;
-        private UpdatePackageManifestFailureCallback m_UpdatePackageManifestFailureCallback;
+        private UpdatePackageManifestSuccessCallback _updatePackageManifestSuccessCallback;
+        private UpdatePackageManifestFailureCallback _updatePackageManifestFailureCallback;
 
         /// <summary>
         /// 初始化更新资源包清单回调函数集的新实例。
@@ -29,20 +29,20 @@
         public UpdatePackageManifestCallbacks(UpdatePackageManifestSuccessCallback updatePackageManifestSuccessCallback,
             UpdatePackageManifestFailureCallback updatePackageManifestFailureCallback)
         {
-            m_UpdatePackageManifestSuccessCallback = updatePackageManifestSuccessCallback;
-            m_UpdatePackageManifestFailureCallback = updatePackageManifestFailureCallback;
+            _updatePackageManifestSuccessCallback = updatePackageManifestSuccessCallback;
+            _updatePackageManifestFailureCallback = updatePackageManifestFailureCallback;
         }
 
         /// <summary>
         /// 获取更新资源包清单成功时的回调函数。
         /// </summary>
         public UpdatePackageManifestSuccessCallback UpdatePackageManifestSuccessCallback =>
-            m_UpdatePackageManifestSuccessCallback;
+            _updatePackageManifestSuccessCallback;
 
         /// <summary>
         /// 获取更新资源包清单失败时的回调函数。
         /// </summary>
         public UpdatePackageManifestFailureCallback UpdatePackageManifestFailureCallback =>
-            m_UpdatePackageManifestFailureCallback;
+            _updatePackageManifestFailureCallback;
     }
 }

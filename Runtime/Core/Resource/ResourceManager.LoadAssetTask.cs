@@ -6,23 +6,23 @@ namespace EasyGameFramework.Core.Resource
     {
         private sealed class LoadAssetTask : LoadResourceTaskBase
         {
-            private LoadAssetCallbacks m_LoadAssetCallbacks;
+            private LoadAssetCallbacks _loadAssetCallbacks;
 
             public override bool IsScene => false;
 
             public override void OnLoadAssetSuccess(LoadResourceAgent agent, AssetObject assetObject, float duration)
             {
-                if (m_LoadAssetCallbacks.LoadAssetSuccessCallback != null)
+                if (_loadAssetCallbacks.LoadAssetSuccessCallback != null)
                 {
-                    m_LoadAssetCallbacks.LoadAssetSuccessCallback(AssetAddress, assetObject.Asset, duration, UserData);
+                    _loadAssetCallbacks.LoadAssetSuccessCallback(AssetAddress, assetObject.Asset, duration, UserData);
                 }
             }
 
             public override void OnLoadAssetFailure(LoadResourceAgent agent, LoadResourceStatus status, string errorMessage)
             {
-                if (m_LoadAssetCallbacks.LoadAssetFailureCallback != null)
+                if (_loadAssetCallbacks.LoadAssetFailureCallback != null)
                 {
-                    m_LoadAssetCallbacks.LoadAssetFailureCallback(AssetAddress, status, errorMessage, UserData);
+                    _loadAssetCallbacks.LoadAssetFailureCallback(AssetAddress, status, errorMessage, UserData);
                 }
             }
 
@@ -31,14 +31,14 @@ namespace EasyGameFramework.Core.Resource
             {
                 LoadAssetTask loadAssetTask = ReferencePool.Acquire<LoadAssetTask>();
                 loadAssetTask.Initialize(assetAddress, assetType, priority, userData);
-                loadAssetTask.m_LoadAssetCallbacks = loadAssetCallbacks;
+                loadAssetTask._loadAssetCallbacks = loadAssetCallbacks;
                 return loadAssetTask;
             }
 
             public override void Clear()
             {
                 base.Clear();
-                m_LoadAssetCallbacks = null;
+                _loadAssetCallbacks = null;
             }
         }
     }

@@ -12,20 +12,20 @@ namespace EasyGameFramework
 {
     internal sealed class WWWFormInfo : IReference
     {
-        private WWWForm m_WWWForm;
-        private object m_UserData;
+        private WWWForm _wWWForm;
+        private object _userData;
 
         public WWWFormInfo()
         {
-            m_WWWForm = null;
-            m_UserData = null;
+            _wWWForm = null;
+            _userData = null;
         }
 
         public WWWForm WWWForm
         {
             get
             {
-                return m_WWWForm;
+                return _wWWForm;
             }
         }
 
@@ -33,22 +33,22 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_UserData;
+                return _userData;
             }
         }
 
         public static WWWFormInfo Create(WWWForm wwwForm, object userData)
         {
             WWWFormInfo wwwFormInfo = ReferencePool.Acquire<WWWFormInfo>();
-            wwwFormInfo.m_WWWForm = wwwForm;
-            wwwFormInfo.m_UserData = userData;
+            wwwFormInfo._wWWForm = wwwForm;
+            wwwFormInfo._userData = userData;
             return wwwFormInfo;
         }
 
         public void Clear()
         {
-            m_WWWForm = null;
-            m_UserData = null;
+            _wWWForm = null;
+            _userData = null;
         }
     }
 }

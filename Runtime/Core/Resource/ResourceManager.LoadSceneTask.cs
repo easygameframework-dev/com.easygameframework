@@ -4,7 +4,7 @@
     {
         private class LoadSceneTask : LoadResourceTaskBase
         {
-            private LoadSceneCallbacks m_LoadSceneCallbacks;
+            private LoadSceneCallbacks _loadSceneCallbacks;
 
             public override bool IsScene => true;
 
@@ -12,29 +12,29 @@
             {
                 LoadSceneTask loadSceneTask = ReferencePool.Acquire<LoadSceneTask>();
                 loadSceneTask.Initialize(sceneAssetAddress, null, priority, userData);
-                loadSceneTask.m_LoadSceneCallbacks = loadSceneCallbacks;
+                loadSceneTask._loadSceneCallbacks = loadSceneCallbacks;
                 return loadSceneTask;
             }
 
             public override void Clear()
             {
                 base.Clear();
-                m_LoadSceneCallbacks = null;
+                _loadSceneCallbacks = null;
             }
 
             public override void OnLoadAssetSuccess(LoadResourceAgent agent, AssetObject assetObject, float duration)
             {
-                if (m_LoadSceneCallbacks.LoadSceneSuccessCallback != null)
+                if (_loadSceneCallbacks.LoadSceneSuccessCallback != null)
                 {
-                    m_LoadSceneCallbacks.LoadSceneSuccessCallback(AssetAddress, assetObject.Asset, duration, UserData);
+                    _loadSceneCallbacks.LoadSceneSuccessCallback(AssetAddress, assetObject.Asset, duration, UserData);
                 }
             }
 
             public override void OnLoadAssetFailure(LoadResourceAgent agent, LoadResourceStatus status, string errorMessage)
             {
-                if (m_LoadSceneCallbacks.LoadSceneFailureCallback != null)
+                if (_loadSceneCallbacks.LoadSceneFailureCallback != null)
                 {
-                    m_LoadSceneCallbacks.LoadSceneFailureCallback(AssetAddress, status, errorMessage, UserData);
+                    _loadSceneCallbacks.LoadSceneFailureCallback(AssetAddress, status, errorMessage, UserData);
                 }
             }
         }

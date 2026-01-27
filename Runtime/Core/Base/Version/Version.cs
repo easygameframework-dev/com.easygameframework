@@ -14,7 +14,7 @@ namespace EasyGameFramework.Core
     {
         private const string GameFrameworkVersionString = "2021.05.31";
 
-        private static IVersionHelper s_VersionHelper = null;
+        private static IVersionHelper s_versionHelper = null;
 
         /// <summary>
         /// 获取游戏框架版本号。
@@ -34,12 +34,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (s_VersionHelper == null)
+                if (s_versionHelper == null)
                 {
                     return string.Empty;
                 }
 
-                return s_VersionHelper.GameVersion;
+                return s_versionHelper.GameVersion;
             }
         }
 
@@ -50,12 +50,12 @@ namespace EasyGameFramework.Core
         {
             get
             {
-                if (s_VersionHelper == null)
+                if (s_versionHelper == null)
                 {
                     return 0;
                 }
 
-                return s_VersionHelper.InternalGameVersion;
+                return s_versionHelper.InternalGameVersion;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EasyGameFramework.Core
         /// <param name="versionHelper">要设置的版本号辅助器。</param>
         public static void SetVersionHelper(IVersionHelper versionHelper)
         {
-            s_VersionHelper = versionHelper;
+            s_versionHelper = versionHelper;
         }
     }
 }

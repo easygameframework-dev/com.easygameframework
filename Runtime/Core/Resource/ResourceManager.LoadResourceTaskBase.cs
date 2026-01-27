@@ -6,13 +6,13 @@ namespace EasyGameFramework.Core.Resource
     {
         private abstract class LoadResourceTaskBase : TaskBase
         {
-            private static int s_Serial = 0;
+            private static int s_serial = 0;
 
-            private AssetAddress m_AssetAddress;
-            private Type m_AssetType;
+            private AssetAddress _assetAddress;
+            private Type _assetType;
 
-            public AssetAddress AssetAddress => m_AssetAddress;
-            public Type AssetType => m_AssetType;
+            public AssetAddress AssetAddress => _assetAddress;
+            public Type AssetType => _assetType;
 
             public DateTime StartTime { get; set; }
 
@@ -29,9 +29,9 @@ namespace EasyGameFramework.Core.Resource
 
             protected void Initialize(AssetAddress assetAddress, Type assetType, int priority, object userData)
             {
-                Initialize(++s_Serial, "LoadResourceTask", priority, userData);
-                m_AssetAddress = assetAddress;
-                m_AssetType = assetType;
+                Initialize(++s_serial, "LoadResourceTask", priority, userData);
+                _assetAddress = assetAddress;
+                _assetType = assetType;
             }
         }
     }

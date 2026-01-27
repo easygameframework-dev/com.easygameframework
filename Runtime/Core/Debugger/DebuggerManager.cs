@@ -12,16 +12,16 @@ namespace EasyGameFramework.Core.Debugger
     /// </summary>
     internal sealed partial class DebuggerManager : GameFrameworkModule, IDebuggerManager
     {
-        private readonly DebuggerWindowGroup m_DebuggerWindowRoot;
-        private bool m_ActiveWindow;
+        private readonly DebuggerWindowGroup _debuggerWindowRoot;
+        private bool _activeWindow;
 
         /// <summary>
         /// 初始化调试器管理器的新实例。
         /// </summary>
         public DebuggerManager()
         {
-            m_DebuggerWindowRoot = new DebuggerWindowGroup();
-            m_ActiveWindow = false;
+            _debuggerWindowRoot = new DebuggerWindowGroup();
+            _activeWindow = false;
         }
 
         /// <summary>
@@ -43,11 +43,11 @@ namespace EasyGameFramework.Core.Debugger
         {
             get
             {
-                return m_ActiveWindow;
+                return _activeWindow;
             }
             set
             {
-                m_ActiveWindow = value;
+                _activeWindow = value;
             }
         }
 
@@ -58,7 +58,7 @@ namespace EasyGameFramework.Core.Debugger
         {
             get
             {
-                return m_DebuggerWindowRoot;
+                return _debuggerWindowRoot;
             }
         }
 
@@ -69,12 +69,12 @@ namespace EasyGameFramework.Core.Debugger
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            if (!m_ActiveWindow)
+            if (!_activeWindow)
             {
                 return;
             }
 
-            m_DebuggerWindowRoot.OnUpdate(elapseSeconds, realElapseSeconds);
+            _debuggerWindowRoot.OnUpdate(elapseSeconds, realElapseSeconds);
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace EasyGameFramework.Core.Debugger
         /// </summary>
         internal override void Shutdown()
         {
-            m_ActiveWindow = false;
-            m_DebuggerWindowRoot.Shutdown();
+            _activeWindow = false;
+            _debuggerWindowRoot.Shutdown();
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace EasyGameFramework.Core.Debugger
                 throw new GameFrameworkException("Debugger window is invalid.");
             }
 
-            m_DebuggerWindowRoot.RegisterDebuggerWindow(path, debuggerWindow);
+            _debuggerWindowRoot.RegisterDebuggerWindow(path, debuggerWindow);
             debuggerWindow.Initialize(args);
         }
 
@@ -115,7 +115,7 @@ namespace EasyGameFramework.Core.Debugger
         /// <returns>是否解除注册调试器窗口成功。</returns>
         public bool UnregisterDebuggerWindow(string path)
         {
-            return m_DebuggerWindowRoot.UnregisterDebuggerWindow(path);
+            return _debuggerWindowRoot.UnregisterDebuggerWindow(path);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace EasyGameFramework.Core.Debugger
         /// <returns>要获取的调试器窗口。</returns>
         public IDebuggerWindow GetDebuggerWindow(string path)
         {
-            return m_DebuggerWindowRoot.GetDebuggerWindow(path);
+            return _debuggerWindowRoot.GetDebuggerWindow(path);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace EasyGameFramework.Core.Debugger
         /// <returns>是否成功选中调试器窗口。</returns>
         public bool SelectDebuggerWindow(string path)
         {
-            return m_DebuggerWindowRoot.SelectDebuggerWindow(path);
+            return _debuggerWindowRoot.SelectDebuggerWindow(path);
         }
     }
 }

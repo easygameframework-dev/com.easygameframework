@@ -15,9 +15,9 @@ namespace EasyGameFramework.Core.FileSystem
     [StructLayout(LayoutKind.Auto)]
     public struct FileInfo
     {
-        private readonly string m_Name;
-        private readonly long m_Offset;
-        private readonly int m_Length;
+        private readonly string _name;
+        private readonly long _offset;
+        private readonly int _length;
 
         /// <summary>
         /// 初始化文件信息的新实例。
@@ -42,9 +42,9 @@ namespace EasyGameFramework.Core.FileSystem
                 throw new GameFrameworkException("Length is invalid.");
             }
 
-            m_Name = name;
-            m_Offset = offset;
-            m_Length = length;
+            _name = name;
+            _offset = offset;
+            _length = length;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return !string.IsNullOrEmpty(m_Name) && m_Offset >= 0L && m_Length >= 0;
+                return !string.IsNullOrEmpty(_name) && _offset >= 0L && _length >= 0;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return m_Name;
+                return _name;
             }
         }
 
@@ -76,7 +76,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return m_Offset;
+                return _offset;
             }
         }
 
@@ -87,7 +87,7 @@ namespace EasyGameFramework.Core.FileSystem
         {
             get
             {
-                return m_Length;
+                return _length;
             }
         }
     }

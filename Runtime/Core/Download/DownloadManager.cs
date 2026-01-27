@@ -17,28 +17,28 @@ namespace EasyGameFramework.Core.Download
     {
         private const int OneMegaBytes = 1024 * 1024;
 
-        private readonly TaskPool<DownloadTask> m_TaskPool;
-        private readonly DownloadCounter m_DownloadCounter;
-        private int m_FlushSize;
-        private float m_Timeout;
-        private EventHandler<DownloadStartEventArgs> m_DownloadStartEventHandler;
-        private EventHandler<DownloadUpdateEventArgs> m_DownloadUpdateEventHandler;
-        private EventHandler<DownloadSuccessEventArgs> m_DownloadSuccessEventHandler;
-        private EventHandler<DownloadFailureEventArgs> m_DownloadFailureEventHandler;
+        private readonly TaskPool<DownloadTask> _taskPool;
+        private readonly DownloadCounter _downloadCounter;
+        private int _flushSize;
+        private float _timeout;
+        private EventHandler<DownloadStartEventArgs> _downloadStartEventHandler;
+        private EventHandler<DownloadUpdateEventArgs> _downloadUpdateEventHandler;
+        private EventHandler<DownloadSuccessEventArgs> _downloadSuccessEventHandler;
+        private EventHandler<DownloadFailureEventArgs> _downloadFailureEventHandler;
 
         /// <summary>
         /// 初始化下载管理器的新实例。
         /// </summary>
         public DownloadManager()
         {
-            m_TaskPool = new TaskPool<DownloadTask>();
-            m_DownloadCounter = new DownloadCounter(1f, 10f);
-            m_FlushSize = OneMegaBytes;
-            m_Timeout = 30f;
-            m_DownloadStartEventHandler = null;
-            m_DownloadUpdateEventHandler = null;
-            m_DownloadSuccessEventHandler = null;
-            m_DownloadFailureEventHandler = null;
+            _taskPool = new TaskPool<DownloadTask>();
+            _downloadCounter = new DownloadCounter(1f, 10f);
+            _flushSize = OneMegaBytes;
+            _timeout = 30f;
+            _downloadStartEventHandler = null;
+            _downloadUpdateEventHandler = null;
+            _downloadSuccessEventHandler = null;
+            _downloadFailureEventHandler = null;
         }
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_TaskPool.Paused;
+                return _taskPool.Paused;
             }
             set
             {
-                m_TaskPool.Paused = value;
+                _taskPool.Paused = value;
             }
         }
 
@@ -75,7 +75,7 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_TaskPool.TotalAgentCount;
+                return _taskPool.TotalAgentCount;
             }
         }
 
@@ -86,7 +86,7 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_TaskPool.FreeAgentCount;
+                return _taskPool.FreeAgentCount;
             }
         }
 
@@ -97,7 +97,7 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_TaskPool.WorkingAgentCount;
+                return _taskPool.WorkingAgentCount;
             }
         }
 
@@ -108,7 +108,7 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_TaskPool.WaitingTaskCount;
+                return _taskPool.WaitingTaskCount;
             }
         }
 
@@ -119,11 +119,11 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_FlushSize;
+                return _flushSize;
             }
             set
             {
-                m_FlushSize = value;
+                _flushSize = value;
             }
         }
 
@@ -134,11 +134,11 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_Timeout;
+                return _timeout;
             }
             set
             {
-                m_Timeout = value;
+                _timeout = value;
             }
         }
 
@@ -149,7 +149,7 @@ namespace EasyGameFramework.Core.Download
         {
             get
             {
-                return m_DownloadCounter.CurrentSpeed;
+                return _downloadCounter.CurrentSpeed;
             }
         }
 
@@ -160,11 +160,11 @@ namespace EasyGameFramework.Core.Download
         {
             add
             {
-                m_DownloadStartEventHandler += value;
+                _downloadStartEventHandler += value;
             }
             remove
             {
-                m_DownloadStartEventHandler -= value;
+                _downloadStartEventHandler -= value;
             }
         }
 
@@ -175,11 +175,11 @@ namespace EasyGameFramework.Core.Download
         {
             add
             {
-                m_DownloadUpdateEventHandler += value;
+                _downloadUpdateEventHandler += value;
             }
             remove
             {
-                m_DownloadUpdateEventHandler -= value;
+                _downloadUpdateEventHandler -= value;
             }
         }
 
@@ -190,11 +190,11 @@ namespace EasyGameFramework.Core.Download
         {
             add
             {
-                m_DownloadSuccessEventHandler += value;
+                _downloadSuccessEventHandler += value;
             }
             remove
             {
-                m_DownloadSuccessEventHandler -= value;
+                _downloadSuccessEventHandler -= value;
             }
         }
 
@@ -205,11 +205,11 @@ namespace EasyGameFramework.Core.Download
         {
             add
             {
-                m_DownloadFailureEventHandler += value;
+                _downloadFailureEventHandler += value;
             }
             remove
             {
-                m_DownloadFailureEventHandler -= value;
+                _downloadFailureEventHandler -= value;
             }
         }
 
@@ -220,8 +220,8 @@ namespace EasyGameFramework.Core.Download
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            m_TaskPool.Update(elapseSeconds, realElapseSeconds);
-            m_DownloadCounter.Update(elapseSeconds, realElapseSeconds);
+            _taskPool.Update(elapseSeconds, realElapseSeconds);
+            _downloadCounter.Update(elapseSeconds, realElapseSeconds);
         }
 
         /// <summary>
@@ -229,8 +229,8 @@ namespace EasyGameFramework.Core.Download
         /// </summary>
         internal override void Shutdown()
         {
-            m_TaskPool.Shutdown();
-            m_DownloadCounter.Shutdown();
+            _taskPool.Shutdown();
+            _downloadCounter.Shutdown();
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace EasyGameFramework.Core.Download
             agent.DownloadAgentSuccess += OnDownloadAgentSuccess;
             agent.DownloadAgentFailure += OnDownloadAgentFailure;
 
-            m_TaskPool.AddAgent(agent);
+            _taskPool.AddAgent(agent);
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace EasyGameFramework.Core.Download
         /// <returns>下载任务的信息。</returns>
         public TaskInfo GetDownloadInfo(int serialId)
         {
-            return m_TaskPool.GetTaskInfo(serialId);
+            return _taskPool.GetTaskInfo(serialId);
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace EasyGameFramework.Core.Download
         /// <returns>下载任务的信息。</returns>
         public TaskInfo[] GetDownloadInfos(string tag)
         {
-            return m_TaskPool.GetTaskInfos(tag);
+            return _taskPool.GetTaskInfos(tag);
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace EasyGameFramework.Core.Download
         /// <param name="results">下载任务的信息。</param>
         public void GetDownloadInfos(string tag, List<TaskInfo> results)
         {
-            m_TaskPool.GetTaskInfos(tag, results);
+            _taskPool.GetTaskInfos(tag, results);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace EasyGameFramework.Core.Download
         /// <returns>所有下载任务的信息。</returns>
         public TaskInfo[] GetAllDownloadInfos()
         {
-            return m_TaskPool.GetAllTaskInfos();
+            return _taskPool.GetAllTaskInfos();
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace EasyGameFramework.Core.Download
         /// <param name="results">所有下载任务的信息。</param>
         public void GetAllDownloadInfos(List<TaskInfo> results)
         {
-            m_TaskPool.GetAllTaskInfos(results);
+            _taskPool.GetAllTaskInfos(results);
         }
 
         /// <summary>
@@ -408,8 +408,8 @@ namespace EasyGameFramework.Core.Download
                 throw new GameFrameworkException("You must add download agent first.");
             }
 
-            DownloadTask downloadTask = DownloadTask.Create(downloadPath, downloadUri, tag, priority, m_FlushSize, m_Timeout, userData);
-            m_TaskPool.AddTask(downloadTask);
+            DownloadTask downloadTask = DownloadTask.Create(downloadPath, downloadUri, tag, priority, _flushSize, _timeout, userData);
+            _taskPool.AddTask(downloadTask);
             return downloadTask.SerialId;
         }
 
@@ -420,7 +420,7 @@ namespace EasyGameFramework.Core.Download
         /// <returns>是否移除下载任务成功。</returns>
         public bool RemoveDownload(int serialId)
         {
-            return m_TaskPool.RemoveTask(serialId);
+            return _taskPool.RemoveTask(serialId);
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace EasyGameFramework.Core.Download
         /// <returns>移除下载任务的数量。</returns>
         public int RemoveDownloads(string tag)
         {
-            return m_TaskPool.RemoveTasks(tag);
+            return _taskPool.RemoveTasks(tag);
         }
 
         /// <summary>
@@ -439,46 +439,46 @@ namespace EasyGameFramework.Core.Download
         /// <returns>移除下载任务的数量。</returns>
         public int RemoveAllDownloads()
         {
-            return m_TaskPool.RemoveAllTasks();
+            return _taskPool.RemoveAllTasks();
         }
 
         private void OnDownloadAgentStart(DownloadAgent sender)
         {
-            if (m_DownloadStartEventHandler != null)
+            if (_downloadStartEventHandler != null)
             {
                 DownloadStartEventArgs downloadStartEventArgs = DownloadStartEventArgs.Create(sender.Task.SerialId, sender.Task.DownloadPath, sender.Task.DownloadUri, sender.CurrentLength, sender.Task.UserData);
-                m_DownloadStartEventHandler(this, downloadStartEventArgs);
+                _downloadStartEventHandler(this, downloadStartEventArgs);
                 ReferencePool.Release(downloadStartEventArgs);
             }
         }
 
         private void OnDownloadAgentUpdate(DownloadAgent sender, int deltaLength)
         {
-            m_DownloadCounter.RecordDeltaLength(deltaLength);
-            if (m_DownloadUpdateEventHandler != null)
+            _downloadCounter.RecordDeltaLength(deltaLength);
+            if (_downloadUpdateEventHandler != null)
             {
                 DownloadUpdateEventArgs downloadUpdateEventArgs = DownloadUpdateEventArgs.Create(sender.Task.SerialId, sender.Task.DownloadPath, sender.Task.DownloadUri, sender.CurrentLength, sender.Task.UserData);
-                m_DownloadUpdateEventHandler(this, downloadUpdateEventArgs);
+                _downloadUpdateEventHandler(this, downloadUpdateEventArgs);
                 ReferencePool.Release(downloadUpdateEventArgs);
             }
         }
 
         private void OnDownloadAgentSuccess(DownloadAgent sender, long length)
         {
-            if (m_DownloadSuccessEventHandler != null)
+            if (_downloadSuccessEventHandler != null)
             {
                 DownloadSuccessEventArgs downloadSuccessEventArgs = DownloadSuccessEventArgs.Create(sender.Task.SerialId, sender.Task.DownloadPath, sender.Task.DownloadUri, sender.CurrentLength, sender.Task.UserData);
-                m_DownloadSuccessEventHandler(this, downloadSuccessEventArgs);
+                _downloadSuccessEventHandler(this, downloadSuccessEventArgs);
                 ReferencePool.Release(downloadSuccessEventArgs);
             }
         }
 
         private void OnDownloadAgentFailure(DownloadAgent sender, string errorMessage)
         {
-            if (m_DownloadFailureEventHandler != null)
+            if (_downloadFailureEventHandler != null)
             {
                 DownloadFailureEventArgs downloadFailureEventArgs = DownloadFailureEventArgs.Create(sender.Task.SerialId, sender.Task.DownloadPath, sender.Task.DownloadUri, errorMessage, sender.Task.UserData);
-                m_DownloadFailureEventHandler(this, downloadFailureEventArgs);
+                _downloadFailureEventHandler(this, downloadFailureEventArgs);
                 ReferencePool.Release(downloadFailureEventArgs);
             }
         }

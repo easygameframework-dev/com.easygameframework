@@ -21,23 +21,23 @@ namespace EasyGameFramework
     {
         private const int DefaultPriority = 0;
 
-        private IWebRequestManager m_WebRequestManager = null;
-        private EventComponent m_EventComponent = null;
+        private IWebRequestManager _webRequestManager = null;
+        private EventComponent _eventComponent = null;
 
         [SerializeField]
-        private Transform m_InstanceRoot = null;
+        private Transform _instanceRoot = null;
 
         [SerializeField]
-        private string m_WebRequestAgentHelperTypeName = "UnityGameFramework.Runtime.UnityWebRequestAgentHelper";
+        private string _webRequestAgentHelperTypeName = "UnityGameFramework.Runtime.UnityWebRequestAgentHelper";
 
         [SerializeField]
-        private WebRequestAgentHelperBase m_CustomWebRequestAgentHelper = null;
+        private WebRequestAgentHelperBase _customWebRequestAgentHelper = null;
 
         [SerializeField]
-        private int m_WebRequestAgentHelperCount = 1;
+        private int _webRequestAgentHelperCount = 1;
 
         [SerializeField]
-        private float m_Timeout = 30f;
+        private float _timeout = 30f;
 
         /// <summary>
         /// 获取 Web 请求代理总数量。
@@ -46,7 +46,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_WebRequestManager.TotalAgentCount;
+                return _webRequestManager.TotalAgentCount;
             }
         }
 
@@ -57,7 +57,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_WebRequestManager.FreeAgentCount;
+                return _webRequestManager.FreeAgentCount;
             }
         }
 
@@ -68,7 +68,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_WebRequestManager.WorkingAgentCount;
+                return _webRequestManager.WorkingAgentCount;
             }
         }
 
@@ -79,7 +79,7 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_WebRequestManager.WaitingTaskCount;
+                return _webRequestManager.WaitingTaskCount;
             }
         }
 
@@ -90,11 +90,11 @@ namespace EasyGameFramework
         {
             get
             {
-                return m_WebRequestManager.Timeout;
+                return _webRequestManager.Timeout;
             }
             set
             {
-                m_WebRequestManager.Timeout = m_Timeout = value;
+                _webRequestManager.Timeout = _timeout = value;
             }
         }
 
@@ -105,36 +105,36 @@ namespace EasyGameFramework
         {
             base.Awake();
 
-            m_WebRequestManager = GameFrameworkEntry.GetModule<IWebRequestManager>();
-            if (m_WebRequestManager == null)
+            _webRequestManager = GameFrameworkEntry.GetModule<IWebRequestManager>();
+            if (_webRequestManager == null)
             {
                 Log.Fatal("Web request manager is invalid.");
                 return;
             }
 
-            m_WebRequestManager.Timeout = m_Timeout;
-            m_WebRequestManager.WebRequestStart += OnWebRequestStart;
-            m_WebRequestManager.WebRequestSuccess += OnWebRequestSuccess;
-            m_WebRequestManager.WebRequestFailure += OnWebRequestFailure;
+            _webRequestManager.Timeout = _timeout;
+            _webRequestManager.WebRequestStart += OnWebRequestStart;
+            _webRequestManager.WebRequestSuccess += OnWebRequestSuccess;
+            _webRequestManager.WebRequestFailure += OnWebRequestFailure;
         }
 
         private void Start()
         {
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            if (m_InstanceRoot == null)
+            if (_instanceRoot == null)
             {
-                m_InstanceRoot = new GameObject("Web Request Agent Instances").transform;
-                m_InstanceRoot.SetParent(gameObject.transform);
-                m_InstanceRoot.localScale = Vector3.one;
+                _instanceRoot = new GameObject("Web Request Agent Instances").transform;
+                _instanceRoot.SetParent(gameObject.transform);
+                _instanceRoot.localScale = Vector3.one;
             }
 
-            for (int i = 0; i < m_WebRequestAgentHelperCount; i++)
+            for (int i = 0; i < _webRequestAgentHelperCount; i++)
             {
                 AddWebRequestAgentHelper(i);
             }
@@ -147,7 +147,7 @@ namespace EasyGameFramework
         /// <returns>Web 请求任务的信息。</returns>
         public TaskInfo GetWebRequestInfo(int serialId)
         {
-            return m_WebRequestManager.GetWebRequestInfo(serialId);
+            return _webRequestManager.GetWebRequestInfo(serialId);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace EasyGameFramework
         /// <returns>Web 请求任务的信息。</returns>
         public TaskInfo[] GetWebRequestInfos(string tag)
         {
-            return m_WebRequestManager.GetWebRequestInfos(tag);
+            return _webRequestManager.GetWebRequestInfos(tag);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace EasyGameFramework
         /// <param name="results">Web 请求任务的信息。</param>
         public void GetAllWebRequestInfos(string tag, List<TaskInfo> results)
         {
-            m_WebRequestManager.GetAllWebRequestInfos(tag, results);
+            _webRequestManager.GetAllWebRequestInfos(tag, results);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace EasyGameFramework
         /// <returns>所有 Web 请求任务的信息。</returns>
         public TaskInfo[] GetAllWebRequestInfos()
         {
-            return m_WebRequestManager.GetAllWebRequestInfos();
+            return _webRequestManager.GetAllWebRequestInfos();
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace EasyGameFramework
         /// <param name="results">所有 Web 请求任务的信息。</param>
         public void GetAllWebRequestInfos(List<TaskInfo> results)
         {
-            m_WebRequestManager.GetAllWebRequestInfos(results);
+            _webRequestManager.GetAllWebRequestInfos(results);
         }
 
         /// <summary>
@@ -487,7 +487,7 @@ namespace EasyGameFramework
         /// <returns>是否移除 Web 请求任务成功。</returns>
         public bool RemoveWebRequest(int serialId)
         {
-            return m_WebRequestManager.RemoveWebRequest(serialId);
+            return _webRequestManager.RemoveWebRequest(serialId);
         }
 
         /// <summary>
@@ -497,7 +497,7 @@ namespace EasyGameFramework
         /// <returns>移除 Web 请求任务的数量。</returns>
         public int RemoveWebRequests(string tag)
         {
-            return m_WebRequestManager.RemoveWebRequests(tag);
+            return _webRequestManager.RemoveWebRequests(tag);
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace EasyGameFramework
         /// <returns>移除 Web 请求任务的数量。</returns>
         public int RemoveAllWebRequests()
         {
-            return m_WebRequestManager.RemoveAllWebRequests();
+            return _webRequestManager.RemoveAllWebRequests();
         }
 
         /// <summary>
@@ -515,7 +515,7 @@ namespace EasyGameFramework
         /// <param name="index">Web 请求代理辅助器索引。</param>
         private void AddWebRequestAgentHelper(int index)
         {
-            WebRequestAgentHelperBase webRequestAgentHelper = Helper.CreateHelper(m_WebRequestAgentHelperTypeName, m_CustomWebRequestAgentHelper, index);
+            WebRequestAgentHelperBase webRequestAgentHelper = Helper.CreateHelper(_webRequestAgentHelperTypeName, _customWebRequestAgentHelper, index);
             if (webRequestAgentHelper == null)
             {
                 Log.Error("Can not create web request agent helper.");
@@ -524,10 +524,10 @@ namespace EasyGameFramework
 
             webRequestAgentHelper.name = Utility.Text.Format("Web Request Agent Helper - {0}", index);
             Transform transform = webRequestAgentHelper.transform;
-            transform.SetParent(m_InstanceRoot);
+            transform.SetParent(_instanceRoot);
             transform.localScale = Vector3.one;
 
-            m_WebRequestManager.AddWebRequestAgentHelper(webRequestAgentHelper);
+            _webRequestManager.AddWebRequestAgentHelper(webRequestAgentHelper);
         }
 
         /// <summary>
@@ -542,23 +542,23 @@ namespace EasyGameFramework
         /// <returns>新增 Web 请求任务的序列编号。</returns>
         private int AddWebRequest(string webRequestUri, byte[] postData, WWWForm wwwForm, string tag, int priority, object userData)
         {
-            return m_WebRequestManager.AddWebRequest(webRequestUri, postData, tag, priority, WWWFormInfo.Create(wwwForm, userData));
+            return _webRequestManager.AddWebRequest(webRequestUri, postData, tag, priority, WWWFormInfo.Create(wwwForm, userData));
         }
 
         private void OnWebRequestStart(object sender, EasyGameFramework.Core.WebRequest.WebRequestStartEventArgs e)
         {
-            m_EventComponent.Fire(this, WebRequestStartEventArgs.Create(e));
+            _eventComponent.Fire(this, WebRequestStartEventArgs.Create(e));
         }
 
         private void OnWebRequestSuccess(object sender, EasyGameFramework.Core.WebRequest.WebRequestSuccessEventArgs e)
         {
-            m_EventComponent.Fire(this, WebRequestSuccessEventArgs.Create(e));
+            _eventComponent.Fire(this, WebRequestSuccessEventArgs.Create(e));
         }
 
         private void OnWebRequestFailure(object sender, EasyGameFramework.Core.WebRequest.WebRequestFailureEventArgs e)
         {
             Log.Warning("Web request failure, web request serial id '{0}', web request uri '{1}', error message '{2}'.", e.SerialId, e.WebRequestUri, e.ErrorMessage);
-            m_EventComponent.Fire(this, WebRequestFailureEventArgs.Create(e));
+            _eventComponent.Fire(this, WebRequestFailureEventArgs.Create(e));
         }
     }
 }
